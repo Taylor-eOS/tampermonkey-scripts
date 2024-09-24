@@ -17,7 +17,7 @@
         button.style.right = '0px';
         button.style.width = '10px';
         button.style.height = '10px';
-        button.style.backgroundColor = 'grey';
+        button.style.backgroundColor = '#ececec';
         button.style.border = 'none';
         button.style.borderRadius = '1px';
         button.style.zIndex = 1000;
