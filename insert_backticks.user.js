@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Insert Backticks Button
 // @namespace    http://tampermonkey.net/
-// @version      1.1
+// @version      1.3
 // @description  Inserts backticks into a specific element, even if text already exists
 // @match        *://*/*
 // @grant        none
@@ -16,8 +16,8 @@
     button.style.position = 'fixed';
     button.style.bottom = '50px';
     button.style.left = '370px';
-    button.style.width = '16px';
-    button.style.height = '16px';
+    button.style.width = '18px';
+    button.style.height = '18px';
     button.style.backgroundColor = '#ececec';
     button.style.border = 'none';
     button.style.borderRadius = '8px';
@@ -31,7 +31,7 @@
     const insertBackticks = () => {
         const targetElement = document.querySelector('p[data-placeholder="Message ChatGPT"]');
         if (targetElement) {
-            const backticks = '\n```\n\n```';
+            const backticks = '```\n\n\n```';
             // Append backticks to existing content, handling <br> tags for new lines
             const existingContent = targetElement.innerHTML;
             targetElement.innerHTML = existingContent + backticks.replace(/\n/g, '<br>');
