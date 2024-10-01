@@ -14,13 +14,13 @@
     const button = document.createElement('button');
     //button.textContent = '`';
     button.style.position = 'fixed';
-    button.style.bottom = '53px';
+    button.style.bottom = '50px';
     button.style.left = '370px';
-    button.style.width = '12px';
-    button.style.height = '12px';
+    button.style.width = '16px';
+    button.style.height = '16px';
     button.style.backgroundColor = '#ececec';
     button.style.border = 'none';
-    button.style.borderRadius = '5px';
+    button.style.borderRadius = '8px';
     button.style.zIndex = '1000';
     button.style.cursor = 'pointer';
     button.style.fontSize = '12px';
@@ -31,7 +31,7 @@
     const insertBackticks = () => {
         const targetElement = document.querySelector('p[data-placeholder="Message ChatGPT"]');
         if (targetElement) {
-            const backticks = '```\n\n\n```';
+            const backticks = '\n```\n\n```';
             // Append backticks to existing content, handling <br> tags for new lines
             const existingContent = targetElement.innerHTML;
             targetElement.innerHTML = existingContent + backticks.replace(/\n/g, '<br>');
