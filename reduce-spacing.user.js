@@ -4,7 +4,7 @@
 // @version      1.1
 // @description  Reduce vertical space between paragraphs and list items on any website
 // @author       Your Name
-// @match        *://*/*
+// @match        *chatgpt.com/*
 // @grant        GM_addStyle
 // @run-at       document-start
 // ==/UserScript==
