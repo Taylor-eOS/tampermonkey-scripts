@@ -14,12 +14,12 @@
         const button = document.createElement('button');
         button.style.position = 'fixed';
         button.style.top = '0px';
-        button.style.right = '0px';
-        button.style.width = '10px';
-        button.style.height = '10px';
-        button.style.backgroundColor = '#ececec';
+        button.style.left = '0px';
+        button.style.width = '12px';
+        button.style.height = '12px';
+        button.style.backgroundColor = 'grey';//'#ececec';
         button.style.border = 'none';
-        button.style.borderRadius = '1px';
+        button.style.borderRadius = '5px';
         button.style.zIndex = 1000;
         button.style.cursor = 'pointer';
 
