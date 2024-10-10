@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         Insert Text with Shortcut
+// @name         Insert Text
 // @namespace    http://tampermonkey.net/
-// @version      1.0
-// @description  Insert concise response request
+// @version      2.0
+// @description  Insert different text based on different shortcuts
 // @author       You
 // @match        *chatgpt.com/*
 // @grant        none
@@ -11,15 +11,17 @@
 (function() {
     'use strict';
 
-    // Listen for keydown event
+    // Listen for keydown events
     document.addEventListener('keydown', function(e) {
-        // Check if Ctrl + Shift + ` (on many keyboards '´' is above the tab or near it) is pressed
+        // Ctrl + Shift + ´ -> insert three backticks (```)
         if (e.ctrlKey && e.shiftKey && e.key === 'Dead') {
-            // Prevent default behavior to avoid unintended actions
             e.preventDefault();
-
-            // Insert text at the cursor position
-            insertTextAtCursor('[Write concisely and continuously.]');
+            insertTextAtCursor('```\n\n\n```');
+        }
+        // Ctrl + Alt + Period -> insert the specified sentence
+        else if (e.ctrlKey && e.altKey && e.code === 'Period') {
+            e.preventDefault();
+            insertTextAtCursor(' [Write continuously and concisely.]');
         }
     });
 
