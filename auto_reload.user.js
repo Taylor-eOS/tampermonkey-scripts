@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         Auto Reload WebApp
+// @name         Auto Reload On Start
 // @namespace    http://tampermonkey.net/
 // @version      1.2
 // @description  Reload the web app shortly after access
