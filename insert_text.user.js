@@ -21,7 +21,7 @@
         // Ctrl + Alt + Period -> insert the specified sentence
         else if (e.ctrlKey && e.altKey && e.code === 'Period') {
             e.preventDefault();
-            insertTextAtCursor(' [Write continuously and concisely.]');
+            insertTextAtCursor(' [Format your response as a continuous, concise paragraph.]');
         }
     });
 
