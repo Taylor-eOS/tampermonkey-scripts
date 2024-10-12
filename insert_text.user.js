@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Insert Text
 // @namespace    http://tampermonkey.net/
-// @version      2.0
+// @version      2.2
 // @description  Insert different text based on different shortcuts
 // @author       You
 // @match        *chatgpt.com/*
@@ -21,7 +21,12 @@
         // Ctrl + Alt + Period -> insert the specified sentence
         else if (e.ctrlKey && e.altKey && e.code === 'Period') {
             e.preventDefault();
-            insertTextAtCursor(' [Format your response as a continuous, concise paragraph.]');
+            insertTextAtCursor(' [Format your response as a continuous and concise paragraph.]');
+        }
+        // Ctrl + Alt + Period -> insert the specified sentence
+        else if (e.ctrlKey && e.altKey && e.code === 'Comma') {
+            e.preventDefault();
+            insertTextAtCursor(' [Answer this specific question in continuous and concise writing.]');
         }
     });
 
