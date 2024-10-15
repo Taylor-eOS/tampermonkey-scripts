@@ -26,7 +26,7 @@
         // Ctrl + Alt + Period -> insert the specified sentence
         else if (e.ctrlKey && e.altKey && e.code === 'Comma') {
             e.preventDefault();
-            insertTextAtCursor('[Answer this specific question in continuous and concise writing.]');
+            insertTextAtCursor('[Answer this specific question in continuous and concise writing without code.]');
         }
         // Ctrl + Alt + Period -> insert the specified sentence
         else if (e.ctrlKey && e.altKey && e.key === '-') {
