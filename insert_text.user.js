@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Insert Text with Clipboard
 // @namespace    http://tampermonkey.net/
-// @version      2.5
+// @version      2.6
 // @description  Insert different text based on different shortcuts, including clipboard content within backticks
 // @author       You
 // @match        *chatgpt.com/*
@@ -50,21 +50,20 @@
             activeElement.selectionStart = activeElement.selectionEnd = start + text.length;
 
         } else if (activeElement.isContentEditable) {
-            // **Updated Logic:** Replace newline characters with <br> tags for contenteditable elements
-            let html = text.replace(/\n/g, '<br>');
+            // **Updated Logic:** Replace newline characters with <div> to ensure separate lines
+            let html = text
+            .split('\n')
+            .map(line => document.createTextNode(line))
+            .reduce((frag, node) => {
+                frag.appendChild(node);
+                frag.appendChild(document.createElement('br'));
+                return frag;
+            }, document.createDocumentFragment());
 
             // Use Range API to insert HTML
             let range = window.getSelection().getRangeAt(0);
             range.deleteContents();
-
-            // Create a temporary container to parse the HTML string
-            let tempDiv = document.createElement('div');
-            tempDiv.innerHTML = html;
-
-            // Insert each node separately to maintain formatting
-            while (tempDiv.firstChild) {
-                range.insertNode(tempDiv.firstChild);
-            }
+            range.insertNode(html);
 
             // Move the cursor to the end of the inserted content
             range.collapse(false);
@@ -80,10 +79,10 @@
             // Sanitize clipboard text if necessary
             let sanitizedText = sanitizeText(clipboardText);
 
-            // Remove leading and trailing newline characters
+            // Remove leading and trailing whitespace (including newlines)
             sanitizedText = sanitizedText.trim();
 
-            // Insert backticks and ensure they are on separate lines
+            // **Construct the entire code block with explicit newlines**
             const textToInsert = '```\n' + sanitizedText + '\n```';
 
             insertTextAtCursor(textToInsert);
