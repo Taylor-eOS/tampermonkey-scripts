@@ -34,7 +34,7 @@
             insertTextAtCursor('[Continue the approach that led to the last response.]');
         }
         // Ctrl + Alt + M -> insert the specified sentence
-        else if (e.ctrlKey && e.altKey && e.key === 'm') {
+        else if (e.ctrlKey && e.altKey && e.key === 'r') {
             e.preventDefault();
             insertTextAtCursor('[Reflect on whether this is accurate.]');
         }
