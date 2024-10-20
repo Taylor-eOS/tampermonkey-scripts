@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Insert Text
 // @namespace    http://tampermonkey.net/
-// @version      2.8
+// @version      2.9
 // @description  Insert different text based on different shortcuts
 // @author       You
 // @match        *chatgpt.com/*
@@ -18,17 +18,17 @@
             e.preventDefault();
             insertTextAtCursor('```\n\n\n```');
         }
-        // Ctrl + Alt + Period -> Format continuous response
+        // Ctrl + Alt + Period -> format continuous response
         else if (e.ctrlKey && e.altKey && e.code === 'Period') {
             e.preventDefault();
             insertTextAtCursor('[Format your response as a continuous and concise paragraph.]');
         }
-        // Ctrl + Alt + Comma -> Answer this specific question
+        // Ctrl + Alt + Comma -> answer this specific question
         else if (e.ctrlKey && e.altKey && e.code === 'Comma') {
             e.preventDefault();
-            insertTextAtCursor('[Answer this specific question in continuous and concise writing without code.]');
+            insertTextAtCursor('[Just answer this specific question in continuous and concise writing without code.]');
         }
-        // Ctrl + Alt + Minus -> Continue approach
+        // Ctrl + Alt + Minus -> continue approach
         else if (e.ctrlKey && e.altKey && e.key === '-') {
             e.preventDefault();
             insertTextAtCursor('[Continue the approach that led to the last response.]');
@@ -36,17 +36,32 @@
         // Ctrl + Alt + R -> Reflect
         else if (e.ctrlKey && e.altKey && e.key === 'r') {
             e.preventDefault();
-            insertTextAtCursor('[Reflect on whether this is accurate.]');
+            insertTextAtCursor('[Reflect on whether this is accurate in continuous writing.]');
         }
-        // Ctrl + Alt + I -> infer
+        // Ctrl + Alt + I -> Infer
         else if (e.ctrlKey && e.altKey && e.key === 'i') {
             e.preventDefault();
-            insertTextAtCursor('[Try to infer from my prompt what I need to know in relation to this topic, and try to provide information that would benefit my learning in this situation.]');
+            insertTextAtCursor('[Try to infer from my prompt what I would be interested in, and provide some creative reflection that would benefit my learning considering my prompts so far.]');
         }
-        // Ctrl + Alt + Y -> tell me something I have not considered yet
+        // Ctrl + Alt + Y -> tell me something I have not considered Yet
         else if (e.ctrlKey && e.altKey && e.key === 'y') {
             e.preventDefault();
-            insertTextAtCursor('[Can you tell me something creatively on this topic that I have not considered yet, inferring from my previous prompts to tell me something which I would be interested to hear.]');
+            insertTextAtCursor('[Can you tell me something creatively on this topic that I have not considered yet, inferring from my previous prompts what I would be interested to hear.]');
+        }
+        // Ctrl + Alt + A -> Assume other functions work
+        else if (e.ctrlKey && e.altKey && e.key === 'a') {
+            e.preventDefault();
+            insertTextAtCursor('[Just concern yourself with rewriting the function I gave you. The code should interface with the unseen parts of the script like the ones I gave you. Assume that unseen functions just work, and don\'t reinvent them. Stay on target. Include explanations outside the code, but no inline comments or empty lines inside code.]');
+        }
+        // Ctrl + Alt + C -> Code
+        else if (e.ctrlKey && e.altKey && e.key === 'f') {
+            e.preventDefault();
+            insertTextAtCursor('[Include explanations outside the code, but no inline comments (the ones after `#`) inside it, and don\'t have empty lines in the code.]');
+        }
+        // Ctrl + Alt + T -> stay on Target
+        else if (e.ctrlKey && e.altKey && e.key === 'f') {
+            e.preventDefault();
+            insertTextAtCursor('[Try to stay on target with your response.]');
         }
     });
 
