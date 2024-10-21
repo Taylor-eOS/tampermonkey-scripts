@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Insert Text
 // @namespace    http://tampermonkey.net/
-// @version      2.9
+// @version      2.10
 // @description  Insert different text based on different shortcuts
 // @author       You
 // @match        *chatgpt.com/*
@@ -51,7 +51,7 @@
         // Ctrl + Alt + A -> Assume other functions work
         else if (e.ctrlKey && e.altKey && e.key === 'a') {
             e.preventDefault();
-            insertTextAtCursor('[Just concern yourself with rewriting the function I gave you. The code should interface with the unseen parts of the script like the ones I gave you. Assume that unseen functions just work, and don\'t reinvent them. Stay on target. Include explanations outside the code, but no inline comments or empty lines inside code.]');
+            insertTextAtCursor('[Just concern yourself with rewriting the function I gave you. The code should interface with the unseen parts of the script in the same way. Assume that unseen functions just work, and don\'t reinvent them. Stay on target. Include explanations outside the code, but no inline comments or empty lines inside code.]');
         }
         // Ctrl + Alt + C -> Code
         else if (e.ctrlKey && e.altKey && e.key === 'f') {
