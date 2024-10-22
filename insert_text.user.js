@@ -26,7 +26,7 @@
         // Ctrl + Alt + Comma -> answer this specific question
         else if (e.ctrlKey && e.altKey && e.code === 'Comma') {
             e.preventDefault();
-            insertTextAtCursor('[Just answer this specific question in continuous and concise writing without code.]');
+            insertTextAtCursor('[Answer this specific question in continuous and concise writing without code.]');
         }
         // Ctrl + Alt + Minus -> continue approach
         else if (e.ctrlKey && e.altKey && e.key === '-') {
@@ -54,14 +54,19 @@
             insertTextAtCursor('[Just concern yourself with rewriting the function I gave you. The code should interface with the unseen parts of the script in the same way. Assume that unseen functions just work, and don\'t reinvent them. Stay on target. Include explanations outside the code, but no inline comments or empty lines inside code.]');
         }
         // Ctrl + Alt + C -> Comments
-        else if (e.ctrlKey && e.altKey && e.key === 'f') {
+        else if (e.ctrlKey && e.altKey && e.key === 'c') {
             e.preventDefault();
             insertTextAtCursor('[Stay on target. Include explanations outside the code, but no inline comments or empty lines inside code. Assume that unseen functions just work, and don\'t reinvent them.]');
         }
         // Ctrl + Alt + T -> stay on Target
-        else if (e.ctrlKey && e.altKey && e.key === 'f') {
+        else if (e.ctrlKey && e.altKey && e.key === 't') {
             e.preventDefault();
             insertTextAtCursor('[Try to stay on target with your response.]');
+        }
+        // Ctrl + Alt + W -> Write continuously
+        else if (e.ctrlKey && e.altKey && e.key === 'w') {
+            e.preventDefault();
+            insertTextAtCursor('[Write continuously.]');
         }
     });
 
