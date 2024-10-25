@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Insert Text
-// @version      3.0
+// @version      3.1
 // @description  Insert text into ChatGPT prompt window via key combinations
 // @author       You
 // @match        *chatgpt.com/*
@@ -10,15 +10,17 @@
 (function() {
     'use strict';
     const keyMap = {
-        'Control+Shift+Equal': '```\n\n\n```',
-        'Control+Alt+Period': '[Format your response concisely and continuously.]',
-        'Control+Alt+Comma': '[Answer questions in a targeted way in continuous and concise language without code.]',
+        'Control+Shift+Equal': '```\n```',
+        'Control+Alt+Period': '[Format your response continuously and concisely.]',
+        'Control+Alt+Comma': '[Answer this question targeted in continuous and concise language without code.]',
         'Control+Alt+Slash': '[I liked that response. Continue the approach that led to the last result.]',
-        'Control+Alt+KeyF': '[Just concern yourself with rewriting the function I gave you. The code should interface with the unseen parts of the script in the same way as this does.]',
-        'Control+Alt+KeyC': '[Stay on target. Include explanations outside of the code, but no inline comments or empty lines in code blocks. Assume that unseen functions work, and don\'t reinvent them.]',
+        'Control+Alt+KeyG': '[Focus on rewriting the functions I gave you. This code should interface with unseen parts like my input. Assume that unseen functions work, and don\'t reinvent them.]',
+        'Control+Alt+KeyC': '[Stay on target. Include continuous natural language explanations, but no inline comments or empty lines in code blocks.]',
         'Control+Alt+KeyR': '[Reflect on whether these statements are accurate in continuous natural language.]',
         'Control+Alt+KeyI': '[What I always miss from AI responses in comparison to talking to a person is its own initiative in the content direction. The AI always just sticks to what the user said. A person might make a segue, extend a thought, have an objection, or come up with something they are reminded of. You know what I mean.]',
         'Control+Alt+KeyO': '[Take the initiative on this topic to creatively provide some ideas I have not considered yet that I would be interested to hear, as inferred from my perspective so far.]',
+        'Control+Alt+KeyU': '[Can you incorporate this new information and update your answer to take it into account.]',
+        'Control+Alt+KeyQ': '[If an aspect is unclear or ambiguous, ask for more details to confirm your understanding before answering, particularly before writing code code. Go through a process of clarification before writing code.]',
     };
 
     /*
