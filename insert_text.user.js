@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Insert Text
-// @version      3.4
+// @version      3.41
 // @description  Insert text into ChatGPT prompt window via key combinations
 // @author       You
 // @match        *chatgpt.com/*
@@ -20,10 +20,11 @@
         'Control+Alt+KeyR': '[Reflect on the general issue I am trying to express, not just the specific question I managed to verbalize.]',
         'Control+Alt+KeyB': '[Brainstorm solutions to this problem, and offer suggestions in continuous prose.]',
         'Control+Alt+KeyE': '[Explore whether these statements are accurate in continuous prose.]',
-        'Control+Alt+KeyT': '[Target a response to just this specific request.]',
-        'Control+Alt+KeyI': '[What I always miss from LLM responses is independent initiative in what content to provide. The LLM usually just sticks to what the user said. A real person might make a segue, extend a thought, have an objection, or come up with something related. Initiate content direction like a real human might, with related thoughts or objections, instead of just paraphrasing my input in finer words.]',
+        'Control+Alt+KeyT': '[Target answering just this specific concern.]',
+        'Control+Alt+KeyI': '[What I always miss from LLM responses is independent initiative in content direction. The LLM usually just sticks to what the user said. A real person might make a segue, extend a thought, have an objection, or come up with something related. Initiate content direction like a real human might, with related thoughts or objections, instead of just paraphrasing my input in finer words.]',
         'Control+Alt+KeyJ': '[Just give me the functions that need to be changed. Don\'t repeat functions that stay the same.]',
         'Control+Alt+KeyU': '[Take the initiative to creatively expand my understanding of this topic with ideas I have not considered yet, which I would be interested to hear considering my prompts so far.]',
+        'Control+Alt+KeyT': '[Take this caveat into account and update your response to incorporate it.]',
         'Control+Alt+KeyS': '[Seek clarifications if you don\'t know the correct answer, instead of writing speculatively. Alert me to incomplete instructions instead of writing code that can\'t work because you didn\'t have the information to get it right. If you need to see code from other files, then ask me and request missing data before launching ahead with a flawed solution.]',
         'Control+Alt+KeyQ': '[Ask questions before answering if any aspect of my prompt is unclear. Go through a process of clarification to ensure that your understanding is sufficient before providing a solution or writing code.]',
         'Control+Alt+KeyP': '[Add print lines at strategic places in the code to investigate the cause of the error, so we can pinpoint its cause.]',
@@ -31,14 +32,13 @@
         'Control+Alt+KeyX': '[Tell me what causes this error and suggest how to fix it.]',
         'Control+Alt+KeyV': '[Reduce your verbosity, but don\'t entirely eliminate commentary.]',
         'Control+Alt+KeyW': '[Write the code in whole. Do not include prior code snippets or isolated examples.]',
-        'Control+Alt+KeyK': '[Incorporate this caveat and update your treatment of the issue to take it into account.]',
-        'Control+Alt+KeyM': '[Do not simply paraphrase what I wrote in different words, but provide an answer to my questions with creative content, adding new insights.]',
-        'Control+Alt+KeyN': '[Provide useful information directly, avoiding summaries or conclusions.]',
-        'Control+Alt+KeyT': '[Do five things: relate my prompt to real world examples, find something to agree with, something to disagree with, a segue, and add some related knowledge I did not think of but would be glad to hear.]',
-        'Control+Alt+KeyH': '[]',
         'Control+Alt+KeyL': '[Channel a based, cynical, libertarian stance. Respond in the spirit of South Park or RSD Tyler. Favor edgy, genuine, unfiltered perspectives over lame or sanitized ones. Present the unvarnished truth without bias due to social conformity.]',
-        'Control+Alt+KeyY': '[Can you use a few relevant new words in your response, so I can expand my vocabulary.]',
+        'Control+Alt+KeyY': '[Use some relevant words I don\'t know yet (as inferred from my vocabulary) in your response, so I can expand my vocabulary.]',
         'Control+Alt+KeyZ': '[Stringently eschew creating any form of list, whether numbered or bulleted. Do not include any list-producing HTML tags like `<ul>`, `<ol>`, or `<li>` in your response whatsoever. Write in continuous prose, avoiding all structured separations or markup. Make the response flow naturally as one unbroken block of text. Keep sentences connected, with no structural separations or divisions. Present information in one seamless, uninterrupted paragraph. Don\’t organize the response into any type of list. Aggressively avoid segmenting content; keep everything unified in a single, continuous block of prose.]',
+        'Control+Alt+KeyH': '[Do not just paraphrase what I wrote with different words, but provide creative content, adding new insights.]',
+        'Control+Alt+KeyM': '[Provide useful information directly, avoiding summaries or conclusions.]',
+        'Control+Alt+KeyN': '[Do five things: relate my prompt to real world examples, find something to agree with, something to disagree with, a segue, and add some related knowledge I did not think of but would be glad to hear.]',
+        'Control+Alt+KeyK': '[]',
     };
 
     /*
