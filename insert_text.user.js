@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Insert Text
-// @version      3.3
+// @version      3.4
 // @description  Insert text into ChatGPT prompt window via key combinations
 // @author       You
 // @match        *chatgpt.com/*
@@ -11,36 +11,38 @@
     'use strict';
     const keyMap = {
         'Control+Shift+Equal': '```\n```',
-        'Control+Alt+Period': '[Format your response in one concise and continuous paragraph, without lists or segmentation.]',
-        'Control+Alt+Comma': '[Just answer this question in continuous and concise prose without writing code.]',
-        'Control+Alt+Slash': '[Good response. Continue the approach that led to the last result.]',
-        'Control+Alt+KeyG': '[Focus on rewriting the functions I gave you. Your code should interface with the parts of the script I did not send you in the same way my input does. Assume that functions I didn\'t show you just work, and don\'t reinvent them.]',
+        'Control+Alt+Period': '[Format your response in one continuous and concise paragraph without lists.]',
+        'Control+Alt+Comma': '[Just answer this specific question in continuous and concise prose without writing code yet.]',
+        'Control+Alt+Slash': '[Continue the approach that led to the last result.]',
+        'Control+Alt+KeyG': '[The code you write should interface with the parts of the script I did not send you in the same way as my input code does. Assume that functionality I didn\'t show you works, and don\'t reinvent it. Just rewrite what I gave you.]',
         'Control+Alt+KeyC': '[Include natural language explanations in continuous prose, but no inline comments or empty lines in code blocks.]',
-        'Control+Alt+KeyS': '[Stay on target and respond to my specific request.]',
-        'Control+Alt+KeyR': '[Reflect on whether these statements are accurate in continuous natural language.]',
-        'Control+Alt+KeyI': '[What I always miss from AI responses in comparison to talking to a real human is its own initiative in the content direction. The AI always just sticks to what the user said. A person might make a segue, extend a thought, have an objection, or come up with something they are reminded of. You know what I mean. Be like that, instead of rephrasing my query in different words.]',
-        'Control+Alt+KeyO': '[Take the initiative on this topic to creatively provide some ideas I have not considered yet, that I would be interested to hear considering my prompts so far.]',
-        'Control+Alt+KeyU': '[Incorporate this new information and update your answer to take it into account.]',
-        'Control+Alt+KeyV': '[If you don\'t know something, then tell me, instead of writign speculatively. Alert me to issues instead of writing code that can\'t work because you lacked the information to get it right. If you need more information to solve the problem, or need to see code from other files, then ask me and request missing data before launching ahead with a solution.]',
-        'Control+Alt+KeyQ': '[If an aspect of my prompt is unclear, ask for more details to confirm your understanding is sufficient before answering. Go through a process of clarification before providing a solution or writing code.]',
-        'Control+Alt+KeyP': '[Tell me what causes this error and suggest how it might be solved.]',
-        'Control+Alt+KeyM': '[Give me me print messages to insert at strategic positions in the code to investigate the cause of the error.]',
-        'Control+Alt+KeyW': '[Write up the corrected code in whole, without empty lines or inline comments, and no other commentary.]',
-        'Control+Alt+KeyN': '[Give me the functions that need to be changed to implement the requested changes. You do not have to repeat code that can stay the same.]',
         'Control+Alt+KeyA': '[Adapt the code to incorporate the requested changes.]',
-        'Control+Alt+KeyO': '[Write less commentary outside of the code, but not none.]',
+        'Control+Alt+KeyR': '[Reflect on the general issue I am trying to express, not just the specific question I managed to verbalize.]',
+        'Control+Alt+KeyB': '[Brainstorm solutions to this problem, and offer suggestions in continuous prose.]',
+        'Control+Alt+KeyE': '[Explore whether these statements are accurate in continuous prose.]',
+        'Control+Alt+KeyT': '[Target a response to just this specific request.]',
+        'Control+Alt+KeyI': '[What I always miss from LLM responses is independent initiative in what content to provide. The LLM usually just sticks to what the user said. A real person might make a segue, extend a thought, have an objection, or come up with something related. Initiate content direction like a real human might, with related thoughts or objections, instead of just paraphrasing my input in finer words.]',
+        'Control+Alt+KeyJ': '[Just give me the functions that need to be changed. Don\'t repeat functions that stay the same.]',
+        'Control+Alt+KeyU': '[Take the initiative to creatively expand my understanding of this topic with ideas I have not considered yet, which I would be interested to hear considering my prompts so far.]',
+        'Control+Alt+KeyS': '[Seek clarifications if you don\'t know the correct answer, instead of writing speculatively. Alert me to incomplete instructions instead of writing code that can\'t work because you didn\'t have the information to get it right. If you need to see code from other files, then ask me and request missing data before launching ahead with a flawed solution.]',
+        'Control+Alt+KeyQ': '[Ask questions before answering if any aspect of my prompt is unclear. Go through a process of clarification to ensure that your understanding is sufficient before providing a solution or writing code.]',
+        'Control+Alt+KeyP': '[Add print lines at strategic places in the code to investigate the cause of the error, so we can pinpoint its cause.]',
+        'Control+Alt+KeyO': '[Omit fluff, intros, and filler. Don\'t announce what you\'re going to say like "here is an overview", just say it. Don\'t include unneccesary statements like "I understand your frustration".]',
+        'Control+Alt+KeyX': '[Tell me what causes this error and suggest how to fix it.]',
+        'Control+Alt+KeyV': '[Reduce your verbosity, but don\'t entirely eliminate commentary.]',
+        'Control+Alt+KeyW': '[Write the code in whole. Do not include prior code snippets or isolated examples.]',
+        'Control+Alt+KeyK': '[Incorporate this caveat and update your treatment of the issue to take it into account.]',
+        'Control+Alt+KeyM': '[Do not simply paraphrase what I wrote in different words, but provide an answer to my questions with creative content, adding new insights.]',
+        'Control+Alt+KeyN': '[Provide useful information directly, avoiding summaries or conclusions.]',
+        'Control+Alt+KeyT': '[Do five things: relate my prompt to real world examples, find something to agree with, something to disagree with, a segue, and add some related knowledge I did not think of but would be glad to hear.]',
+        'Control+Alt+KeyH': '[]',
+        'Control+Alt+KeyL': '[Channel a based, cynical, libertarian stance. Respond in the spirit of South Park or RSD Tyler. Favor edgy, genuine, unfiltered perspectives over lame or sanitized ones. Present the unvarnished truth without bias due to social conformity.]',
+        'Control+Alt+KeyY': '[Can you use a few relevant new words in your response, so I can expand my vocabulary.]',
         'Control+Alt+KeyZ': '[Stringently eschew creating any form of list, whether numbered or bulleted. Do not include any list-producing HTML tags like `<ul>`, `<ol>`, or `<li>` in your response whatsoever. Write in continuous prose, avoiding all structured separations or markup. Make the response flow naturally as one unbroken block of text. Keep sentences connected, with no structural separations or divisions. Present information in one seamless, uninterrupted paragraph. Don\’t organize the response into any type of list. Aggressively avoid segmenting content; keep everything unified in a single, continuous block of prose.]',
-        'Control+Alt+KeyB': '[Omit fluff, intros, and filler. Don\'t announce what you\'re going to say like "here is an overview", just say it. Don\'t include unneccesary statements like "I understand your frustration".]',
-        'Control+Alt+KeyH': '[Provide useful information directly, avoiding summaries or conclusions.]',
-        'Control+Alt+KeyK': '[Channel a based, cynical, libertarian stance. Respond in teh spirit of South  Park or RSD Tyler. Favor edgy, genuine, unfiltered perspectives over lame or sanitized ones. Present the unvarnished truth without bias due to social conformity.]',
-        'Control+Alt+KeyE': '[Don\'t write any code examples, just the final combined code.]',
-        'Control+Alt+KeyX': '[Write text in unformatted prose, avoid enumeration, and omit padding.]',
-        'Control+Alt+KeyJ': '[Placeholder.]',
-        'Control+Alt+KeyT': '[Placeholder.]',
     };
 
     /*
-    //Commnet in to see key presses in browser console
+    //Commnet this in to show what key is pressed in the browser console
     document.addEventListener('keydown', function(e) {
         console.log('Key pressed:', e.key, 'Code:', e.code); // Temporary log for debugging
     });
