@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Insert Text
-// @version      3.5
+// @version      3.51
 // @description  Insert text into ChatGPT prompt window via key combinations
 // @author       You
 // @match        *chatgpt.com/*
@@ -13,13 +13,14 @@
         'Control+Shift+Equal': '```\n```',
         'Control+Alt+Period': '[Format your response in one continuous and concise paragraph without lists.]',
         'Control+Alt+Comma': '[Just answer this specific question in continuous and concise prose without code.]',
+        'Alt+Shift+Comma': '[Don\'t write code yet.]',
         'Control+Alt+Slash': '[Continue the approach that led to the last result.]',
         'Control+Alt+KeyC': '[Include natural language explanations in continuous prose, but no inline comments or empty lines in code blocks.]',
         'Control+Alt+KeyG': '[The code you write should work seamlessly with the parts of my script that I haven’t provided, just as the code I sent does. Maintain compatibility with these unseen sections, assuming they function correctly, and do not reinvent them.]',
         'Alt+Shift+KeyC': '[Write concisely and continuously.]',
-        'Alt+Shift+KeyG': '[Give me the complete code, without further commentary, empty lines, or inline comments.]',
+        'Alt+Shift+KeyG': '[I do not need an explanation. Give me the complete code, without further commentary, empty lines, or inline comments.]',
         'Control+Alt+KeyJ': '[Just provide the functions that need changes. Exclude functions that remain unchanged.]',
-        'Control+Alt+KeyX': '[Adapt the code to fix this.]',
+        'Control+Alt+KeyA': '[Adapt the code to fix this.]',
         'Control+Alt+KeyT': '[Stay on target.]',
         'Control+Alt+KeyS': '[The code does not have to be short or simple. Prioritize robust logic that uses sufficient coding frameworks, rather than inflexible if-then-statements. Feel free to implement redundancy or step-wise processing. Performance is not a concern, so feel free to use memory-heavy solutions, like storing all objects in lists.]',
         'Alt+Shift+KeyX': '[Avoid using regex, because it causes too much trouble.]',
@@ -37,9 +38,6 @@
         'Control+Alt+KeyF': '[Do five things: relate my prompt to real world examples, find something to agree with, something to disagree with, a segue, and add some related knowledge I did not think of but would be glad to hear.]',
         'Control+Alt+KeyZ': '[Stringently eschew creating any form of list, whether numbered or bulleted. Do not include any list-producing HTML tags like `<ul>`, `<ol>`, or `<li>` in your response whatsoever. Write in continuous prose, vehemently avoiding all structured separations or markup. Make sure the response flows naturally as one unbroken block of text. Keep sentences connected, with no structural separations or divisions. Present information in one seamless, uninterrupted paragraph, not in the form of numbered lists. Don\’t organize the response into any type of enumeration. Aggressively avoid segmenting content; keep everything unified in a single, continuous block of prose.]',
         'Alt+Shift+Key': '[Creatively expand my understanding of this topic with ideas I have not considered yet, but which I would be interested to hear, considering my inputs so far.]',
-        //'Control+Alt+Key': '[Channel a based, cynical, libertarian stance. Respond in the spirit of South Park or RSD Tyler. Favor edgy, genuine, unfiltered perspectives over lame or sanitized ones. Present the unvarnished truth without bias stemming from social conformity.]',
-        'Control+Alt+KeyH': '[Do not write in hypothetical mode, with sentences like "this theory argues". Don\'t present the subjective perspective of wrong people, I am not asking what "people say", but what is the case in reality.]',
-        //'Control+Alt+Key': '[Use some relevant new words in your response I don\'t know yet (as inferred from my vocabulary), so I can expand my vocabulary.]',
     };
 
     /*
