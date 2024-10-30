@@ -12,12 +12,12 @@
     const keyMap = {
         'Control+Shift+Equal': '```\n```',
         'Control+Alt+Period': '[Format your response in one continuous and concise paragraph without lists.]',
+        'Alt+Shift+Period': '[Write concisely and continuously.]',
         'Control+Alt+Comma': '[Just answer this specific question in continuous and concise prose without code.]',
         'Alt+Shift+Comma': '[Don\'t write code yet.]',
         'Control+Alt+Slash': '[Continue the approach that led to the last result.]',
         'Control+Alt+KeyC': '[Include natural language explanations in continuous prose, but no inline comments or empty lines in code blocks.]',
         'Control+Alt+KeyG': '[The code you write should work seamlessly with the parts of my script that I haven’t provided, just as the code I sent does. Maintain compatibility with these unseen sections, assuming they function correctly, and do not reinvent them.]',
-        'Alt+Shift+KeyC': '[Write concisely and continuously.]',
         'Alt+Shift+KeyG': '[I do not need an explanation. Give me the complete code, without further commentary, empty lines, or inline comments.]',
         'Control+Alt+KeyJ': '[Just provide the functions that need changes. Exclude functions that remain unchanged.]',
         'Control+Alt+KeyA': '[Adapt the code to fix this.]',
