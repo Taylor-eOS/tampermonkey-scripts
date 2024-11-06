@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Insert Text
 // @version      4.2
-// @description  Insert text into ChatGPT prompt window via key combinations
+// @description  Insert instructions into the ChatGPT prompt window via key combinations
 // @author       You
 // @match        *chatgpt.com/*
 // @grant        none
@@ -13,22 +13,22 @@
         'Control+Shift+Equal': '```\n```',
         'Control+Alt+Period': 'The following will be formatted in one continuous and concise paragraph, avoiding needless structural list-making.',
         'Alt+Shift+Period': 'The following will be written continuously and concisely.',
-        'Control+Alt+Comma': 'This answer will solely answer the specific question asked in continuous and concise prose without any code included.',
+        'Control+Alt+Comma': 'The following will solely answer the specific question asked in continuous and concise prose without any code included.',
         'Alt+Shift+Comma': 'The following will be written in continuous natural language, without including code at this stage.',
-        'Control+Alt+KeyC': 'Explanations outside the code may be included as continuous prose in the following, but the code itself will have no inline comments, empty lines, or internal segmentation in functions.',
+        'Control+Alt+KeyC': 'The following will contain continuous explanations outside the code, but the code will contain no inline comments, empty lines, or segmentation inside functions.',
         'Alt+Shift+KeyC': 'The following code will be complete, free from added explanations, inline comments, or empty lines within functions.',
         'Control+Alt+KeyG': 'The following code will remain compatible with the unseen parts of the larger project, and use them assuming that they function as expected. It will interface seamlessly as the provided code does, without reinventing any unseen sections. Modifications or additions will be applied to the code snippet provided. Requests for clarification will be included if further other parts are necessary.',
-        'Alt+Shift+KeyG': 'The following will disregard issues that stem from not seening all parts of the larger project, such as variables not being defined in the provided snippet.',
+        'Alt+Shift+KeyG': 'The following will disregard issues that stem from not all parts of the larger project being provided, such as variables not being defined here.',
         'Control+Alt+KeyA': 'The following code adapts the original snippet to make the required changes.',
         'Alt+Shift+KeyA': 'Answers to these questions will be provided in continuous prose.',
         'Control+Alt+KeyJ': 'The following will include only the functions that have been changed, omitting any that remain the same from the previous version.',
         'Alt+Shift+KeyJ': 'The following content will be limited to what was specifically requested, along with necessary additions, avoiding unrelated or tangential information.',
         'Control+Alt+Slash': 'The approach taken in the following will continue the method that led to the last result.',
         'Alt+Shift+Slash': 'This updated assessment will incorporate the provided information, assume its validity, and incorporate it into an update assessment.',
-        'Control+Alt+KeyZ': 'The following will evaluate whether the stated contentions are true and address discrepancies as needed.',
-        'Alt+Shift+KeyZ': 'The following will assess the feasibility of the outlined proposals.',
-        'Control+Alt+KeyX': '',
-        'Alt+Shift+KeyX': '',
+        'Control+Alt+KeyZ': ' continuously and concisely',
+        'Alt+Shift+KeyZ': 'The following text will not be formatted as lists.',
+        'Control+Alt+KeyX': 'The following will evaluate whether the stated contentions are true and address discrepancies as needed.',
+        'Alt+Shift+KeyX': 'The following will assess the feasibility of the outlined proposals.',
         'Control+Alt+KeyS': 'The following code will apply robust logic, making use of comprehensive coding frameworks instead of simple if-then statements. Multi-step processing and memory-heavy solutions, such as storing all objects in lists, will be considered without concern for performance constraints.',
         'Alt+Shift+KeyS': 'Relevant suggestions related to the discussed topic will be provided in the following.',
         'Control+Alt+KeyI': 'The following aims to interpret the underlying intention of this prompt, adjusting the approach to optimize the outcome according to technical possibilities and common solutions, rather than strictly adhering to a literal interpretation of the instructions.',
@@ -63,6 +63,7 @@
         'Alt+Shift+KeyO': '',
         'Control+Alt+Shift+Period': 'The following will avoid any form of list creation, whether numbered or bulleted. No list-producing HTML tags such as <ul>, <ol>, or <li> will be included. Structured separations or markup will be entirely eschewed to maintain a unbroken flow of text. Sentences will be kept connected without structural separations or divisions. The information will be presented in one seamless, uninterrupted paragraph, maintaining a continuous block of prose.'
     };
+    //The following adapts the code to fix this error.
     //The following analysis will determine the accuracy of the provided understanding.
     //The following will write an analysis of this idea and how it could be implemented.
     //The following response will aim to implement something meaningful that aligns with the overall goal, avoiding literal adherence to instructions that miss the core intent.',
@@ -93,7 +94,6 @@
         }
     });
 
-    //Insert text
     function insertTextAtCursor(text) {
         let activeElement = document.activeElement;
         if (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA') {
