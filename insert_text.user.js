@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Insert Text
-// @version      4.3
+// @version      4.4
 // @description  Insert instructions into the ChatGPT prompt window via key combinations
 // @author       You
 // @match        *chatgpt.com/*
@@ -26,8 +26,8 @@
         'Control+Alt+Slash': ' Continuing the approach that led to the last result.',
         'Alt+Shift+Slash': ' This updated assessment will incorporate the provided information, assume its validity, and incorporate it into an update assessment.',
         'Control+Alt+KeyZ': '  continuously and concisely',
-        'Alt+Shift+KeyZ': ' .',
-        'Control+Alt+KeyX': ' Evaluating whether the stated contentions are true and address discrepancies as needed.',
+        'Alt+Shift+KeyZ': ' Not adding explanation.',
+        'Control+Alt+KeyX': ' Evaluating whether the stated contentions are true and correcting misunderstandings.',
         'Alt+Shift+KeyX': ' Assessing the feasibility of the outlined proposals.',
         'Control+Alt+KeyS': ' Apply robust logic, making use of comprehensive coding frameworks instead of simple if-then statements. Multi-step processing and memory-heavy solutions, such as storing all objects in lists, will be considered without concern for performance constraints.',
         'Alt+Shift+KeyS': ' Comprehensive rewrite addressing all adjustments that need to be made, without concern for brevity, simplicity, or computational performance',
@@ -61,7 +61,7 @@
         'Alt+Shift+KeyN': ' ',
         'Control+Alt+KeyO': ' ',
         'Alt+Shift+KeyO': ' ',
-        'Control+Alt+Shift+Period': ' Avoiding any form of list creation, whether numbered or bulleted. No list-producing HTML tags such as <ul>, <ol>, or <li> will be included. Structured separations or markup will be entirely eschewed to maintain a unbroken flow of text. Sentences will be kept connected without structural separations or divisions. The information will be presented in one seamless, uninterrupted paragraph, maintaining a continuous block of prose.'
+        'Control+Alt+Shift+Period': ' Not writing an impenetrable wall of lists. Eschewing any form of list creation, whether numbered or bulleted. No list-producing HTML tags such as <ul>, <ol>, or <li> included. Entirely avoiding structured separations or markup. Maintaining unbroken flow of text. Keeping sentences connected without structural separations or divisions. Presenting information in one seamless, uninterrupted paragraph, maintaining a continuous block of prose.'
     };
     //Answering the question continuously and concisely.
     //Relevant suggestions related to the discussed topic will be provided.
