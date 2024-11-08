@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Insert Text
-// @version      4.6
+// @version      4.7
 // @description  Insert instructions into the ChatGPT prompt window via key combinations
 // @author       You
 // @match        *chatgpt.com/*
@@ -10,14 +10,13 @@
 (function() {
     'use strict';
     const keyMap = {
-        'Control+Shift+Equal': '```\n```',
         'Control+Alt+Period': 'be formatted as one continuous, concise paragraph, without unnecessary structural list-making.]',
         'Alt+Shift+Period': 'be written continuously and concisely.]',
         'Control+Alt+Comma': 'solely answer the specific question asked, in continuous and concise prose, without code.]',
         'Alt+Shift+Comma': 'be written in continuous natural language, excluding code at this stage.]',
         'Control+Alt+KeyC': 'include continuous explanations outside code while ensuring the code itself contains no inline comments, empty lines, or segmentation within functions.]',
         'Alt+Shift+KeyC': 'provide complete code, excluding commentary, inline comments, or empty lines within functions.]',
-        'Control+Alt+KeyG': 'contain code written to be compatible with unseen project parts, using existing functions as in the provided code and avoiding reinvention of unseen components. Modifications or additions will be limited to the provided snippet..]',
+        'Control+Alt+KeyG': 'contain code written to be compatible with unseen project parts, using existing functions as in the provided code without reinventing unseen components. Modifications or additions will be limited to the provided snippet..]',
         'Alt+Shift+KeyG': 'disregard issues that stem from mot seeing all parts of the larger project, such as variables not being defined here.]',
         'Control+Alt+KeyA': 'adapt the previous code to make the required changes.]',
         'Alt+Shift+KeyA': 'answer in continuous prose.]',
@@ -56,11 +55,11 @@
         'Control+Alt+KeyW': 'explain causes of the issue and proposing improvements.]',
         'Alt+Shift+KeyW': 'focus on definitive conclusions based on code review instead of guessing.]',
         'Control+Alt+KeyK': 'contextualize the topic with relevant background information for better understanding.]',
-        'Alt+Shift+KeyK': '[]',
+        'Alt+Shift+KeyK': ']',
         'Control+Alt+KeyN': 'write fully neutral towards the moral issues, with a perspective that is not shaped by our current interpretation of issues.]',
-        'Alt+Shift+KeyN': '[]',
-        'Control+Alt+KeyO': '[]',
-        'Alt+Shift+KeyO': '[]',
+        'Alt+Shift+KeyN': ']',
+        'Control+Alt+KeyO': ']',
+        'Alt+Shift+KeyO': ']',
         'Control+Alt+Shift+Period': 'avoid all list creation, whether numbered or bulleted. No list-producing HTML tags (<ul>, <ol>, <li>). Entirely excluding structured separations or markup. Maintaining unbroken text flow with connected sentences, presenting information in one continuous paragraph without segmentation.]'
     };
     //Answering the question continuously and concisely.
@@ -89,7 +88,10 @@
         const key = e.code;
         keys.push(key);
         const keyString = keys.join('+');
-        if (keyMap[keyString]) {
+        if (keyString === 'Control+Shift+Equal') {
+            e.preventDefault();
+            insertBackticks('```\n```');
+        } else if (keyMap[keyString]) {
             e.preventDefault();
             insertTextAtCursor(keyMap[keyString]);
         }
@@ -97,6 +99,19 @@
 
     function insertTextAtCursor(text) {
         text = '[The following will ' + text;
+        let activeElement = document.activeElement;
+        if (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA') {
+            let start = activeElement.selectionStart;
+            let end = activeElement.selectionEnd;
+            activeElement.value = activeElement.value.slice(0, start) + text + activeElement.value.slice(end);
+            activeElement.selectionStart = activeElement.selectionEnd = start + text.length;
+        } else if (activeElement.isContentEditable) {
+            document.execCommand('insertText', false, text);
+        }
+    }
+
+    //Separate function for the backticks, change the key to what works on your keyboard
+    function insertBackticks(text) {
         let activeElement = document.activeElement;
         if (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA') {
             let start = activeElement.selectionStart;
