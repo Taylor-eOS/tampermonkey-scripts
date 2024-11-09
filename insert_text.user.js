@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Insert Text
-// @version      4.9
+// @version      4.10
 // @description  Insert instructions into the ChatGPT prompt window via key combinations
 // @author       You
 // @match        *chatgpt.com/*
@@ -13,9 +13,8 @@
         'Control+Alt+Period': 'be formatted in one continuous and concise paragraph, without structural list-making.]',
         'Alt+Shift+Period': 'be written continuously and concisely.]',
         'Control+Alt+Shift+Period': 'avoid all list creation, whether numbered or bulleted. No list-producing HTML tags (<ul>, <ol>, <li>) will be included. The response entirely eschews structured separations or markup, and maintains unbroken text, presenting information in continuous prose without segmentation.]',
-        'Control+Alt+Comma': 'solely answer the specific question asked, in continuous and concise natural language, without code.]',
-        'Alt+Shift+Comma': 'answer in continuous natural language and not write code yet.]',
-        'Control+Alt+Shift+Comma': 'avoid numbered lists.]',
+        'Control+Alt+Comma': 'solely answer the specific question asked, in continuous and concise natural language without code.]',
+        'Alt+Shift+Comma': 'answer in continuous natural language, without writing code yet.]',
         'Control+Alt+KeyC': 'include continuous explanations outside of the code, while the code itself will contain no inline comments, empty lines, or segmentation within functions.]',
         'Alt+Shift+KeyC': 'provide the complete code, excluding commentary, inline comments, or empty lines within functions.]',
         'Control+Alt+KeyG': 'contain code written to be compatible with unseen project parts, using existing functions as in the provided code without reinventing unseen components. Modifications or additions will be limited to the provided snippet.]',
@@ -24,16 +23,16 @@
         'Alt+Shift+KeyJ': 'be limited to specifically requested content, and necessary additions, avoiding unrelated or tangential information.]',
         'Control+Alt+KeyV': 'limit verbosity and excessive verbal output.]',
         'Alt+Shift+KeyV': 'omit fluff, filler, introductions, and conclusions, and focus on essential content only, without additional explanations or announcements of actions.]',
-        'Control+Alt+KeyA': 'adapt the previous code to make the requested changes.]',
-        'Alt+Shift+KeyA': 'adapt the previous code to fix this error.]',
+        'Control+Alt+KeyA': 'adapt the previous code to make the requested changes without apologizing.]',
+        'Alt+Shift+KeyA': 'adapt the previous code to fix this error without apologizing.]',
         'Control+Alt+Slash': 'consider the last response a sucess and continue the approach that led to the last result.]',
         'Alt+Shift+Slash': 'update its assessment to incorporate this information, assuming it is valid.]',
-        'Control+Alt+KeyZ': 'not include an explanation.]',
-        'Alt+Shift+KeyZ': ' ', //Just the prepend
-        'Control+Alt+KeyX': 'evaluate the accuracy of the stated understanding and correct misunderstandings as appropriate.]',
-        'Alt+Shift+KeyX': 'assess the feasibility of the outlined proposals and suggest how they could be implemented.]',
-        'Control+Alt+KeyS': 'apply robust logic using comprehensive coding methods rather than simple if-then statements, favoring multi-step processing and memory-heavy solutions, like storing objects in lists, without concern for performance.]',
-        'Alt+Shift+KeyS': 'treat this code as a learning project where there is no concern for brevity, simplicity, or performance. The code does not have to be computationally simple.]',
+        'Control+Alt+KeyZ': 'avoid numbered lists.]',
+        'Alt+Shift+KeyZ': 'be more concise]',
+        'Control+Alt+KeyX': 'not include an explanation.]',
+        'Alt+Shift+KeyX': ' ', //Just the prepend
+        'Control+Alt+KeyS': ' not have to be short or simple. It may apply robust logic using comprehensive coding methods rather than simple if-then statements. Multi-step processing and memory-heavy solutions, like storing objects in lists, are considered without concern for performance.]',
+        'Alt+Shift+KeyS': 'treat this code as a learning project where there is no concern for brevity, simplicity, or performance.]',
         'Control+Alt+KeyP': 'outline the code mechanics in a compact, pseudocode-like format, that focuses on structural logic while omitting implementation details to identify conceptual flaws.]',
         'Alt+Shift+KeyP': 'add print lines strategically throughout the code to identify the cause of the error.]',
         'Control+Alt+KeyR': 'be written as an essay from the perspective of an agreeable professional in the relevant field.]',
@@ -53,16 +52,18 @@
         'Control+Alt+KeyH': 'avoid slipping into "hypothetical mode" where perspectives are presented as subjective. And presenting actuality, not "what many people say".]',
         'Alt+Shift+KeyH': 'provide definitive conclusions based on actual analysis of the available code, instead of guessing about it.]',
         'Control+Alt+KeyY': 'adopt a straightforward, based, and cynical libertarian stance, mirroring an unfiltered tone like South Park or RSD Tyler.]',
-        'Alt+Shift+KeyY': 'present an edgy, genuine, and unfiltered perspective, avoiding sanitized or conformist bias, conveying the unvarnished truth.]',
-        'Control+Alt+KeyN': ']',
+        'Alt+Shift+KeyY': 'present an edgy, genuine, and unfiltered perspective, avoiding sanitized or conformist bias, but instead conveying the unvarnished truth.]',
+        'Control+Alt+KeyN': 'present a perspective that is fully neutral in terms of morality, and no shaped by the presentism of our current interpretation of issues.]',
         'Alt+Shift+KeyN': ']',
-        'Control+Alt+KeyM': 'present a perspective that is fully neutral in terms of morality, without presentism shaped by our current interpretation of issues.]',
-        'Alt+Shift+KeyM': ']',
         'Control+Alt+KeyW': 'review the code to determine if there are any structural issues.]',
-        'Alt+Shift+KeyW': ']',
-        'Control+Alt+KeyO': ']',
+        'Alt+Shift+KeyW': 'The following will consider what makes sense instead of giving me any more "cars without an engine".]',
+        'Control+Alt+KeyM': ']',
+        'Alt+Shift+KeyM': ']',
+        'Control+Alt+KeyO': 'assess the feasibility of the outlined proposals and suggest how they could be implemented.]',
         'Alt+Shift+KeyO': ']',
     };
+    //answer the question.
+    //evaluate the accuracy of the stated understanding and correct misunderstandings as appropriate.]
     //suggest causes of the issue and proposing improvements.
     //make relevant suggestions related to the discussed topic.
     //provide comprehensive insights into the expressed unknowns.
