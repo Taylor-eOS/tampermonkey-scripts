@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         Save ChatGPT Conversation Robust
+// @name         Save ChatGPT Conversation with Confirmation
 // @namespace    http://tampermonkey.net/
-// @version      2.0
-// @description  Save ChatGPT conversation as a .txt file with better stability.
+// @version      2.2
+// @description  Save ChatGPT conversation with filename based on content and visual confirmation.
 // @match        *chatgpt.com/*
 // @grant        none
 // ==/UserScript==
@@ -10,13 +10,10 @@
 (function () {
     'use strict';
 
-    // Initialize the script
     const initialize = () => {
-        // Remove existing button to prevent duplication
         const existingButton = document.getElementById('save-conversation-button');
         if (existingButton) existingButton.remove();
 
-        // Create the download button
         const button = document.createElement('button');
         button.id = 'save-conversation-button';
         button.textContent = '💾 Save';
@@ -30,12 +27,12 @@
         button.style.borderRadius = '5px';
         button.style.cursor = 'pointer';
         button.style.zIndex = 1000;
+        button.style.transition = 'background-color 0.3s ease';
 
         button.addEventListener('click', saveConversation);
         document.body.appendChild(button);
     };
 
-    // Observe page content changes to re-initialize
     const observePageChanges = () => {
         const observer = new MutationObserver(() => {
             if (!document.getElementById('save-conversation-button')) {
@@ -46,19 +43,14 @@
         observer.observe(document.body, { childList: true, subtree: true });
     };
 
-    // Save the conversation
     const saveConversation = () => {
         const messages = [];
         const messageContainers = document.querySelectorAll('[data-message-id]');
+        let defaultFilename = 'conversation';
 
-        messageContainers.forEach(msgElement => {
+        messageContainers.forEach((msgElement, index) => {
             const role = msgElement.getAttribute('data-message-author-role');
-
-            // Try to find the content element for both user and assistant
-            let contentElement = msgElement.querySelector('.whitespace-pre-wrap');
-            if (!contentElement) {
-                contentElement = msgElement.querySelector('.markdown');
-            }
+            let contentElement = msgElement.querySelector('.whitespace-pre-wrap') || msgElement.querySelector('.markdown');
 
             if (role && contentElement) {
                 const htmlContent = contentElement.innerHTML;
@@ -75,6 +67,11 @@
 
                 formattedText = decodeHTMLEntities(formattedText);
 
+                if (index === 0) {
+                    // Use the first few words of the conversation as the filename
+                    defaultFilename = formattedText.split(/\s+/).slice(0, 5).join(' ').replace(/[^a-zA-Z0-9_\-]/g, '_') || 'conversation';
+                }
+
                 messages.push(`${capitalizeRole(role)}:\n${formattedText}`);
             }
         });
@@ -84,24 +81,31 @@
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = 'conversation.txt';
+            a.download = `${defaultFilename}.txt`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
+
+            // Confirmation animation
+            const button = document.getElementById('save-conversation-button');
+            if (button) {
+                button.style.backgroundColor = '#28a745'; // Green to indicate success
+                setTimeout(() => {
+                    button.style.backgroundColor = '#007bff'; // Back to original color
+                }, 1000);
+            }
         } else {
             alert('No conversation found to save.');
         }
     };
 
-    // Decode HTML entities
     const decodeHTMLEntities = (text) => {
         const textarea = document.createElement('textarea');
         textarea.innerHTML = text;
         return textarea.value;
     };
 
-    // Capitalize role
     const capitalizeRole = (role) => {
         if (role === 'user') {
             return 'User';
@@ -112,7 +116,6 @@
         }
     };
 
-    // Initialize and observe page changes
     initialize();
     observePageChanges();
 })();
