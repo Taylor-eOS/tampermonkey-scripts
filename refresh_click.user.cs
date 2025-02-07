@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Refresh Click
 // @namespace    http://tampermonkey.net/
-// @version      1.2
-// @description  Adds a button that checks for a message and clicks a button
+// @version      1.3
+// @description  Click a button
 // @author       You
 // @match        *://*/*
 // @grant        GM_addStyle
@@ -11,7 +11,7 @@
 (function() {
     'use strict';
 
-    // Add custom styles for the button
+    // Add custom styles for the control button
     GM_addStyle(`
         #retryButton {
             position: fixed;
@@ -20,7 +20,7 @@
             background-color: #ececec;
             color: black;
             border: none;
-            padding: 8px 8px;
+            padding: 8px;
             cursor: pointer;
             font-size: 10px;
             z-index: 9999;
@@ -79,11 +79,15 @@
     // Toggle the checking interval when the control button is clicked
     button.addEventListener('click', () => {
         if (checking) {
+            // Stop checking: clear the interval, update the button text and color
             clearInterval(intervalId);
-            button.innerHTML = 'Start Checking';
+            button.innerHTML = 'Start';
+            button.style.backgroundColor = '#ececec';
         } else {
+            // Start checking: set the interval, update the button text and color
             intervalId = setInterval(checkAndClick, 2000);
-            button.innerHTML = 'Stop Checking';
+            button.innerHTML = 'Stop';
+            button.style.backgroundColor = 'red';
         }
         checking = !checking;
     });
