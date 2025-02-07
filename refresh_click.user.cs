@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Refresh Click
 // @namespace    http://tampermonkey.net/
-// @version      1.1
-// @description  Adds a button that checks for "server is busy"
+// @version      1.2
+// @description  Adds a button that checks for a message and clicks a button
 // @author       You
 // @match        *://*/*
 // @grant        GM_addStyle
@@ -27,47 +27,61 @@
         }
     `);
 
-    // Create the button and append it to the body
+    // Create the control button and append it to the page
     const button = document.createElement('button');
     button.id = 'retryButton';
     button.innerHTML = 'Start';
     document.body.appendChild(button);
 
-    let checking = false; // Flag to track whether we're checking
-    let intervalId; // To store the interval for stopping the checking
+    let checking = false;
+    let intervalId;
 
-    // Function to check for the text and click the rect element if found
+    // This function checks if the busy message exists and, if so, clicks the appropriate <rect>
     const checkAndClick = () => {
         const busyMessage = "The server is busy. Please try again later.";
 
-        // Check if the "server is busy" message exists on the page
         if (document.body.innerText.includes(busyMessage)) {
-            // Find the rect element with the id "重新生成"
-            const rectElement = document.getElementById("重新生成");
-
-            if (rectElement) {
-                console.log("Found the rect element! Clicking...");
-
-                // Simulate a click on the <rect> element
-                const clickEvent = new MouseEvent('click', {
-                    bubbles: true,
-                    cancelable: true,
-                    clientX: rectElement.getBoundingClientRect().left + 10, // Arbitrary X inside the rect
-                    clientY: rectElement.getBoundingClientRect().top + 10 // Arbitrary Y inside the rect
+            // Locate the element containing the busy message via XPath
+            const xpath = `//*[contains(text(), "${busyMessage}")]`;
+            const busyElement = document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+            if (busyElement) {
+                const busyRect = busyElement.getBoundingClientRect();
+                // Gather all <rect> elements with id "重新生成"
+                const rectElements = Array.from(document.querySelectorAll('[id="重新生成"]'));
+                // Filter to those whose top is below the busy message's bottom
+                const candidates = rectElements.filter(el => {
+                    const rect = el.getBoundingClientRect();
+                    return rect.top >= busyRect.bottom;
                 });
-                rectElement.dispatchEvent(clickEvent);
+                if (candidates.length > 0) {
+                    // Choose the one with the greatest top coordinate (i.e. the lowest one on the page)
+                    candidates.sort((a, b) => b.getBoundingClientRect().top - a.getBoundingClientRect().top);
+                    const targetRect = candidates[0];
+                    console.log("Clicking target rect:", targetRect);
+                    // Simulate a click on the target <rect> element
+                    const rectBounds = targetRect.getBoundingClientRect();
+                    const clickEvent = new MouseEvent('click', {
+                        bubbles: true,
+                        cancelable: true,
+                        clientX: rectBounds.left + 10, // adjust as needed
+                        clientY: rectBounds.top + 10
+                    });
+                    targetRect.dispatchEvent(clickEvent);
+                } else {
+                    console.log("No <rect> elements found below the busy message.");
+                }
+            } else {
+                console.log("Busy message element not found.");
             }
         }
     };
 
-    // Button click handler to start/stop checking
+    // Toggle the checking interval when the control button is clicked
     button.addEventListener('click', () => {
         if (checking) {
-            // If already checking, stop it
             clearInterval(intervalId);
             button.innerHTML = 'Start Checking';
         } else {
-            // If not checking, start checking
             intervalId = setInterval(checkAndClick, 2000);
             button.innerHTML = 'Stop Checking';
         }
