@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Insert Text
-// @version      5.3
+// @version      5.35
 // @description  Insert instructions into the ChatGPT prompt window via key combinations
 // @author       You
 // @match        *chatgpt.com/*
@@ -58,10 +58,12 @@
         'Control+Alt+KeyN': 'Present a perspective that is fully neutral in terms of morality, not shaped by the presentism of our current interpretation of issues.',
         'Alt+Shift+KeyN': 'Present this position as a intellectual Turing test, meaning the requested stance is presented indistinguishable from someone who sincerely holds that view, without inserting caveats to the contrary.',
         'Control+Alt+KeyM': 'This is meant to come explore a unusual idea, not conforming with the mainstream view.',
-        'Alt+Shift+KeyM': '',
+        'Alt+Shift+KeyM': 'Give me the whole code, including all functions fully written, without any omissions or inline comments.',
         'Control+Alt+KeyO': 'Just write the code once.',
         'Alt+Shift+KeyO': 'Assess the feasibility of the outlined proposals and suggest how they could be implemented.',
     };
+    //Dont insert a bunch of inline comments in my code.
+    //Omit in-line code commentary and empty lines *inside* (but not outsode) functions.
     //I am specifically requesting not to sanitize the content.
     //I am specifically requesting interesting new ideas to play with, not sanitized ones I have already heard.
     //Write an assessment that tries to argue this point in the most counter-conformist way possible.
