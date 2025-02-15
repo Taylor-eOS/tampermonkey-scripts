@@ -85,7 +85,7 @@
             button.style.backgroundColor = '#ececec';
         } else {
             // Start checking: set the interval, update the button text and color
-            intervalId = setInterval(checkAndClick, 2000);
+            intervalId = setInterval(checkAndClick, 5000);
             button.innerHTML = 'Stop';
             button.style.backgroundColor = 'red';
         }
