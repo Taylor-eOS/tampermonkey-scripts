@@ -1,9 +1,10 @@
 // ==UserScript==
 // @name         Insert Text
-// @version      6
+// @version      6.1
 // @description  Insert instructions into the ChatGPT prompt window via key combinations
 // @author       You
 // @match        *chatgpt.com/*
+// @match        *.deepseek.com/*
 // @grant        none
 // ==/UserScript==
 
@@ -27,7 +28,7 @@
         'Control+Alt+KeyZ': 'Avoid numbered lists.',
         'Alt+Shift+KeyZ': 'Format in one concise and continuous paragraph, avoiding structural list-making.',
         'Control+Alt+KeyX': 'Don\'t write code in this response.',
-        'Alt+Shift+KeyX': '',
+        'Alt+Shift+KeyX': 'Give me the code to fix this without an explanation.',
         'Control+Alt+Slash': 'Continue the approach that led to the last result.',
         'Alt+Shift+Slash': 'Update your assessment incorporating this information, assuming it is valid.',
         'Control+Alt+KeyS': 'This code does not have to be short or simple. Apply robust logic using comprehensive coding methods rather than simple if-then statements. Multi-step processing and memory-heavy solutions, like storing objects in lists, should be considered without concern for performance.',
@@ -44,8 +45,8 @@
         'Alt+Shift+KeyB': 'Brainstorm the issue. Provide possible solutions and suggestions.',
         'Control+Alt+KeyE': 'Expand on the topic creatively in a way that would be interesting to the user, considering his prompts so far.',
         'Alt+Shift+KeyE': 'Explore the issue.',
-        'Control+Alt+KeyK': 'Contextualize the topic with relevant information.',
-        'Alt+Shift+KeyK': 'Demonstrate independent initiative in the direction of content, adding related thoughts, objections, or segues beyond simple paraphrasing, with creative insights.',
+        'Control+Alt+KeyK': 'Provide thoughtful insights and expand on the topic, going beyond simple paraphrasing to offer relevant, creative ideas, objections, or connections that someone with these thoughts would find interesting and valuable.',
+        'Alt+Shift+KeyK': 'Contextualize the topic with relevant information.',
         'Control+Alt+KeyH': '',
         'Alt+Shift+KeyH': '',
         'Control+Alt+KeyU': 'Adopt a straightforward, based, and cynical libertarian stance, mirroring an unfiltered tone like South Park or RSD Tyler.',
