@@ -1,15 +1,15 @@
 // ==UserScript==
-// @name         Save ChatGPT Conversation
+// @name         Save Conversation
 // @namespace    http://tampermonkey.net/
-// @version      1.4
-// @description  Save the conversation as a .txt file with proper formatting, including both user and assistant messages.
+// @version      1.5
+// @description  Save the conversation as a .txt file
 // @match        *chatgpt.com/*
+// @match        *.deepseek.com/*
 // @grant        none
 // ==/UserScript==
 
 (function() {
     'use strict';
-
     const createDownloadButton = () => {
         const button = document.createElement('button');
         button.style.position = 'fixed';
@@ -22,27 +22,22 @@
         button.style.borderRadius = '5px';
         button.style.zIndex = 1000;
         button.style.cursor = 'pointer';
-
         button.addEventListener('click', saveConversation);
         document.body.appendChild(button);
     };
-
     const saveConversation = () => {
         const messages = [];
         const messageContainers = document.querySelectorAll('[data-message-id]');
 
         messageContainers.forEach(msgElement => {
             const role = msgElement.getAttribute('data-message-author-role');
-
             // Try to find the content element for both user and assistant
             let contentElement = msgElement.querySelector('.whitespace-pre-wrap');
             if (!contentElement) {
                 contentElement = msgElement.querySelector('.markdown');
             }
-
             if (role && contentElement) {
                 const htmlContent = contentElement.innerHTML;
-
                 let formattedText = htmlContent
                     .replace(/<pre[^>]*><code[^>]*>([\s\S]*?)<\/code><\/pre>/gi, '```\n$1\n```')
                     .replace(/<code[^>]*>([\s\S]*?)<\/code>/gi, '`$1`')
@@ -52,13 +47,10 @@
                     .replace(/<br\s*\/?>/gi, '\n')
                     .replace(/<\/?[^>]+(>|$)/g, '')
                     .trim();
-
                 formattedText = decodeHTMLEntities(formattedText);
-
                 messages.push(`${capitalizeRole(role)}:\n${formattedText}`);
             }
         });
-
         if (messages.length > 0) {
             const blob = new Blob([messages.join('\n\n---\n\n')], { type: 'text/plain' });
             const url = URL.createObjectURL(blob);
@@ -92,4 +84,3 @@
 
     window.addEventListener('load', createDownloadButton);
 })();
-
