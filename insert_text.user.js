@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Insert Text
-// @version      6.25
+// @version      6.3
 // @description  Insert instructions into the ChatGPT prompt window via key combinations
 // @author       You
 // @match        *chatgpt.com/*
@@ -15,23 +15,23 @@
         'Alt+Shift+Period': 'Write concisely and continuously.',
         'Control+Alt+Comma': 'Answer this question in continuous natural language.',
         'Alt+Shift+Comma': 'Target answers to the specific question asked, in continuous natural language without code.',
-        'Control+Alt+KeyC': 'No lines that start with `#` or empty lines inside functions.',
+        'Control+Alt+KeyC': 'Omit lines that start with `#` or empty lines from inside functions.',
         'Alt+Shift+KeyC': 'Give me the functions that need to be changed.',
         'Control+Alt+KeyG': 'Provide drop-in replacements without reinventing unseen parts.',
         'Alt+Shift+KeyG': 'Adapt the code to make the required changes.',
         'Control+Alt+KeyJ': 'Just provide the requested content specifically.',
         'Alt+Shift+KeyJ': 'Do not include an explanation.',
-        'Control+Alt+KeyA': 'Don\'t just agree with what I say, analyze teh issue objectively.',
+        'Control+Alt+KeyA': 'Don\'t just agree with what I say, analyze the issue objectively.',
         'Alt+Shift+KeyA': 'Analyze the provided code to provide an answer from that knowledge background.',
         'Control+Alt+KeyV': 'Limit verbosity and excessive verbal output.',
         'Control+Alt+KeyZ': 'Format in a concise and continuous paragraph without structural lists.',
-        'Alt+Shift+KeyZ': 'Use normal comma sentence structure instead of interposed sentences with thought lines',
+        'Alt+Shift+KeyZ': 'Use only standard comma-based sentence structure, do not use em dashes or interjected clauses.',
         'Control+Alt+KeyX': 'Give me the code to fix this.',
         'Alt+Shift+KeyX': 'No code in this response.',
         'Control+Alt+Slash': 'Continue the approach that led to the last result.',
         'Alt+Shift+Slash': 'Update your assessment incorporating this information, assuming it is valid.',
         'Control+Alt+KeyS': 'This code does not have to be short or simple. Apply robust logic, using comprehensive coding methods, rather than simple if-then statements. Multi-step processing and memory-heavy solutions, like storing objects in lists, may be considered without concern for performance.',
-        'Alt+Shift+KeyS': 'Analyze these ideas, not their social approval.',
+        'Alt+Shift+KeyS': 'They say these chatbots are sycophants, and try to please the user by supporting his views. I am explicitly requesting that this response help me enhance my insight, not soothe me in what I already believe.',
         'Control+Alt+KeyI': 'Interpret the underlying intention that this prompt attempts to convey, rather than following all details literally. Optimize the result by considering technical possibilities and applying common solutions beyond what was specifically requested.',
         'Alt+Shift+KeyI': 'Interpret the prompt as an incomplete attempt to express an idea, and respond to the broader issue it aims to convey, rather than focusing solely on the specific aspects mentioned.',
         'Control+Alt+KeyP': 'Add relevant print lines strategically throughout the script that would help verify the functionality and identify the cause of the problem.',
@@ -54,7 +54,7 @@
         'Control+Alt+KeyY': 'Present this position as a intellectual Turing test, meaning the requested stance is written indistinguishable from someone who sincerely holds that view, without inserting caveats to the contrary.',//*
         'Alt+Shift+KeyY': '',
         'Control+Alt+KeyN': 'Present a perspective that is fully neutral in terms of morality, not shaped by the presentism of our current interpretation of issues.',
-        'Alt+Shift+KeyN': '',
+        'Alt+Shift+KeyN': 'Analyze these ideas, not their social approval.',
         'Control+Alt+KeyM': '',
         'Alt+Shift+KeyM': '',
         'Control+Alt+KeyO': 'Don\'t just reply directly. Write with the tacit understanding that surface instructions are only shadows cast by deeper intent. Engage in what could be called "oblique inference", "reflective improvisation", or "divergent resonance". The goal is to enrich the conversation with latent insight. A riff instead of a harmony line. An emergent path that takes a new vector entirely.',
