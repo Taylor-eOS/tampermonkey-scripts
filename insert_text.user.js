@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Insert Text
-// @version      6.2
+// @version      6.25
 // @description  Insert instructions into the ChatGPT prompt window via key combinations
 // @author       You
 // @match        *chatgpt.com/*
@@ -11,7 +11,7 @@
 (function() {
     'use strict';
     const keyMap = {
-        'Control+Alt+Period': 'Provide content continuously without segmentation.',
+        'Control+Alt+Period': 'Provide content concisely and continuously without segmentation or interposed sentences.',
         'Alt+Shift+Period': 'Write concisely and continuously.',
         'Control+Alt+Comma': 'Answer this question in continuous natural language.',
         'Alt+Shift+Comma': 'Target answers to the specific question asked, in continuous natural language without code.',
@@ -24,9 +24,8 @@
         'Control+Alt+KeyA': 'Don\'t just agree with what I say, analyze teh issue objectively.',
         'Alt+Shift+KeyA': 'Analyze the provided code to provide an answer from that knowledge background.',
         'Control+Alt+KeyV': 'Limit verbosity and excessive verbal output.',
-        'Alt+Shift+KeyV': '',
         'Control+Alt+KeyZ': 'Format in a concise and continuous paragraph without structural lists.',
-        'Alt+Shift+KeyZ': '',
+        'Alt+Shift+KeyZ': 'Use normal comma sentence structure instead of interposed sentences with thought lines',
         'Control+Alt+KeyX': 'Give me the code to fix this.',
         'Alt+Shift+KeyX': 'No code in this response.',
         'Control+Alt+Slash': 'Continue the approach that led to the last result.',
