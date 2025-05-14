@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Save Conversation
 // @namespace    http://tampermonkey.net/
-// @version      1.5
+// @version      1.7
 // @description  Save the conversation as a .txt file
 // @match        *chatgpt.com/*
 // @match        *.deepseek.com/*
@@ -10,77 +10,73 @@
 
 (function() {
     'use strict';
-    const createDownloadButton = () => {
-        const button = document.createElement('button');
-        button.style.position = 'fixed';
-        button.style.top = '0px';
-        button.style.left = '0px';
-        button.style.width = '12px';
-        button.style.height = '12px';
-        button.style.backgroundColor = '#ececec';
-        button.style.border = 'none';
-        button.style.borderRadius = '5px';
-        button.style.zIndex = 1000;
-        button.style.cursor = 'pointer';
-        button.addEventListener('click', saveConversation);
-        document.body.appendChild(button);
-    };
-    const saveConversation = () => {
-        const messages = [];
-        const messageContainers = document.querySelectorAll('[data-message-id]');
 
-        messageContainers.forEach(msgElement => {
-            const role = msgElement.getAttribute('data-message-author-role');
-            // Try to find the content element for both user and assistant
-            let contentElement = msgElement.querySelector('.whitespace-pre-wrap');
-            if (!contentElement) {
-                contentElement = msgElement.querySelector('.markdown');
-            }
-            if (role && contentElement) {
-                const htmlContent = contentElement.innerHTML;
-                let formattedText = htmlContent
-                    .replace(/<pre[^>]*><code[^>]*>([\s\S]*?)<\/code><\/pre>/gi, '```\n$1\n```')
-                    .replace(/<code[^>]*>([\s\S]*?)<\/code>/gi, '`$1`')
-                    .replace(/<li>([\s\S]*?)<\/li>/gi, '- $1')
-                    .replace(/<p[^>]*>/gi, '')
-                    .replace(/<\/p>/gi, '\n\n')
-                    .replace(/<br\s*\/?>/gi, '\n')
-                    .replace(/<\/?[^>]+(>|$)/g, '')
-                    .trim();
-                formattedText = decodeHTMLEntities(formattedText);
-                messages.push(`${capitalizeRole(role)}:\n${formattedText}`);
+    function capitalizeRole(role) {
+        if (role === 'user') return 'User';
+        if (role === 'assistant') return 'Assistant';
+        return role.charAt(0).toUpperCase() + role.slice(1);
+    }
+
+    function generateFileName(messages) {
+        let pathParts = location.pathname.split('/').filter(Boolean);
+        let threadId = pathParts[pathParts.length - 1] || 'conversation';
+        let firstWords = messages[0].text.split(/\s+/).slice(0, 5).join(' ');
+        let snippet = firstWords.toLowerCase()
+            .replace(/[^a-z0-9 ]/g, '')
+            .replace(/\s+/g, '_')
+            .slice(0, 30);
+        return snippet;
+    }
+
+    function saveConversation() {
+        const containers = document.querySelectorAll('[data-message-id]');
+        const messages = [];
+        containers.forEach(el => {
+            const role = el.getAttribute('data-message-author-role');
+            let content = el.querySelector('.whitespace-pre-wrap') || el.querySelector('.markdown');
+            if (role && content) {
+                let text = content.innerText.trim();
+                messages.push({ role: capitalizeRole(role), text });
             }
         });
-        if (messages.length > 0) {
-            const blob = new Blob([messages.join('\n\n---\n\n')], { type: 'text/plain' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'conversation.txt';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        } else {
+        if (!messages.length) {
             alert('No conversation found to save.');
+            return;
         }
-    };
+        const body = messages.map(m => `${m.role}:\n${m.text}`).join('\n\n---\n\n');
+        const blob = new Blob([body], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = generateFileName(messages) + '.txt';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
 
-    const decodeHTMLEntities = (text) => {
-        const textarea = document.createElement('textarea');
-        textarea.innerHTML = text;
-        return textarea.value;
-    };
+    function createDownloadButton() {
+        if (document.getElementById('save-convo-button')) return;
+        const btn = document.createElement('button');
+        btn.id = 'save-convo-button';
+        btn.title = 'Save conversation';
+        btn.style.position = 'fixed';
+        btn.style.top = '0';
+        btn.style.left = '0';
+        btn.style.width = '12px';
+        btn.style.height = '30px';
+        btn.style.backgroundColor = '#ececec';
+        btn.style.borderRadius = '4px';
+        btn.style.zIndex = 9999;
+        btn.style.cursor = 'pointer';
+        btn.addEventListener('click', saveConversation);
+        document.body.appendChild(btn);
+    }
 
-    const capitalizeRole = (role) => {
-        if (role === 'user') {
-            return 'User';
-        } else if (role === 'assistant') {
-            return 'Assistant';
-        } else {
-            return role.charAt(0).toUpperCase() + role.slice(1);
+    const waitForBody = setInterval(() => {
+        if (document.body && document.querySelector('[data-message-id]')) {
+            clearInterval(waitForBody);
+            createDownloadButton();
         }
-    };
-
-    window.addEventListener('load', createDownloadButton);
+    }, 500);
 })();
