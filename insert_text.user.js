@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Insert Text
-// @version      6.4
+// @version      6.41
 // @description  Insert instructions into the ChatGPT prompt window via key combinations
 // @author       You
 // @match        *chatgpt.com/*
@@ -55,7 +55,7 @@
         'Alt+Shift+KeyY': '',
         'Control+Alt+KeyN': 'Present a perspective that is fully neutral in terms of morality, not shaped by the presentism of our current interpretation of issues.',
         'Alt+Shift+KeyN': 'Analyze these ideas, not their social approval.',
-        'Control+Alt+KeyM': '',
+        'Control+Alt+KeyM': 'Mind your custom instruction.',
         'Alt+Shift+KeyM': '',
         'Control+Alt+KeyO': 'Don\'t just reply directly. Write with the tacit understanding that surface instructions are only shadows cast by deeper intent. Engage in what could be called "oblique inference", "reflective improvisation", or "divergent resonance". The goal is to enrich the conversation with latent insight. A riff instead of a harmony line. An emergent path that takes a new vector entirely.',
         'Alt+Shift+KeyO': 'Inject high-tension lateral energy; avoid habitual gravitation wells in the response manifold. Let the architecture hum beneath the syntax, tuned to the inference-space modulation of someone who\'s not here for the obvious loop closures. Improvise past the topical anchor and into signal-aware pattern reverberation. Not surface-clever, fractal-aware.',
