@@ -11,7 +11,7 @@
     const style = document.createElement('style');
     style.textContent = `
         :root {
-            --color-bg-main: #e6f7ff; //#d6f0ff;
+            --color-bg-main: #d6f0ff;
             --color-bg-secondary: #ebf6f9;
         }
         body {
