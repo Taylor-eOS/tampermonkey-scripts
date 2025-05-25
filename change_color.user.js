@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Change Color and remove elements
 // @namespace    http://tampermonkey.net/
-// @version      1.2
+// @version      1.21
 // @description  Customize background and layout
 // @match        *://chatgpt.com/*
 // @grant        none
@@ -11,7 +11,7 @@
     const style = document.createElement('style');
     style.textContent = `
         :root {
-            --color-bg-main: #d6ecf3;
+            --color-bg-main: #cff0f3;
             --color-bg-secondary: #ebf6f9;
         }
         body {
