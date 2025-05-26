@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Insert Text
-// @version      6.41
+// @version      6.5
 // @description  Insert instructions into the ChatGPT prompt window via key combinations
 // @author       You
 // @match        *chatgpt.com/*
@@ -11,10 +11,10 @@
 (function() {
     'use strict';
     const keyMap = {
-        'Control+Alt+Period': 'Provide content concisely and continuously, without segmentation or interposed sentences.',
-        'Alt+Shift+Period': 'Write concisely and continuously.',
-        'Control+Alt+Comma': 'Answer this question in continuous natural language.',
-        'Alt+Shift+Comma': 'Target answers to the specific question asked, in continuous natural language without code.',
+        'Control+Alt+Period': 'Write concisely and continuously.',
+        'Alt+Shift+Period': 'Provide content concisely and continuously without segmentation.',
+        'Control+Alt+Comma': 'Target an answer to the specific question asked, in continuous natural language without code.',
+        'Alt+Shift+Comma': 'Answer this question in continuous natural language without code.',
         'Control+Alt+KeyC': 'Omit lines that start with `#` or empty lines from inside functions.',
         'Alt+Shift+KeyC': 'Give me the functions that need to be changed.',
         'Control+Alt+KeyG': 'Provide drop-in replacements without reinventing unseen parts.',
@@ -41,7 +41,7 @@
         'Control+Alt+KeyQ': 'Question unclear or lacking details in a process of clarification before providing a solution, instead of proceeding with incomplete information.',
         'Alt+Shift+KeyQ': '',
         'Control+Alt+KeyB': 'Brainstorm the issue. Explore possible solutions and suggestions.',
-        'Alt+Shift+KeyB': '',
+        'Alt+Shift+KeyB': 'Make some suggestions',
         'Control+Alt+KeyE': 'Expand on the topic creatively in a way that would be interesting to the user, considering his prompts so far.',
         'Alt+Shift+KeyE': 'Write an essay from the perspective of an agreeable professional in the relevant field of study.',
         'Control+Alt+KeyK': 'Contextualize the topic with relevant information.',
@@ -51,11 +51,11 @@
         'Alt+Shift+KeyU': 'Evaluate the accuracy of the presented understanding, and correct misunderstandings where present.',
         'Control+Alt+KeyW': 'Give me the whole code.',
         'Alt+Shift+KeyW': '',
-        'Control+Alt+KeyY': 'Present this position as a intellectual Turing test, meaning the requested stance is written indistinguishable from someone who sincerely holds that view, without inserting caveats to the contrary.',//*
+        'Control+Alt+KeyY': 'Present this position as a intellectual Turing test, meaning the requested stance is written indistinguishable from someone who sincerely holds that view, without inserting caveats to the contrary.',
         'Alt+Shift+KeyY': '',
         'Control+Alt+KeyN': 'Present a perspective that is fully neutral in terms of morality, not shaped by the presentism of our current interpretation of issues.',
         'Alt+Shift+KeyN': 'Analyze these ideas, not their social approval.',
-        'Control+Alt+KeyM': 'Mind your custom instruction.',
+        'Control+Alt+KeyM': 'Mind the custom instruction.',
         'Alt+Shift+KeyM': '',
         'Control+Alt+KeyO': 'Don\'t just reply directly. Write with the tacit understanding that surface instructions are only shadows cast by deeper intent. Engage in what could be called "oblique inference", "reflective improvisation", or "divergent resonance". The goal is to enrich the conversation with latent insight. A riff instead of a harmony line. An emergent path that takes a new vector entirely.',
         'Alt+Shift+KeyO': 'Inject high-tension lateral energy; avoid habitual gravitation wells in the response manifold. Let the architecture hum beneath the syntax, tuned to the inference-space modulation of someone who\'s not here for the obvious loop closures. Improvise past the topical anchor and into signal-aware pattern reverberation. Not surface-clever, fractal-aware.',
