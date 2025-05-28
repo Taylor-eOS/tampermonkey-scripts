@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Change Color and remove elements
 // @namespace    http://tampermonkey.net/
-// @version      1.21
+// @version      1.22
 // @description  Customize background and layout
 // @match        *://chatgpt.com/*
 // @grant        none
@@ -17,11 +17,6 @@
         body {
             background-color: var(--color-bg-main) !important;
         }
-        aside, nav, .flex-col.w-full.max-w-xs {
-            background-color: var(--color-bg-main) !important;
-            height: 100vh !important;
-            padding-bottom: 0 !important;
-        }
         .bg-token-sidebar-surface-primary.rounded-md {
             background-color: var(--color-bg-secondary) !important;
         }
@@ -35,6 +30,13 @@
         .bg-token-bg-elevated-secondary.sticky.top-0 {
             background-color: var(--color-bg-main) !important;
             box-shadow: none !important;
+        }
+        aside, nav, .flex-col.w-full.max-w-xs {
+            background-color: var(--color-bg-main) !important;
+        }
+        aside, nav, .flex-col.w-full.max-w-xs {
+            //height: 100vh !important;
+            padding-bottom: 0 !important;
         }
         #sora {
             display: none !important;
