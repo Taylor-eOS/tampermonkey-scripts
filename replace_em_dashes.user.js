@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Replace Em Dashes
 // @namespace    http://tampermonkey.net/
-// @version      1.1
+// @version      1.2
 // @description  Replaces em dashes with commas intelligently
 // @match        *://chatgpt.com/*
 // @grant        none
@@ -10,38 +10,54 @@
 (function () {
   'use strict';
 
-    function clean(value) {
-        if (typeof value !== 'string' || !value.includes('—')) return value;
-        return value
-            .replace(/\s*—\s*/g, ', ');
+  function cleanText(text) {
+    return text.replace(/\s*—\s*/g, ', ');
+  }
+
+  function replaceInTextNode(node) {
+    if (node.nodeType === Node.TEXT_NODE && node.nodeValue.includes('—')) {
+      node.nodeValue = cleanText(node.nodeValue);
     }
+  }
 
-  const textContent = Object.getOwnPropertyDescriptor(Node.prototype, 'textContent');
-  Object.defineProperty(Node.prototype, 'textContent', {
-    get() { return textContent.get.call(this); },
-    set(v) { textContent.set.call(this, clean(v)); }
+  let mutationQueue = [];
+  let scheduled = false;
+
+  const observer = new MutationObserver(mutations => {
+    mutationQueue.push(...mutations);
+    if (!scheduled) {
+      scheduled = true;
+      requestIdleCallback(processMutations, { timeout: 100 });
+    }
   });
 
-  const data = Object.getOwnPropertyDescriptor(CharacterData.prototype, 'data');
-  Object.defineProperty(CharacterData.prototype, 'data', {
-    get() { return data.get.call(this); },
-    set(v) { data.set.call(this, clean(v)); }
-  });
+  function processMutations() {
+    for (const mutation of mutationQueue) {
+      if (mutation.type === 'characterData') {
+        replaceInTextNode(mutation.target);
+      } else if (mutation.type === 'childList') {
+        mutation.addedNodes.forEach(node => {
+          walkAndReplace(node);
+        });
+      }
+    }
+    mutationQueue = [];
+    scheduled = false;
+  }
 
-  const nodeValue = Object.getOwnPropertyDescriptor(Node.prototype, 'nodeValue');
-  Object.defineProperty(Node.prototype, 'nodeValue', {
-    get() { return nodeValue.get.call(this); },
-    set(v) { nodeValue.set.call(this, clean(v)); }
-  });
+  function walkAndReplace(node) {
+    if (node.nodeType === Node.TEXT_NODE) {
+      replaceInTextNode(node);
+    } else if (node.nodeType === Node.ELEMENT_NODE) {
+      for (const child of node.childNodes) {
+        walkAndReplace(child);
+      }
+    }
+  }
 
-  const innerHTML = Object.getOwnPropertyDescriptor(Element.prototype, 'innerHTML');
-  Object.defineProperty(Element.prototype, 'innerHTML', {
-    get() { return innerHTML.get.call(this); },
-    set(v) { innerHTML.set.call(this, clean(v)); }
+  observer.observe(document.body, {
+    childList: true,
+    characterData: true,
+    subtree: true
   });
-
-  const originalCreateTextNode = Document.prototype.createTextNode;
-  Document.prototype.createTextNode = function (v) {
-    return originalCreateTextNode.call(this, clean(v));
-  };
 })();
