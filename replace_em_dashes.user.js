@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Replace Em Dashes
 // @namespace    http://tampermonkey.net/
-// @version      1.0
+// @version      1.1
 // @description  Replaces em dashes with commas intelligently
 // @match        *://chatgpt.com/*
 // @grant        none
@@ -10,12 +10,11 @@
 (function () {
   'use strict';
 
-  function clean(value) {
-    if (typeof value !== 'string' || !value.includes('—')) return value;
-    return value
-      .replace(/ — /g, ', ') // space-emdash-space
-      .replace(/—/g, ','); // remaining lone em dashes
-  }
+    function clean(value) {
+        if (typeof value !== 'string' || !value.includes('—')) return value;
+        return value
+            .replace(/\s*—\s*/g, ', ');
+    }
 
   const textContent = Object.getOwnPropertyDescriptor(Node.prototype, 'textContent');
   Object.defineProperty(Node.prototype, 'textContent', {
