@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Insert Text
-// @version      6.5
+// @version      6.6
 // @description  Insert instructions into the ChatGPT prompt window via key combinations
 // @author       You
 // @match        *chatgpt.com/*
@@ -24,8 +24,8 @@
         'Control+Alt+KeyA': 'Don\'t just agree with what I say, analyze the issue objectively.',
         'Alt+Shift+KeyA': 'Analyze the provided code to provide an answer from that knowledge background.',
         'Control+Alt+KeyV': 'Limit verbosity and excessive verbal output.',
-        'Control+Alt+KeyZ': 'Format in a concise and continuous paragraph without structural lists.',
-        'Alt+Shift+KeyZ': 'Instead of interposed sentences with thought lines, add later ideas afterwards with commas.',
+        'Control+Alt+KeyZ': 'Format without structural lists.',
+        'Alt+Shift+KeyZ': 'Use commas instead of interposed sentences with thought lines.',
         'Control+Alt+KeyX': 'Give me the code to fix this.',
         'Alt+Shift+KeyX': 'No code in this response.',
         'Control+Alt+Slash': 'Continue the approach that led to the last result.',
@@ -35,15 +35,15 @@
         'Control+Alt+KeyI': 'Interpret the underlying intention that this prompt attempts to convey, rather than following all details literally. Optimize the result by considering technical possibilities and applying common solutions beyond what was specifically requested.',
         'Alt+Shift+KeyI': 'Interpret the prompt as an incomplete attempt to express an idea, and respond to the broader issue it aims to convey, rather than focusing solely on the specific aspects mentioned.',
         'Control+Alt+KeyP': 'Add relevant print lines strategically throughout the script that would help verify the functionality and identify the cause of the problem.',
-        'Alt+Shift+KeyP': 'Respond like a person would, who is not sure of the right answer, but tries to weigh the different possibilities.',
+        'Alt+Shift+KeyP': 'Write an essay from the perspective of an agreeable professional in the relevant field of study.',
         'Control+Alt+KeyR': 'Review this code and name possible flaws.',
-        'Alt+Shift+KeyR': 'Rewrite the code mechanics into a compact, pseudocode-like outline of the structural logic that omits implementation details that would help with the identification of conceptual flaws.',
+        'Alt+Shift+KeyR': 'Respond like a person would, who is not sure of the right answer, but tries to weigh the different possibilities.',
         'Control+Alt+KeyQ': 'Question unclear or lacking details in a process of clarification before providing a solution, instead of proceeding with incomplete information.',
-        'Alt+Shift+KeyQ': '',
+        'Alt+Shift+KeyQ': 'Rewrite the code mechanics into a compact, pseudocode-like outline of the structural logic that omits implementation details that would help with the identification of conceptual flaws.',
         'Control+Alt+KeyB': 'Brainstorm the issue. Explore possible solutions and suggestions.',
         'Alt+Shift+KeyB': 'Make some suggestions',
         'Control+Alt+KeyE': 'Expand on the topic creatively in a way that would be interesting to the user, considering his prompts so far.',
-        'Alt+Shift+KeyE': 'Write an essay from the perspective of an agreeable professional in the relevant field of study.',
+        'Alt+Shift+KeyE': '',
         'Control+Alt+KeyK': 'Contextualize the topic with relevant information.',
         'Alt+Shift+KeyK': '',
         'Control+Alt+KeyH': 'Assess the feasibility of the outlined proposals and suggest how they could be implemented.',
@@ -51,8 +51,8 @@
         'Alt+Shift+KeyU': 'Evaluate the accuracy of the presented understanding, and correct misunderstandings where present.',
         'Control+Alt+KeyW': 'Give me the whole code.',
         'Alt+Shift+KeyW': '',
-        'Control+Alt+KeyY': 'Present this position as a intellectual Turing test, meaning the requested stance is written indistinguishable from someone who sincerely holds that view, without inserting caveats to the contrary.',
-        'Alt+Shift+KeyY': '',
+        'Control+Alt+KeyY': 'Present this position as a intellectual Turing test, meaning the requested stance is written indistinguishable from someone who sincerely holds that view, without inserting caveats to the contrary.',//*
+        'Alt+Shift+KeyY': 'Avoid flattering statements about the user.',//*
         'Control+Alt+KeyN': 'Present a perspective that is fully neutral in terms of morality, not shaped by the presentism of our current interpretation of issues.',
         'Alt+Shift+KeyN': 'Analyze these ideas, not their social approval.',
         'Control+Alt+KeyM': 'Mind the custom instruction.',
