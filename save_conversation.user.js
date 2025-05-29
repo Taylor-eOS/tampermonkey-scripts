@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Save Conversation
 // @namespace    http://tampermonkey.net/
-// @version      1.8
+// @version      1.81
 // @description  Save the conversation as a .txt file
 // @match        *chatgpt.com/*
 // @match        *.deepseek.com/*
@@ -20,7 +20,7 @@
         let raw = (document.querySelector('title') || {}).textContent;
         if (raw) {
             let name = raw.trim()
-            .slice(0, 30);
+            .slice(0, 40);
             return name || 'conversation';}
         let firstWords = messages[0].text.split(/\s+/).slice(0, 5).join(' ');
         let snippet = firstWords.toLowerCase()
