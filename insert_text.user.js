@@ -1,10 +1,11 @@
 // ==UserScript==
 // @name         Insert Text
-// @version      7.0
-// @description  Insert instructions into the ChatGPT prompt window via key combinations
+// @version      7.1
+// @description  Insert instructions into chatbot prompt window via key combinations
 // @author       You
 // @match        *chatgpt.com/*
 // @match        *.deepseek.com/*
+// @match        *claude.ai/*
 // ==/UserScript==
 
 (function() {
@@ -12,8 +13,8 @@
     const keyMap = {
         'Control+Alt+Period': 'Write continuously.',
         'Alt+Shift+Period': 'Write concisely and continuously, without segmentation.',
-        'Control+Alt+Comma': 'Focus on the question asked. Write a bit more compact.',
-        'Alt+Shift+Comma': 'Target an answer to this specific question, in continuous natural language without code.',
+        'Control+Alt+Comma': 'Focus on the question asked. Write a bit less.',
+        'Alt+Shift+Comma': 'Target an answer to this question, in continuous text.',
         'Control+Alt+KeyC': 'Omit code comments (lines starting with `#`) and empty lines in code blocks.',
         'Alt+Shift+KeyC': 'Use normal Python syntax with spaces.',
         'Control+Alt+KeyG': 'Give me the code to fix this. Do not include an explanation.',
@@ -34,14 +35,14 @@
         'Control+Alt+KeyI': 'Interpret the underlying intention that this prompt attempts to convey, rather than following all details literally. Optimize the result by considering technical possibilities and applying common solutions beyond what was specifically requested.',
         'Alt+Shift+KeyI': 'Interpret the prompt as an incomplete attempt to express an idea, and respond to what it aims to convey, rather than focusing solely on the specific aspects mentioned.',
         'Control+Alt+KeyQ': 'Question unclear or lacking details in a process of clarification before providing a solution, instead of proceeding with incomplete information.',
-        'Alt+Shift+KeyQ': 'Analyze the provided code; do not make assumptions or infer details about unreferenced code. Ask for missing details.',
+        'Alt+Shift+KeyQ': 'Analyze the provided code; do not make assumptions about details you do not have. Ask for missing input instead of guessing about it.',
         'Control+Alt+KeyP': '',
         'Alt+Shift+KeyP': 'Add relevant print lines strategically throughout the script that would help verify the functionality and identify the cause of the problem.',
         'Control+Alt+KeyR': 'Remove redundant phrasing; prioritize direct, propositional clarity over meandering structure.',
         'Alt+Shift+KeyR': '',
         'Control+Alt+KeyB': 'Brainstorm the issue; explore possible solutions and suggestions.',
         'Alt+Shift+KeyB': '',
-        'Control+Alt+KeyE': 'Expand on the topic creatively in a way that would be interesting to the user, considering his prompts so far.',
+        'Control+Alt+KeyE': 'Expand on the topic creatively with aspects that would enhance the insight of the user, considering his prompts so far.',
         'Alt+Shift+KeyE': 'Explore the question like a person would, who is not sure of the right answer, but tries to weigh different possibilities.',
         'Control+Alt+KeyK': 'Contextualize the topic with relevant information.',
         'Alt+Shift+KeyK': '',
@@ -52,7 +53,7 @@
         'Control+Alt+KeyU': 'Adopt a straightforward, based, and cynical libertarian stance, mirroring the irreverent, unfiltered tone of South Park or RSD Tyler. Avoid a sanitized bias, and instead convey the unvarnished truth',
         'Alt+Shift+KeyU': 'Evaluate the accuracy of the presented understanding, and correct misunderstandings where present.',
         'Control+Alt+KeyW': 'Give me whole functions.',
-        'Alt+Shift+KeyW': '',
+        'Alt+Shift+KeyW': 'Give me the whole code.',
         'Control+Alt+KeyY': '',
         'Alt+Shift+KeyY': '',
         'Control+Alt+KeyN': 'Present a perspective that is fully neutral, not shaped by current perspectives on issues.',
