@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Insert Text
-// @version      7.1
-// @description  Insert instructions into chatbot prompt window via key combinations
+// @version      7.2
+// @description  Insert instructions into the ChatGPT prompt window via key combinations
 // @author       You
 // @match        *chatgpt.com/*
 // @match        *.deepseek.com/*
@@ -13,16 +13,16 @@
     const keyMap = {
         'Control+Alt+Period': 'Write continuously.',
         'Alt+Shift+Period': 'Write concisely and continuously, without segmentation.',
-        'Control+Alt+Comma': 'Focus on the question asked. Write a bit less.',
-        'Alt+Shift+Comma': 'Target an answer to this question, in continuous text.',
+        'Control+Alt+Comma': 'Target an answer to this question, in continuous text.',
+        'Alt+Shift+Comma': 'Focus on the question asked. Write a bit less.',
         'Control+Alt+KeyC': 'Omit code comments (lines starting with `#`) and empty lines in code blocks.',
         'Alt+Shift+KeyC': 'Use normal Python syntax with spaces.',
         'Control+Alt+KeyG': 'Give me the code to fix this. Do not include an explanation.',
         'Alt+Shift+KeyG': 'Provide drop-in replacements for the functions that need to be changed.',
         'Control+Alt+KeyJ': '',
         'Alt+Shift+KeyJ': '',
-        'Control+Alt+KeyA': 'Don\'t just agree with what the user says, analyze the issue objectively.',
-        'Alt+Shift+KeyA': 'I am explicitly requesting that this response return what is correct, not necessarily confirm what I already believe.',
+        'Control+Alt+KeyA': 'Don\'t just agree with what the user says, analyze the issue objectively. I am explicitly requesting that this response should return what is correct, not necessarily confirm what I already believe.',
+        'Alt+Shift+KeyA': 'Analyze the provided code; do not make assumptions about details you do not have. Ask for missing input instead of guessing about it.',
         'Control+Alt+KeyV': 'Limit unnecessary verbosity; reduce verbal output.',
         'Alt+Shift+KeyV': 'Omit the last paragraph from the response to make it shorter.',
         'Control+Alt+KeyZ': 'Do not use any em dashes; replace interposed sentences with linear writing.',//*
@@ -35,7 +35,7 @@
         'Control+Alt+KeyI': 'Interpret the underlying intention that this prompt attempts to convey, rather than following all details literally. Optimize the result by considering technical possibilities and applying common solutions beyond what was specifically requested.',
         'Alt+Shift+KeyI': 'Interpret the prompt as an incomplete attempt to express an idea, and respond to what it aims to convey, rather than focusing solely on the specific aspects mentioned.',
         'Control+Alt+KeyQ': 'Question unclear or lacking details in a process of clarification before providing a solution, instead of proceeding with incomplete information.',
-        'Alt+Shift+KeyQ': 'Analyze the provided code; do not make assumptions about details you do not have. Ask for missing input instead of guessing about it.',
+        'Alt+Shift+KeyQ': 'Ask for more code if I didn\'t send the necessary functions to make this decision instead of proceeding with incomplete information.',
         'Control+Alt+KeyP': '',
         'Alt+Shift+KeyP': 'Add relevant print lines strategically throughout the script that would help verify the functionality and identify the cause of the problem.',
         'Control+Alt+KeyR': 'Remove redundant phrasing; prioritize direct, propositional clarity over meandering structure.',
@@ -45,7 +45,7 @@
         'Control+Alt+KeyE': 'Expand on the topic creatively with aspects that would enhance the insight of the user, considering his prompts so far.',
         'Alt+Shift+KeyE': 'Explore the question like a person would, who is not sure of the right answer, but tries to weigh different possibilities.',
         'Control+Alt+KeyK': 'Contextualize the topic with relevant information.',
-        'Alt+Shift+KeyK': '',
+        'Alt+Shift+KeyK': 'Context start]\n```\n```\n[Context end',
         'Control+Alt+KeyH': '',
         'Alt+Shift+KeyH': '',
         'Alt+Shift+KeyF': 'Assess the feasibility of the outlined proposals and suggest how they could be implemented.',
