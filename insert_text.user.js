@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Insert Text
-// @version      7.2
+// @version      7.21
 // @description  Insert instructions into the ChatGPT prompt window via key combinations
 // @author       You
 // @match        *chatgpt.com/*
@@ -12,11 +12,11 @@
     'use strict';
     const keyMap = {
         'Control+Alt+Period': 'Write continuously.',
-        'Alt+Shift+Period': 'Write concisely and continuously, without segmentation.',
+        'Alt+Shift+Period': 'Write concisely and continuously.',
         'Control+Alt+Comma': 'Target an answer to this question, in continuous text.',
-        'Alt+Shift+Comma': 'Focus on the question asked. Write a bit less.',
+        'Alt+Shift+Comma': 'Write a bit more compact. Focus on the question asked.',
         'Control+Alt+KeyC': 'Omit code comments (lines starting with `#`) and empty lines in code blocks.',
-        'Alt+Shift+KeyC': 'Use normal Python syntax with spaces.',
+        'Alt+Shift+KeyC': 'Write it in normal Python syntax with spaces between equals signs.',
         'Control+Alt+KeyG': 'Give me the code to fix this. Do not include an explanation.',
         'Alt+Shift+KeyG': 'Provide drop-in replacements for the functions that need to be changed.',
         'Control+Alt+KeyJ': '',
@@ -35,7 +35,7 @@
         'Control+Alt+KeyI': 'Interpret the underlying intention that this prompt attempts to convey, rather than following all details literally. Optimize the result by considering technical possibilities and applying common solutions beyond what was specifically requested.',
         'Alt+Shift+KeyI': 'Interpret the prompt as an incomplete attempt to express an idea, and respond to what it aims to convey, rather than focusing solely on the specific aspects mentioned.',
         'Control+Alt+KeyQ': 'Question unclear or lacking details in a process of clarification before providing a solution, instead of proceeding with incomplete information.',
-        'Alt+Shift+KeyQ': 'Ask for more code if I didn\'t send the necessary functions to make this decision instead of proceeding with incomplete information.',
+        'Alt+Shift+KeyQ': 'Ask for more code if I didn\'t send the necessary functions to make this decision instead of proceeding with inferred assumptions.',
         'Control+Alt+KeyP': '',
         'Alt+Shift+KeyP': 'Add relevant print lines strategically throughout the script that would help verify the functionality and identify the cause of the problem.',
         'Control+Alt+KeyR': 'Remove redundant phrasing; prioritize direct, propositional clarity over meandering structure.',
@@ -48,7 +48,7 @@
         'Alt+Shift+KeyK': 'Context start]\n```\n```\n[Context end',
         'Control+Alt+KeyH': '',
         'Alt+Shift+KeyH': '',
-        'Alt+Shift+KeyF': 'Assess the feasibility of the outlined proposals and suggest how they could be implemented.',
+        'Alt+Shift+KeyF': 'Formulate an assessment of the feasibility of the outlined proposals and suggest ideas for how solutions could be implemented.',
         'Alt+Shift+KeyT': 'Present this position as an intellectual Turing test, meaning the requested stance is written indistinguishable from someone who sincerely holds that view, without inserting caveats to the contrary.',
         'Control+Alt+KeyU': 'Adopt a straightforward, based, and cynical libertarian stance, mirroring the irreverent, unfiltered tone of South Park or RSD Tyler. Avoid a sanitized bias, and instead convey the unvarnished truth',
         'Alt+Shift+KeyU': 'Evaluate the accuracy of the presented understanding, and correct misunderstandings where present.',
