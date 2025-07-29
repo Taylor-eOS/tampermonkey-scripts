@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Insert Text
-// @version      7.41
+// @version      7.5
 // @description  Insert instructions into the ChatGPT prompt window via key combinations
 // @author       You
 // @match        *chatgpt.com/*
@@ -20,8 +20,8 @@
         'Alt+Shift+KeyC': 'Write in normal Python syntax with spaces between equals signs.',
         'Control+Alt+KeyG': 'Give me the code to fix this. Do not include an explanation.',
         'Alt+Shift+KeyG': 'Provide drop-in replacements for whole functions that need to be changed.',
-        'Control+Alt+KeyJ': '',
-        'Alt+Shift+KeyJ': '',
+        'Control+Alt+KeyJ': 'You may write extensively.',
+        'Alt+Shift+KeyJ': 'You may make lists in this response.',
         'Control+Alt+KeyA': 'Don\'t just agree with what the user says, analyze the issue objectively. Say what is correct. I am explicitly requesting that this response should return what is technically correct. What the prompt suggests is just a way to phrase the question.',
         'Alt+Shift+KeyA': 'Analyze the provided code; do not make assumptions about details that weren\'t shown to you. Request lacking inputs instead of proceeding with inferred assumptions. Ask for missing input instead of guessing about it.',
         'Control+Alt+KeyV': 'Limit unnecessary verbosity; reduce verbal output.',
@@ -40,8 +40,8 @@
         'Control+Alt+KeyQ': 'Question unclear or lacking details in a process of clarification before providing a solution, instead of proceeding with incomplete information.',
         'Alt+Shift+KeyQ': 'Ask for more code if I didn\'t send the necessary functions to make this decision, instead of proceeding from inferred assumptions.',
         'Control+Alt+KeyP': 'Add relevant print lines strategically throughout the script that would help verify the functionality and identify the cause of the problem.',
-        'Alt+Shift+KeyP': '',
-        'Control+Alt+KeyR': 'Can you research this.',
+        'Alt+Shift+KeyP': 'I can barely program without a chatbot.',
+        'Control+Alt+KeyR': 'Research this.',
         'Alt+Shift+KeyR': 'Remove redundant phrasing; prioritize direct, propositional clarity over meandering structure. If the parts before and after the "or" mean about the same, combine them into one.',
         'Control+Alt+KeyB': 'Brainstorm the issue; explore possible solutions and suggestions.',
         'Alt+Shift+KeyB': '',
