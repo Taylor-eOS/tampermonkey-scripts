@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Insert Text
-// @version      7.4
+// @version      7.41
 // @description  Insert instructions into the ChatGPT prompt window via key combinations
 // @author       You
 // @match        *chatgpt.com/*
@@ -35,19 +35,21 @@
         'Alt+Shift+KeyS': 'Stop making suggestions at the end. Give useful information like a book or article, without sycophancy or any other annoying chatbot ways to raise retention times.',
         'Control+Alt+KeyI': 'Interpret the underlying intention that this prompt attempts to convey, rather than following all details literally. Optimize the result by considering technical possibilities and applying common solutions beyond what was specifically requested.',
         'Alt+Shift+KeyI': 'Interpret the prompt as an incomplete attempt to express an idea, and respond to what it aims to convey, rather than focusing solely on the specific aspects mentioned.',
+        'Control+Alt+KeyY': 'Interpret these statements as questions, and answer whether they or their alternatives are accurate, not being biased by what I suggest or any desire to confirm what I say.',
+        'Alt+Shift+KeyY': 'I often describe one approach as a way to formulate the question what alternative approach would be feasible. The idea is not to get stuck on my idea, but to figure out what approach would work best.',
         'Control+Alt+KeyQ': 'Question unclear or lacking details in a process of clarification before providing a solution, instead of proceeding with incomplete information.',
         'Alt+Shift+KeyQ': 'Ask for more code if I didn\'t send the necessary functions to make this decision, instead of proceeding from inferred assumptions.',
         'Control+Alt+KeyP': 'Add relevant print lines strategically throughout the script that would help verify the functionality and identify the cause of the problem.',
         'Alt+Shift+KeyP': '',
-        'Control+Alt+KeyR': 'Remove redundant phrasing; prioritize direct, propositional clarity over meandering structure. If the parts before and after the "or" mean about the same, combine them into one.',
-        'Alt+Shift+KeyR': '',
+        'Control+Alt+KeyR': 'Can you research this.',
+        'Alt+Shift+KeyR': 'Remove redundant phrasing; prioritize direct, propositional clarity over meandering structure. If the parts before and after the "or" mean about the same, combine them into one.',
         'Control+Alt+KeyB': 'Brainstorm the issue; explore possible solutions and suggestions.',
         'Alt+Shift+KeyB': '',
         'Control+Alt+KeyE': 'Expand on the topic creatively with aspects that would enhance the insight of the user, considering his prompts so far.',
         'Alt+Shift+KeyE': 'Explore the question like a person would, who is not sure of the right answer, but tries to weigh different possibilities.',
         'Control+Alt+KeyK': 'Contextualize the topic with relevant information.',
         'Alt+Shift+KeyK': 'Context start]\n```\n```\n[Context end',
-        'Control+Alt+KeyH': '',
+        'Control+Alt+KeyH': 'Can you explain this.',//*
         'Alt+Shift+KeyH': '',
         'Alt+Shift+KeyF': 'Explore the feasibility of the outlined proposals and suggest ideas for how solutions could be implemented.',
         'Alt+Shift+KeyT': 'Present this position as an intellectual Turing test, meaning the requested stance is written indistinguishable from someone who sincerely holds that view, without inserting caveats to the contrary.',
@@ -55,8 +57,6 @@
         'Alt+Shift+KeyU': 'Evaluate the accuracy of the presented understanding, and correct misunderstandings where present.',
         'Control+Alt+KeyW': 'Give me whole functions.',
         'Alt+Shift+KeyW': 'Give me the whole code.',
-        'Control+Alt+KeyY': '',
-        'Alt+Shift+KeyY': '',
         'Control+Alt+KeyN': 'Present a perspective that is fully neutral, not shaped by current perspectives on issues.',
         'Alt+Shift+KeyN': 'Analyze these ideas, not their social approval.',
         'Control+Alt+KeyM': 'Mind following the custom instruction.',
