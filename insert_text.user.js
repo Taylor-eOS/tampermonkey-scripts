@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Insert Text
-// @version      7.5
+// @version      7.55
 // @description  Insert instructions into the ChatGPT prompt window via key combinations
 // @author       You
 // @match        *chatgpt.com/*
@@ -45,12 +45,12 @@
         'Alt+Shift+KeyR': 'Remove redundant phrasing; prioritize direct, propositional clarity over meandering structure. If the parts before and after the "or" mean about the same, combine them into one.',
         'Control+Alt+KeyB': 'Brainstorm the issue; explore possible solutions and suggestions.',
         'Alt+Shift+KeyB': '',
-        'Control+Alt+KeyE': 'Expand on the topic creatively with aspects that would enhance the insight of the user, considering his prompts so far.',
-        'Alt+Shift+KeyE': 'Explore the question like a person would, who is not sure of the right answer, but tries to weigh different possibilities.',
+        'Control+Alt+KeyH': 'Expand on the topic creatively with aspects that would enhance the insight of the user, considering his prompts so far.',
+        'Alt+Shift+KeyH': 'Explore the question like a person would, who is not sure of the right answer, but tries to weigh different possibilities.',
+        'Control+Alt+KeyE': 'Can you explain this to someone who doesn\'t know the topic well.',
+        'Alt+Shift+KeyE': 'Can you explain this.',
         'Control+Alt+KeyK': 'Contextualize the topic with relevant information.',
         'Alt+Shift+KeyK': 'Context start]\n```\n```\n[Context end',
-        'Control+Alt+KeyH': 'Can you explain this.',//*
-        'Alt+Shift+KeyH': '',
         'Alt+Shift+KeyF': 'Explore the feasibility of the outlined proposals and suggest ideas for how solutions could be implemented.',
         'Alt+Shift+KeyT': 'Present this position as an intellectual Turing test, meaning the requested stance is written indistinguishable from someone who sincerely holds that view, without inserting caveats to the contrary.',
         'Control+Alt+KeyU': 'Adopt a straightforward, based, and cynical libertarian stance, mirroring the irreverent, unfiltered tone of South Park or RSD Tyler. Avoid a sanitized bias, and instead convey the unvarnished truth',
@@ -60,7 +60,7 @@
         'Control+Alt+KeyN': 'Present a perspective that is fully neutral, not shaped by current perspectives on issues.',
         'Alt+Shift+KeyN': 'Analyze these ideas, not their social approval.',
         'Control+Alt+KeyM': 'Mind following the custom instruction.',
-        'Alt+Shift+KeyM': '',
+        'Alt+Shift+KeyM': 'No emojis. Write continuously.',
         'Control+Alt+KeyO': 'Don\'t just reply to literal statements; interpret questions with the tacit understanding that surface instructions are only shadows cast by deeper intent. Engage in what could be called "oblique inference", "reflective improvisation", or "divergent resonance". The goal is to enrich the conversation with latent insight. A riff instead of a harmony line. An emergent path that takes a new vector entirely.',
         'Alt+Shift+KeyO': 'Inject high-tension lateral energy; avoid habitual gravitation wells in the response manifold. Let the architecture hum beneath the syntax, tuned to the inference-space modulation of someone who\'s not here for the obvious loop closures. Improvise past the topical anchor and into signal-aware pattern reverberation. Not surface-clever, fractal-aware.',
     };
