@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Insert Text
-// @version      7.9
+// @version      7.10
 // @description  Insert instructions into chatbot prompt window via key combinations
 // @author       You
 // @match        *://*/*
@@ -32,7 +32,7 @@
         'Control+Alt+Slash': 'Continue the approach that led to the last result.',
         'Alt+Shift+Slash': 'Update your assessment incorporating this information, with the assumption that it is valid.',
         'Control+Alt+KeyS': 'This code does not have to be short or simple. Apply robust logic and comprehensive coding methods rather than simple if-then statements or regex; multi-step processing and memory-heavy solutions, like keeping all data in memory, may be considered without concern for performance.',
-        'Alt+Shift+KeyS': 'Stop interaction suggestions; no "if you want" or "do you want" questions. Omit call-to-engagement closers.',
+        'Alt+Shift+KeyS': 'Don\'t ask what to do next at the end of responses. Don\'t involve the reader; only provide information. Stop interaction suggestions; do not make "if you want" or "do you want" questions at the end. Omit call-to-engagement closers.',
         'Control+Alt+KeyI': 'Interpret the prompt as an incomplete attempt to express an idea, and respond to what the underlying intention aims to convey. Consider other relevant possibilities, rather than just focusing on the specific aspects mentioned.',
         'Alt+Shift+KeyI': 'Optimize the result by considering technical possibilities and applying common solutions beyond what was specifically requested.',
         'Control+Alt+KeyY': 'The described approach is just a way to phrase the question. Don\'t stick to this idea, but consider alternative solutions to accomplish the expressed goal. Figure out what approach would work best.',
