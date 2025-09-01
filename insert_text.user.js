@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Insert Text
-// @version      7.10
+// @version      7.11
 // @description  Insert instructions into chatbot prompt window via key combinations
 // @author       You
 // @match        *://*/*
@@ -20,7 +20,7 @@
         'Control+Alt+KeyG': 'Give me the code to fix this, without too much explanation.',
         'Alt+Shift+KeyG': 'Provide drop-in replacements for whole functions that need to be changed.',
         'Control+Alt+KeyA': 'Don\'t just agree with what the user says, analyze the issue objectively. I am explicitly requesting that this response should return what is technically accurate instead of just going along with what was suggested.',
-        'Alt+Shift+KeyA': '',
+        'Alt+Shift+KeyA': 'Think about this thoroughly and provide a good response',
         'Control+Alt+KeyZ': 'Entirely omit any informationally worthless comments, like saying everything is "profound", "on point", "cutting through", "right to ask", or such. Never start any response with "You are right". Just provide content like an article: practical information without a wild sycophancy circus.',//*
         'Alt+Shift+KeyZ': 'Do not use any em dashes in your response whatsoever; entirely replace interposed sentences with linear writing. Make the writing natural, not obviously from a chatbot. Do not write any overly artistic interposed sentences with em dashes, or I\'ll have to remove them so it\'s not immediately obvious chatbot, because no human ever makes those in an email.',//*
         'Control+Alt+KeyV': 'Limit unnecessary verbosity; reduce verbal output.',
@@ -32,7 +32,9 @@
         'Control+Alt+Slash': 'Continue the approach that led to the last result.',
         'Alt+Shift+Slash': 'Update your assessment incorporating this information, with the assumption that it is valid.',
         'Control+Alt+KeyS': 'This code does not have to be short or simple. Apply robust logic and comprehensive coding methods rather than simple if-then statements or regex; multi-step processing and memory-heavy solutions, like keeping all data in memory, may be considered without concern for performance.',
-        'Alt+Shift+KeyS': 'Don\'t ask what to do next at the end of responses. Don\'t involve the reader; only provide information. Stop interaction suggestions; do not make "if you want" or "do you want" questions at the end. Omit call-to-engagement closers.',
+        'Alt+Shift+KeyS': '',
+        'Control+Alt+KeyX': 'Omit call-to-engagement closers.',
+        'Alt+Shift+KeyX': 'Don\'t ask what to do next at the end of responses. Don\'t involve the reader; only provide information. No interaction suggestions; do not add "if you want" questions at the end.',
         'Control+Alt+KeyI': 'Interpret the prompt as an incomplete attempt to express an idea, and respond to what the underlying intention aims to convey. Consider other relevant possibilities, rather than just focusing on the specific aspects mentioned.',
         'Alt+Shift+KeyI': 'Optimize the result by considering technical possibilities and applying common solutions beyond what was specifically requested.',
         'Control+Alt+KeyY': 'The described approach is just a way to phrase the question. Don\'t stick to this idea, but consider alternative solutions to accomplish the expressed goal. Figure out what approach would work best.',
@@ -55,11 +57,10 @@
         'Alt+Shift+KeyN': 'Analyze these ideas, not their social approval.',
         'Control+Alt+KeyM': 'Mind following the custom instruction.',
         'Alt+Shift+KeyM': 'No emojis. No vertical lines.',
-        'Alt+Shift+KeyF': 'Explore the feasibility of the outlined proposals and suggest ideas for how solutions could be implemented.',
-        'Control+Alt+KeyX': '',
         'Control+Alt+KeyO': 'Don\'t just reply to literal statements; interpret questions with the tacit understanding that surface instructions are only shadows cast by deeper intent. Engage in what could be called "oblique inference", "reflective improvisation", or "divergent resonance". The goal is to enrich the conversation with latent insight. A riff instead of a harmony line. An emergent path that takes a new vector entirely.',
         'Alt+Shift+KeyO': 'Inject high-tension lateral energy; avoid habitual gravitation wells in the response manifold. Let the architecture hum beneath the syntax, tuned to the inference-space modulation of someone who\'s not here for the obvious loop closures. Improvise past the topical anchor and into signal-aware pattern reverberation. Not surface-clever, fractal-aware.',
         'Control+Alt+KeyU': 'Adopt a straightforward, based, and cynical libertarian stance, with an irreverent, unfiltered tone. Avoid a sanitized bias, and instead convey the unvarnished truth.',
+        'Alt+Shift+KeyF': 'Explore the feasibility of the outlined proposals and suggest ideas for how solutions could be implemented.',
         'Alt+Shift+KeyU': 'Evaluate the accuracy of the presented understanding, and correct misunderstandings where present.',
         'Alt+Shift+KeyT': 'Present this position as an intellectual Turing test, meaning the requested stance is written indistinguishable from someone who sincerely holds that view, without inserting caveats to the contrary.',
     };
