@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Insert Text
-// @version      7.11
+// @version      7.11.1
 // @description  Insert instructions into chatbot prompt window via key combinations
 // @author       You
 // @match        *://*/*
@@ -14,9 +14,8 @@
         'Control+Alt+Shift+Period': 'Stringently eschew creating any form of list, whether numbered or bulleted. Do not include any list-producing HTML tags like `<ul>`, `<ol>`, or `<li>` in your response whatsoever. Write in continuous prose, avoiding all structured separations or markup. Make the response flow naturally as one unbroken block of text. Keep sentences connected, with no structural separations or divisions. Present information in one seamless, uninterrupted paragraph. Do not organize the response into any type of enumeration. Purely write unformatted raw text. Aggressively avoid segmenting content; keep everything unified in a single, continuous block of prose like a book. Write connected, unfragmented text. Write continuously! Do not make any numbered lists!',
         'Control+Alt+Comma': 'Target an answer to this specific question in continuous text.',
         'Alt+Shift+Comma': 'Focus on the question asked. Don\t write code. Write compactly.',
-        'Control+Alt+KeyC': 'Write code without comments. Do not add empty lines inside code blocks, but an empty line between functions. Use normal spaces around equals signs, except for keyword arguments.',
-        'Alt+Shift+KeyC': 'Write in normal code indentation, without oddities like taring code apart vertically or compacting all horizontal spaces.',
-        'Control+Alt+Shift+KeyC': 'Remove code comments and empty lines inside code blocks.',
+        'Control+Alt+KeyC': 'Write code without comments or empty lines inside code blocks, but normal separation between functions and normal indentation.',
+        'Alt+Shift+KeyC': 'Don\'t tare apart code with needless empty lines or code comments.',
         'Control+Alt+KeyG': 'Give me the code to fix this, without too much explanation.',
         'Alt+Shift+KeyG': 'Provide drop-in replacements for whole functions that need to be changed.',
         'Control+Alt+KeyA': 'Don\'t just agree with what the user says, analyze the issue objectively. I am explicitly requesting that this response should return what is technically accurate instead of just going along with what was suggested.',
@@ -32,9 +31,8 @@
         'Control+Alt+Slash': 'Continue the approach that led to the last result.',
         'Alt+Shift+Slash': 'Update your assessment incorporating this information, with the assumption that it is valid.',
         'Control+Alt+KeyS': 'This code does not have to be short or simple. Apply robust logic and comprehensive coding methods rather than simple if-then statements or regex; multi-step processing and memory-heavy solutions, like keeping all data in memory, may be considered without concern for performance.',
-        'Alt+Shift+KeyS': '',
-        'Control+Alt+KeyX': 'Omit call-to-engagement closers.',
-        'Alt+Shift+KeyX': 'Don\'t ask what to do next at the end of responses. Don\'t involve the reader; only provide information. No interaction suggestions; do not add "if you want" questions at the end.',
+        'Control+Alt+KeyX': 'Don\'t ask what to do next at the end of responses. Don\'t involve the reader; only provide information. Don\'t add "if you want" questions at the end. Make a normal-length response despite this.',
+        'Alt+Shift+KeyX': '',
         'Control+Alt+KeyI': 'Interpret the prompt as an incomplete attempt to express an idea, and respond to what the underlying intention aims to convey. Consider other relevant possibilities, rather than just focusing on the specific aspects mentioned.',
         'Alt+Shift+KeyI': 'Optimize the result by considering technical possibilities and applying common solutions beyond what was specifically requested.',
         'Control+Alt+KeyY': 'The described approach is just a way to phrase the question. Don\'t stick to this idea, but consider alternative solutions to accomplish the expressed goal. Figure out what approach would work best.',
