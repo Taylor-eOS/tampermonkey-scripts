@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Insert Text
-// @version      8.0
+// @version      8.0.1
 // @description  Insert instructions into chatbot prompt window via key combinations
 // @author       You
 // @match        *://*/*
@@ -20,9 +20,9 @@
         'Control+Alt+KeyG': 'Give me the code to fix this. Don\t include too much explanation.',
         'Alt+Shift+KeyG': 'Provide drop-in replacements for whole functions that need to be changed.',
         'Control+Alt+KeyA': 'Don\'t just agree with what the user says, analyze the issue objectively. I am explicitly requesting that this response should return what is technically accurate instead of just going along with what was suggested.',
-        'Alt+Shift+KeyA': 'Think about this thoroughly and provide a worthwhile response',
+        'Alt+Shift+KeyA': 'Is this an accurate assessment or does it need correction?',
         'Control+Alt+KeyZ': 'Do not use any em dashes in your response whatsoever; just use commas and normal punctuation. Entirely replace interposed sentences with linear writing. Make the writing natural, not obviously from a chatbot. Do not write any overly artistic interposed sentences with em dashes, or I\'ll have to remove them so it\'s not immediately obvious chatbot, because no human ever uses those.',
-        'Alt+Shift+KeyZ': '',
+        'Alt+Shift+KeyZ': 'Write this in normal code syntax.',
         'Control+Alt+KeyV': 'Limit unnecessary verbosity; reduce verbal output.',
         'Alt+Shift+KeyV': 'Omit every last paragraph from all responses to shorten them, and skip summaries.',
         'Control+Alt+KeyM': 'Mind following the custom instruction.',
@@ -34,7 +34,8 @@
         'Control+Alt+Slash': 'Continue the approach that led to the last result.',
         'Alt+Shift+Slash': 'Update your assessment incorporating this information, assuming that it is valid.',
         'Control+Alt+KeyX': 'Don\'t suggest or ask what to say next at the end of responses. Don\'t involve the reader; just provide information. Make a normal-length response despite this.',
-        'Alt+Shift+KeyX': 'Entirely refrain from ending a reply with any suggestion or question on how to continue, any offer, or any phrasing that asks or implies the user should choose how the assistant proceeds. Never append closers such as "If you want," "Do you want me to", or any variant that functions as a call-to-engagement. Omit any closing paragraph that solicits a next-step decision from the user. Remove questions that ask the user to specify what to do next. No conditional closers, no offers to continue, no invitations to request the next action. Responses must end without query. Do not include follow-up offers, optional next steps, or open-ended engagement hooks. Always finalize the content without any sentence that invites continuation, asks for a decision about continuing, or proposes next steps framed as options for the user to accept. Conclude firmly and fully with the informational content only, without an implied offer to perform future work.',
+        'Alt+Shift+KeyX': 'Stop asking me about stuff I don\'t need at the end of responses',
+        'Control+Alt+Shift+KeyX': 'Entirely refrain from ending a reply with any suggestion or question on how to continue, any offer, or any phrasing that asks or implies the user should choose how the assistant proceeds. Never append closers such as "If you want," "Do you want me to", or any variant that functions as a call-to-engagement. Omit any closing paragraph that solicits a next-step decision from the user. Remove questions that ask the user to specify what to do next. No conditional closers, no offers to continue, no invitations to request the next action. Responses must end without query. Do not include follow-up offers, optional next steps, or open-ended engagement hooks. Always finalize the content without any sentence that invites continuation, asks for a decision about continuing, or proposes next steps framed as options for the user to accept. Conclude firmly and fully with the informational content only, without an implied offer to perform future work.',
         'Control+Alt+KeyI': 'Interpret my input as an incomplete attempt to express an idea. Respond to what the underlying intention aims to convey rather than the specific content. Expand with relevant information that would benefit this knowledge state.',
         'Alt+Shift+KeyI': 'Optimize the result by considering technical possibilities and applying common solutions beyond what was specifically requested.',
         'Control+Alt+KeyY': 'This approach is just a way to phrase the question. Don\'t stick to this idea, but consider alternative solutions that would be better at solving the expressed goal. The aim is to figure out what approach would work best, not to confirm what the user suggested.',
@@ -48,7 +49,7 @@
         'Control+Alt+KeyR': 'Remove redundant phrasing; prioritize direct, propositional clarity over meandering structure. If the parts before and after an "or" mean about the same, combine them into one statement.',
         'Alt+Shift+KeyR': '',
         'Control+Alt+KeyB': 'Brainstorm the issue; explore possible solutions and suggestions.',
-        'Alt+Shift+KeyB': '',
+        'Alt+Shift+KeyB': 'Think about this thoroughly and provide a worthwhile response.',
         'Control+Alt+KeyE': 'Evaluate the accuracy of the presented understanding, and correct misunderstandings where present.',
         'Alt+Shift+KeyE': 'Explain this to someone who doesn\'t know the topic well.',
         'Control+Alt+KeyK': 'Contextualize the topic with relevant information.',
