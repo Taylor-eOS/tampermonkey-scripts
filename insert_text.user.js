@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         Insert Text
-// @version      8.1
-// @description  Insert instructions into chatbot prompt window via key combinations
+// @name         Insert Text with Search
+// @version      9
+// @description  Insert instructions into chatbot prompt window via key combinations and searchable overlay
 // @author       You
 // @match        *://*/*
 // ==/UserScript==
@@ -66,15 +66,17 @@
         'Alt+Shift+KeyT': 'Present this position as an intellectual Turing test, meaning the requested stance is written indistinguishable from someone who sincerely holds that view, without inserting caveats to the contrary.',
     };
 
-    /*
-    //Commnet this in to show what key is pressed in the browser console
-    document.addEventListener('keydown]', function(e) {
-        console.log('Key pressed:]', e.key, 'Code:]', e.code); // Temporary log for debugging
-    });
-    */
+    let searchActive = false;
+    let overlay = null;
+    let inputEl = null;
+    let resultsEl = null;
+    let selectedIndex = -1;
+    let lastActiveElement = null;
+    const MAX_RESULTS = 4;
+    const OPEN_KEY = 'Control+Shift+KeyF';
 
-    //Common listener for the table
     document.addEventListener('keydown', function(e) {
+        if (searchActive) return;
         const keys = [];
         if (e.ctrlKey) keys.push('Control');
         if (e.altKey) keys.push('Alt');
@@ -88,33 +90,200 @@
         } else if (keyMap[keyString]) {
             e.preventDefault();
             insertTextAtCursor(keyMap[keyString]);
+        } else if (keyString === OPEN_KEY) {
+            e.preventDefault();
+            openSearchOverlay();
         }
     });
 
     function insertTextAtCursor(text) {
-        text = '[' + text;
-        text = text + ']';
-        let activeElement = document.activeElement;
-        if (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA') {
+        text = '[' + text + ']';
+        const activeElement = lastActiveElement || document.activeElement;
+        if (!activeElement) return;
+        const tag = activeElement.tagName;
+        if (tag === 'INPUT' || tag === 'TEXTAREA') {
             let start = activeElement.selectionStart;
             let end = activeElement.selectionEnd;
             activeElement.value = activeElement.value.slice(0, start) + text + activeElement.value.slice(end);
             activeElement.selectionStart = activeElement.selectionEnd = start + text.length;
+            activeElement.focus();
         } else if (activeElement.isContentEditable) {
+            activeElement.focus();
             document.execCommand('insertText', false, text);
         }
     }
 
-    //Separate function for the backticks. Change the key to what works on your keyboard
     function insertBackticks(text) {
-        let activeElement = document.activeElement;
-        if (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA') {
+        const activeElement = lastActiveElement || document.activeElement;
+        if (!activeElement) return;
+        const tag = activeElement.tagName;
+        if (tag === 'INPUT' || tag === 'TEXTAREA') {
             let start = activeElement.selectionStart;
             let end = activeElement.selectionEnd;
             activeElement.value = activeElement.value.slice(0, start) + text + activeElement.value.slice(end);
             activeElement.selectionStart = activeElement.selectionEnd = start + text.length;
+            activeElement.focus();
         } else if (activeElement.isContentEditable) {
+            activeElement.focus();
             document.execCommand('insertText', false, text);
         }
+    }
+
+    function openSearchOverlay() {
+        if (searchActive) return;
+        searchActive = true;
+        selectedIndex = -1;
+        lastActiveElement = document.activeElement;
+        overlay = document.createElement('div');
+        overlay.style.position = 'fixed';
+        overlay.style.left = '50%';
+        overlay.style.top = '20%';
+        overlay.style.transform = 'translateX(-50%)';
+        overlay.style.background = 'rgba(255,255,255,0.98)';
+        overlay.style.border = '1px solid #bbb';
+        overlay.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
+        overlay.style.zIndex = 2147483647;
+        overlay.style.padding = '10px';
+        overlay.style.minWidth = '480px';
+        overlay.style.maxWidth = '90vw';
+        overlay.style.borderRadius = '6px';
+        inputEl = document.createElement('input');
+        inputEl.type = 'text';
+        inputEl.placeholder = 'Type to search snippets...';
+        inputEl.style.width = '100%';
+        inputEl.style.boxSizing = 'border-box';
+        inputEl.style.padding = '8px';
+        inputEl.style.fontSize = '14px';
+        inputEl.style.marginBottom = '8px';
+        inputEl.autocomplete = 'off';
+        resultsEl = document.createElement('div');
+        resultsEl.style.maxHeight = '240px';
+        resultsEl.style.overflow = 'auto';
+        overlay.appendChild(inputEl);
+        overlay.appendChild(resultsEl);
+        document.body.appendChild(overlay);
+        inputEl.focus();
+        inputEl.addEventListener('keydown', onInputKeyDown);
+        inputEl.addEventListener('input', updateSuggestions);
+        document.addEventListener('mousedown', onDocumentMouseDown);
+        updateSuggestions();
+    }
+
+    function closeSearchOverlay() {
+        if (!searchActive) return;
+        document.removeEventListener('mousedown', onDocumentMouseDown);
+        inputEl.removeEventListener('keydown', onInputKeyDown);
+        inputEl.removeEventListener('input', updateSuggestions);
+        if (overlay && overlay.parentElement) overlay.parentElement.removeChild(overlay);
+        overlay = null;
+        inputEl = null;
+        resultsEl = null;
+        searchActive = false;
+        selectedIndex = -1;
+    }
+
+    function onDocumentMouseDown(e) {
+        if (!overlay) return;
+        if (!overlay.contains(e.target)) closeSearchOverlay();
+    }
+
+    function updateSuggestions() {
+        const q = inputEl.value.trim().toLowerCase();
+        const entries = Object.values(keyMap).filter(v => v.toLowerCase().includes(q));
+        const slice = entries.slice(0, MAX_RESULTS);
+        resultsEl.innerHTML = '';
+        slice.forEach((text, idx) => {
+            const item = document.createElement('div');
+            item.textContent = text;
+            item.style.padding = '6px 8px';
+            item.style.cursor = 'pointer';
+            item.dataset.index = idx;
+            item.addEventListener('mouseenter', () => {
+                selectedIndex = idx;
+                refreshSelection();
+            });
+            item.addEventListener('mouseleave', () => {
+                selectedIndex = -1;
+                refreshSelection();
+            });
+            item.addEventListener('click', () => {
+                insertTextAndClose(text);
+            });
+            resultsEl.appendChild(item);
+        });
+        if (slice.length === 0) {
+            const empty = document.createElement('div');
+            empty.textContent = 'No matches';
+            empty.style.padding = '6px 8px';
+            empty.style.color = '#666';
+            resultsEl.appendChild(empty);
+        }
+        selectedIndex = -1;
+        refreshSelection();
+    }
+
+    function onInputKeyDown(e) {
+        if (e.key === 'Escape') {
+            e.preventDefault();
+            closeSearchOverlay();
+            return;
+        }
+        if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            moveSelection(1);
+            return;
+        }
+        if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            moveSelection(-1);
+            return;
+        }
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            commitSelection();
+            return;
+        }
+    }
+
+    function moveSelection(delta) {
+        const items = resultsEl.querySelectorAll('div');
+        if (!items.length) return;
+        if (selectedIndex < 0) selectedIndex = 0;
+        else selectedIndex = (selectedIndex + delta + items.length) % items.length;
+        refreshSelection();
+        const sel = items[selectedIndex];
+        if (sel) sel.scrollIntoView({block: 'nearest'});
+    }
+
+    function refreshSelection() {
+        const items = resultsEl.querySelectorAll('div');
+        items.forEach((el, idx) => {
+            if (idx === selectedIndex) {
+                el.style.background = '#007acc';
+                el.style.color = '#fff';
+            } else {
+                el.style.background = '';
+                el.style.color = '';
+            }
+        });
+    }
+
+    function commitSelection() {
+        const items = resultsEl.querySelectorAll('div');
+        if (items.length === 0) {
+            const q = inputEl.value.trim();
+            if (q) insertTextAndClose(q);
+            else closeSearchOverlay();
+            return;
+        }
+        const idx = selectedIndex >= 0 ? selectedIndex : 0;
+        const el = items[idx];
+        if (el) insertTextAndClose(el.textContent);
+        else closeSearchOverlay();
+    }
+
+    function insertTextAndClose(text) {
+        closeSearchOverlay();
+        insertTextAtCursor(text);
     }
 })();
