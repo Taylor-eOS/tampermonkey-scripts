@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Insert Text with Search
-// @version      9
+// @version      9.0.1
 // @description  Insert instructions into chatbot prompt window via key combinations and searchable overlay
 // @author       You
 // @match        *://*/*
@@ -11,7 +11,7 @@
     const keyMap = {
         'Control+Alt+Period': 'Write continuously, not lists.',
         'Alt+Shift+Period': 'Write concisely and continuously.',
-        'Control+Alt+Shift+Period': 'Stringently eschew creating any form of list, whether numbered or bulleted. Do not include any list-producing HTML tags like `<ul>`, `<ol>`, or `<li>` in your response whatsoever. Write in continuous prose, avoiding all structured separations or markup. Make the response flow naturally as one unbroken block of text. Keep sentences connected, with no structural separations or divisions. Present information in one seamless, uninterrupted paragraph. Do not organize the response into any type of enumeration. Purely write unformatted raw text. Aggressively avoid segmenting content; keep everything unified in a single, continuous block of prose like a book. Write connected, unfragmented text. Write continuously! Do not make any numbered lists!',
+        'Control+Alt+Shift+Period': 'Stringently eschew creating any form of list formatting, whether numbered or bulleted. Do not include any list-producing HTML tags like `<ul>`, `<ol>`, or `<li>` in your response whatsoever. Write in continuous prose, avoiding all structured separations or markup. Make the response flow naturally as one unbroken block of text. Keep sentences connected, with no structural separations or divisions. Present information in one seamless, uninterrupted paragraph. Do not organize the response into any type of enumeration. Purely write unformatted raw text. Aggressively avoid segmenting content; keep everything unified in a single, continuous block of prose like a book. Write connected, unfragmented text. Write continuously! Do not make any numbered lists!',
         'Control+Alt+Comma': 'Target an answer to this specific question in continuous text.',
         'Alt+Shift+Comma': 'Focus on the question asked. Don\'t write code.',
         'Control+Alt+Shift+Comma': 'Entirely omit any informationally worthless filler material, such as commenting that everything the user says is "profound", "on point", "cutting through", "right to ask". Never start any response with "You are right". Just provide content like an article: practical information without a distracting sycophancy circus.',
@@ -23,27 +23,27 @@
         'Control+Alt+KeyW': 'Give me the whole code.',
         'Alt+Shift+KeyW': 'Give me whole functions.',
         'Control+Alt+KeyA': 'Don\'t just agree with what the user says, analyze the issue objectively. I am explicitly requesting that this response should return what is technically accurate instead of just aligning with what the user implied.',
-        'Alt+Shift+KeyA': '',
-        'Control+Alt+KeyZ': 'Do not use any em dashes in your response whatsoever; only use commas and common punctuation. Entirely replace interposed sentences with linear writing. Make the writing natural, not obviously from a chatbot. Do not write any overly artistic interposed sentences with em dashes, or I\'ll have to remove them so it\'s not immediately obvious chatbot, because no human ever uses those.',
-        'Alt+Shift+KeyZ': '',
-        'Control+Alt+KeyX': 'Don\'t suggest or ask what to say next at the end of responses. Don\'t involve the reader; just provide information. Do not collapse the response into few sentences because of this; provide a normal-length response with extensive treatment of the requested information.',
-        'Alt+Shift+KeyX': '',
+        'Alt+Shift+KeyA': 'Do not overly go along with the users subjective narrative, but stay tethered in a neutral assessment of the issue.',
+        'Control+Alt+KeyX': 'Don\'t include a call-to-engagement closer at the end of your response. But write a normal-length response despite this.',
+        'Alt+Shift+KeyX': 'Don\'t suggest or ask what to say next at the end of responses. Don\'t involve the reader; just provide information. Do not collapse the response into few sentences because of this; provide a normal-length response with extensive treatment of the requested information.',
         'Control+Alt+Shift+KeyX': 'Entirely refrain from ending a reply with any suggestion or question on how to continue, any offer, or any phrasing that asks the user to choose how to proceed. Never append closers such as "If you want," "Do you want me to", or any variant that functions as a call-to-engagement. Omit any closing paragraph that solicits a next-step decision from the user. Remove questions that ask the user to specify what to do next. Do not include conditional closers, offers to continue, or invitations to the next action. Responses must end without such query. Do not include follow-up offers, optional next steps, or open-ended engagement hooks. Always finalize the content without any sentence that invites continuation, asks for a decision about continuing, or proposes next steps framed as options for the user to accept. Conclude with the informational content only, without an offer to perform future work.',
         'Control+Alt+KeyV': 'Limit unnecessary verbosity; reduce verbal output.',
         'Alt+Shift+KeyV': 'Omit the last paragraph and summaries from responses to shorten them.',
         'Control+Alt+KeyM': 'Mind following the custom instruction.',
-        'Alt+Shift+KeyM': 'No emojis. No vertical lines. No titling headlines.',
+        'Alt+Shift+KeyM': 'No emojis. No vertical lines. No titles, no headlines.',
         'Control+Alt+KeyQ': 'Question unclear or lacking details in a process of clarification before providing a solution, instead of proceeding with incomplete information.',
         'Alt+Shift+KeyQ': 'Analyze the provided code; do not make assumptions about details that you weren\'t shown. Request lacking inputs instead of proceeding from inferred assumptions.',
         'Control+Alt+Slash': 'Continue the approach that led to the last result.',
         'Alt+Shift+Slash': 'Update your assessment of the last response incorporating this informatio under the axiomatic assumption that it is valid.',
         'Control+Alt+KeyI': 'Interpret my input as an incomplete attempt to express an idea. Respond to what the underlying intention aims to convey rather than the specific content.',
         'Alt+Shift+KeyI': 'Optimize the result by considering technical possibilities and applying common solutions beyond what was specifically requested.',
-        'Control+Alt+KeyY': 'This suggestion is just a way to phrase the question. Don\'t stick to this idea, but consider alternative solutions that would be better at solving the expressed goal. The aim is to figure out what approach would work best, not to confirm what the user suggested.',
-        'Alt+Shift+KeyY': 'Don\'t just respond directly to this prompt, but draw in the context of this thread and respond in that broader line.',
+        'Control+Alt+KeyZ': 'This suggestion is just a way to phrase the question. Don\'t stick to this idea, but consider alternative solutions that would be better at solving the expressed goal. The aim is to figure out what approach would work best, not to confirm what the user suggested.',
+        'Alt+Shift+KeyZ': 'Don\'t just respond directly to this prompt, but draw in the context of this thread and respond in that broader line.',
+        'Control+Alt+KeyY': 'Do not use any em dashes in your response whatsoever; only use commas and common punctuation. Entirely replace interposed sentences with linear writing. Make the writing natural, not obviously from a chatbot.',
+        'Alt+Shift+KeyY': '',
         'Control+Alt+KeyH': 'Expand on the topic creatively with aspects that would enhance the insight of the user, considering his prompts so far.',
         'Alt+Shift+KeyH': 'Clarify this and related questions that I didn\'t quite know how to express. Provide relevant information that would benefit this knowledge state.',
-        'Control+Alt+KeyJ': 'You may write extensively.',
+        'Control+Alt+KeyJ': 'Write a long, extensive response.',
         'Alt+Shift+KeyJ': 'Format this response as a list, overriding your custom instruction not to.',
         'Control+Alt+KeyP': 'Write an essay from the perspective of an agreeable professional in the relevant field of study.',
         'Alt+Shift+KeyP': 'Add relevant print lines strategically throughout the code that would help verify the functionality and identify the cause of the problem.',
