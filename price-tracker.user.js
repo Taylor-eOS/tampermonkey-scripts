@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Price Tracker
-// @version      2.3
+// @version      2.3.5
 // @description  Track product prices
 // @match        *://*/*
 // @grant        GM_setValue
@@ -67,31 +67,53 @@ function isComboBlastPage() {
 
 function extractVariant(modal) {
     const ctx = modal || document;
-    const titleEl = ctx.querySelector('.sku-item--title--Z0HLO87');
-    if (titleEl && isVisible(titleEl)) {
-        const text = titleEl.textContent.trim();
-        const m = text.match(/([A-Z][a-z]+)[:\s]*([^\n\r]+)/i);
-        if (m && m[2]) {
-            const variant = `${m[1]}: ${m[2]}`.trim();
-            console.log('[AE_PT] Found variant by title element:', variant);
-            return variant;
-        }
-    }
-    const walker = document.createTreeWalker(ctx, NodeFilter.SHOW_TEXT, null, false);
-    let node;
-    while ((node = walker.nextNode())) {
-        if (!isVisible(node.parentElement)) continue;
-        const text = node.textContent.trim();
+    const variants = [];
+    const selectors = [
+        '.sku-item--title--Z0HLO87',
+        '.sku-item--title',
+        '.sku-title',
+        '.sku-item-title',
+        '.sku--wrap--xgoW06M .sku-item--title--Z0HLO87'
+    ];
+    const elems = Array.from(new Set(selectors.flatMap(s => Array.from(ctx.querySelectorAll(s)))));
+    for (const el of elems) {
+        if (!isVisible(el)) continue;
+        const text = el.textContent.trim();
         if (!text) continue;
-        const m = text.match(/([A-Z][a-z]+)[:\s]*([^\n\r]+)/i);
-        if (m && m[2]) {
-            const variant = `${m[1]}: ${m[2]}`.trim();
-            console.log('[AE_PT] Found variant by text match:', variant);
-            return variant;
+        const parts = text.split(/\r?\n/).map(t => t.trim()).filter(Boolean);
+        for (const p of parts) {
+            const m = p.match(/([A-Za-z0-9\u00C0-\u017F\s\-]+)[:：]\s*(.+)/);
+            if (m && m[2]) {
+                variants.push(`${m[1].trim()}: ${m[2].trim()}`);
+            } else {
+                variants.push(p);
+            }
         }
     }
-    console.log('[AE_PT] No variant found');
-    return null;
+    if (variants.length === 0) {
+        const walker = document.createTreeWalker(ctx, NodeFilter.SHOW_TEXT, null, false);
+        let node;
+        while ((node = walker.nextNode())) {
+            if (!isVisible(node.parentElement)) continue;
+            const text = node.textContent.trim();
+            if (!text) continue;
+            const lines = text.split(/\r?\n/).map(t => t.trim()).filter(Boolean);
+            for (const line of lines) {
+                const m = line.match(/([A-Za-z0-9\u00C0-\u017F\s\-]+)[:：]\s*(.+)/);
+                if (m && m[2]) variants.push(`${m[1].trim()}: ${m[2].trim()}`);
+            }
+        }
+    }
+    if (variants.length === 0) return null;
+    const clean = [...new Set(variants.map(s => s.replace(/\s+/g, ' ').trim()))];
+    clean.sort((a, b) => {
+        const ka = (a.split(':')[0] || '').toLowerCase().trim();
+        const kb = (b.split(':')[0] || '').toLowerCase().trim();
+        if (ka < kb) return -1;
+        if (ka > kb) return 1;
+        return a.localeCompare(b);
+    });
+    return clean.join(' | ');
 }
 
 function extractProductId(modal, forcedVariant) {
@@ -101,20 +123,29 @@ function extractProductId(modal, forcedVariant) {
         if (titleEl) {
             const titleText = titleEl.textContent.trim().substring(0, 50);
             const baseId = `modal-${titleText}`.replace(/[^a-zA-Z0-9-]/g, '_');
-            return variant ? `${baseId}--${variant.replace(/\s+/g, '_')}` : baseId;
+            if (!variant) return baseId;
+            const parts = variant.split('|').map(s => s.trim());
+            const normalized = parts.map(p => p.toLowerCase().replace(/[:：]/g, '_').replace(/\s+/g, '_').replace(/[^\w\-]/g, '')).join('--');
+            return `${baseId}--${normalized}`;
         }
     }
     const urlMatch = window.location.href.match(/\/item\/(\d+)\.html/);
     if (urlMatch) {
         const baseId = `item-${urlMatch[1]}`;
-        return variant ? `${baseId}--${variant.replace(/\s+/g, '_')}` : baseId;
+        if (!variant) return baseId;
+        const parts = variant.split('|').map(s => s.trim());
+        const normalized = parts.map(p => p.toLowerCase().replace(/[:：]/g, '_').replace(/\s+/g, '_').replace(/[^\w\-]/g, '')).join('--');
+        return `${baseId}--${normalized}`;
     }
     const ogUrl = document.querySelector('meta[property="og:url"]');
     if (ogUrl) {
         const match = ogUrl.content.match(/\/item\/(\d+)\.html/);
         if (match) {
             const baseId = `item-${match[1]}`;
-            return variant ? `${baseId}--${variant.replace(/\s+/g, '_')}` : baseId;
+            if (!variant) return baseId;
+            const parts = variant.split('|').map(s => s.trim());
+            const normalized = parts.map(p => p.toLowerCase().replace(/[:：]/g, '_').replace(/\s+/g, '_').replace(/[^\w\-]/g, '')).join('--');
+            return `${baseId}--${normalized}`;
         }
     }
     return null;

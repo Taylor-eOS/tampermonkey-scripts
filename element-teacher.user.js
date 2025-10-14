@@ -1,6 +1,6 @@
 // ==UserScript==
-// @name         Element Teacher
-// @version      1.0
+// @name         Teach Helper Select-and-Capture
+// @version      1.0.1
 // @match        *://*/*
 // @grant        GM_addStyle
 // @grant        GM_registerMenuCommand
@@ -194,10 +194,10 @@ function createPanel(){
 
 function createButton(){
   if(document.getElementById(BTN_ID)) return
-  const b=document.createElement('button'); b.id=BTN_ID; b.textContent='Teach price'; document.body.appendChild(b)
+  const b=document.createElement('button'); b.id=BTN_ID; b.textContent='Teach element'; document.body.appendChild(b)
   b.addEventListener('click',()=>{
     const result = captureSelection()
-    if(result.error){ const panel=document.getElementById(PANEL_ID); panel.style.display='block'; panel.textContent = 'No selection found. Select visible price text then click the button.'; return }
+    if(result.error){ const panel=document.getElementById(PANEL_ID); panel.style.display='block'; panel.textContent = 'No selection found. Select visible element text then click the button.'; return }
     showPanel(result)
     try{ clearHighlights(); highlightMatches(result.selector, new RegExp(result.regex,'g')) }catch(e){}
   })
