@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Price Tracker
-// @version      2.4
+// @version      2.5
 // @description  Track product prices
 // @match        *://*/*
 // @grant        GM_setValue
@@ -77,7 +77,6 @@ function isComboBlastPage() {
 
 function extractVariant(modal) {
     const ctx = modal || document;
-    const variants = [];
     const selectors = [
         '.sku-item--title--Z0HLO87',
         '.sku-item--title',
@@ -85,6 +84,8 @@ function extractVariant(modal) {
         '.sku-item-title',
         '.sku--wrap--xgoW06M .sku-item--title--Z0HLO87'
     ];
+    const variants = [];
+    const seen = new Set();
     const elems = Array.from(new Set(selectors.flatMap(s => Array.from(ctx.querySelectorAll(s)))));
     for (const el of elems) {
         if (!isVisible(el)) continue;
@@ -92,26 +93,41 @@ function extractVariant(modal) {
         if (!text) continue;
         const parts = text.split(/\r?\n/).map(t => t.trim()).filter(Boolean);
         for (const p of parts) {
-            const m = p.match(/([A-Za-z0-9\u00C0-\u017F\s\-]+)[:：]\s*(.+)/);
-            if (m && m[2]) {
-                variants.push(`${m[1].trim()}: ${m[2].trim()}`);
-            } else {
-                variants.push(p);
-            }
+            const m = p.match(/([A-Za-z0-9\u00C0-\u017F\s\-]{1,60})[:：]\s*(.+)/);
+            const val = m && m[2] ? `${m[1].trim()}: ${m[2].trim()}` : p.replace(/\s+/g, ' ').trim();
+            if (val && !seen.has(val)) { seen.add(val); variants.push(val); }
         }
     }
     if (variants.length === 0) {
-        const walker = document.createTreeWalker(ctx, NodeFilter.SHOW_TEXT, null, false);
-        let node;
-        while ((node = walker.nextNode())) {
-            if (!node.parentElement || !isVisible(node.parentElement)) continue;
-            const text = node.textContent.trim();
-            if (!text) continue;
-            const lines = text.split(/\r?\n/).map(t => t.trim()).filter(Boolean);
-            for (const line of lines) {
-                const m = line.match(/([A-Za-z0-9\u00C0-\u017F\s\-]+)[:：]\s*(.+)/);
-                if (m && m[2]) variants.push(`${m[1].trim()}: ${m[2].trim()}`);
+        const containerSelector = 'ul, dl, table, select, [class*="sku"], [class*="option"], [class*="variant"], [class*="spec"], [data-sku], [data-variant]';
+        const containers = Array.from(new Set(Array.from(ctx.querySelectorAll(containerSelector))));
+        const blacklist = /(price|shipping|qty|quantity|stock|add to cart|sold out|rating|review|share|seller)/i;
+        let totalFound = 0;
+        for (const c of containers) {
+            if (!isVisible(c)) continue;
+            const walker = document.createTreeWalker(c, NodeFilter.SHOW_TEXT, null, false);
+            let node;
+            const localFound = [];
+            while ((node = walker.nextNode())) {
+                if (!node.parentElement || !isVisible(node.parentElement)) continue;
+                const text = node.textContent.trim();
+                if (!text) continue;
+                const lines = text.split(/\r?\n/).map(t => t.trim()).filter(Boolean);
+                for (const line of lines) {
+                    if (blacklist.test(line)) continue;
+                    const m = line.match(/([A-Za-z0-9\u00C0-\u017F\s\-]{1,60})[:：]\s*(.+)/);
+                    if (!m || !m[2]) continue;
+                    const key = m[1].trim();
+                    const val = m[2].trim();
+                    if (key.length > 40 || val.length > 120) continue;
+                    const candidate = `${key}: ${val}`.replace(/\s+/g, ' ').trim();
+                    if (!seen.has(candidate)) { seen.add(candidate); localFound.push(candidate); totalFound++; }
+                    if (totalFound >= 8) break;
+                }
+                if (totalFound >= 8) break;
             }
+            if (localFound.length > 0) variants.push(...localFound);
+            if (totalFound >= 8) break;
         }
     }
     if (variants.length === 0) return null;
@@ -241,6 +257,7 @@ function scanForPrice() {
 }
 
 function updateHistory(productId, title, price, raw, variant) {
+    const normVariant = variant ? variant.replace(/\s+/g, ' ').trim() : null;
     if (!historyData[productId]) {
         historyData[productId] = {
             title,
@@ -251,8 +268,8 @@ function updateHistory(productId, title, price, raw, variant) {
     const history = historyData[productId];
     const lastRecord = history.records.length ? history.records[history.records.length - 1] : null;
     const lastPrice = lastRecord ? lastRecord.price : null;
-    const lastVariant = lastRecord ? lastRecord.variant : null;
-    if (lastPrice === price && (lastVariant === variant || (lastVariant == null && !variant))) {
+    const lastVariant = lastRecord && lastRecord.variant ? lastRecord.variant.replace(/\s+/g, ' ').trim() : null;
+    if (lastPrice === price && (lastVariant === normVariant || (lastVariant == null && !normVariant))) {
         return false;
     }
     history.title = title;
@@ -260,7 +277,7 @@ function updateHistory(productId, title, price, raw, variant) {
         ts: new Date().toISOString(),
         price,
         raw,
-        variant: variant || null,
+        variant: normVariant || null,
         pageUrl: window.location.href
     });
     storage_set(STORAGE_KEY, historyData);
