@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Price Tracker
-// @version      2.3.5
+// @version      2.4
 // @description  Track product prices
 // @match        *://*/*
 // @grant        GM_setValue
@@ -24,12 +24,17 @@ function storage_get(key, defaultVal) {
     try {
         if (typeof GM_getValue !== 'undefined') {
             const val = GM_getValue(key);
-            return val !== undefined ? JSON.parse(val) : defaultVal;
+            if (val === undefined || val === null) return defaultVal;
+            if (typeof val === 'string') {
+                try { return JSON.parse(val); } catch(e) { return val; }
+            }
+            return val;
         }
     } catch(e) {}
     try {
         const val = localStorage.getItem(key);
-        return val ? JSON.parse(val) : defaultVal;
+        if (!val) return defaultVal;
+        try { return JSON.parse(val); } catch(e) { return val; }
     } catch(e) {}
     return defaultVal;
 }
@@ -37,7 +42,12 @@ function storage_get(key, defaultVal) {
 function storage_set(key, value) {
     try {
         if (typeof GM_setValue !== 'undefined') {
-            GM_setValue(key, JSON.stringify(value));
+            try {
+                GM_setValue(key, value);
+            } catch(e) {
+                // some GM implementations require string
+                try { GM_setValue(key, JSON.stringify(value)); } catch(e2) {}
+            }
             return;
         }
     } catch(e) {}
@@ -94,7 +104,7 @@ function extractVariant(modal) {
         const walker = document.createTreeWalker(ctx, NodeFilter.SHOW_TEXT, null, false);
         let node;
         while ((node = walker.nextNode())) {
-            if (!isVisible(node.parentElement)) continue;
+            if (!node.parentElement || !isVisible(node.parentElement)) continue;
             const text = node.textContent.trim();
             if (!text) continue;
             const lines = text.split(/\r?\n/).map(t => t.trim()).filter(Boolean);
@@ -116,108 +126,117 @@ function extractVariant(modal) {
     return clean.join(' | ');
 }
 
+function normalizePartsForId(parts) {
+    return parts.map(p => p.toLowerCase().replace(/[:：]/g, '_').replace(/\s+/g, '_').replace(/[^\w\-]/g, '')).join('--');
+}
+
 function extractProductId(modal, forcedVariant) {
     const variant = typeof forcedVariant !== 'undefined' ? forcedVariant : extractVariant(modal);
-    if (modal) {
-        const titleEl = modal.querySelector('.title--wrap--UUHae_g');
-        if (titleEl) {
-            const titleText = titleEl.textContent.trim().substring(0, 50);
-            const baseId = `modal-${titleText}`.replace(/[^a-zA-Z0-9-]/g, '_');
-            if (!variant) return baseId;
-            const parts = variant.split('|').map(s => s.trim());
-            const normalized = parts.map(p => p.toLowerCase().replace(/[:：]/g, '_').replace(/\s+/g, '_').replace(/[^\w\-]/g, '')).join('--');
-            return `${baseId}--${normalized}`;
-        }
-    }
+    // Prefer stable identifiers in this order: URL path item id, og:url, modal data-attributes, fallback to modal title
     const urlMatch = window.location.href.match(/\/item\/(\d+)\.html/);
     if (urlMatch) {
         const baseId = `item-${urlMatch[1]}`;
         if (!variant) return baseId;
         const parts = variant.split('|').map(s => s.trim());
-        const normalized = parts.map(p => p.toLowerCase().replace(/[:：]/g, '_').replace(/\s+/g, '_').replace(/[^\w\-]/g, '')).join('--');
+        const normalized = normalizePartsForId(parts);
         return `${baseId}--${normalized}`;
     }
-    const ogUrl = document.querySelector('meta[property="og:url"]');
-    if (ogUrl) {
+    const ogUrl = document.querySelector('meta[property="og:url"], meta[name="og:url"]');
+    if (ogUrl && ogUrl.content) {
         const match = ogUrl.content.match(/\/item\/(\d+)\.html/);
         if (match) {
             const baseId = `item-${match[1]}`;
             if (!variant) return baseId;
             const parts = variant.split('|').map(s => s.trim());
-            const normalized = parts.map(p => p.toLowerCase().replace(/[:：]/g, '_').replace(/\s+/g, '_').replace(/[^\w\-]/g, '')).join('--');
+            const normalized = normalizePartsForId(parts);
+            return `${baseId}--${normalized}`;
+        }
+        // fallback: use og:url value hashed to stable id
+        const safe = ogUrl.content.replace(/[^a-zA-Z0-9]/g, '_').slice(0, 120);
+        const baseId = `og-${safe}`;
+        if (!variant) return baseId;
+        const parts = variant.split('|').map(s => s.trim());
+        const normalized = normalizePartsForId(parts);
+        return `${baseId}--${normalized}`;
+    }
+    // modal-based stable id using data attributes or known title container
+    if (modal) {
+        // try data-sku or data-pid attributes
+        const dataAttr = modal.querySelector('[data-sku], [data-pid], [data-itemid]');
+        if (dataAttr) {
+            const idVal = dataAttr.getAttribute('data-sku') || dataAttr.getAttribute('data-pid') || dataAttr.getAttribute('data-itemid');
+            if (idVal) {
+                const baseId = `modal-id-${idVal}`.replace(/[^a-zA-Z0-9\-_]/g, '_');
+                if (!variant) return baseId;
+                const parts = variant.split('|').map(s => s.trim());
+                const normalized = normalizePartsForId(parts);
+                return `${baseId}--${normalized}`;
+            }
+        }
+        const titleEl = modal.querySelector('.title--wrap--UUHae_g');
+        if (titleEl) {
+            const titleText = titleEl.textContent.trim().replace(/\s+/g, ' ').substring(0, 80);
+            const baseId = `modal-${titleText}`.replace(/[^a-zA-Z0-9-]/g, '_');
+            if (!variant) return baseId;
+            const parts = variant.split('|').map(s => s.trim());
+            const normalized = normalizePartsForId(parts);
             return `${baseId}--${normalized}`;
         }
     }
-    return null;
+    // last resort: derive from document.title and location
+    const docTitle = document.title ? document.title.trim().replace(/\s+/g, ' ').substring(0, 80) : 'unknown';
+    const safeDoc = docTitle.replace(/[^a-zA-Z0-9-]/g, '_');
+    const baseId = `doc-${safeDoc}`;
+    if (!variant) return baseId;
+    const parts = variant.split('|').map(s => s.trim());
+    const normalized = normalizePartsForId(parts);
+    return `${baseId}--${normalized}`;
 }
 
 function extractTitle(modal) {
     if (modal) {
         const titleEl = modal.querySelector('.title--wrap--UUHae_g h1, .title--wrap--UUHae_g');
         if (titleEl) {
-            console.log('[AE_PT] Found modal title');
             return titleEl.textContent.trim();
         }
     }
     const titleEl = document.querySelector('.title--wrap--UUHae_g h1, .title--wrap--UUHae_g');
     if (titleEl) return titleEl.textContent.trim();
-    const ogTitle = document.querySelector('meta[property="og:title"]');
-    if (ogTitle && ogTitle.content.trim()) return ogTitle.content.trim();
+    const ogTitle = document.querySelector('meta[property="og:title"], meta[name="og:title"]');
+    if (ogTitle && ogTitle.content && ogTitle.content.trim()) return ogTitle.content.trim();
     return document.title.trim();
 }
 
 function extractPrice(modal) {
     const context = modal || document;
-    const priceEl = context.querySelector('.price-default--current--F8OlYIo, .product-price-current, .product-price-value');
+    const priceEl = context.querySelector('.price-default--current--F8OlYIo, .product-price-current, .product-price-value, .p-price .p-price__value, .price-current');
     if (!priceEl || !isVisible(priceEl)) {
-        console.log('[AE_PT] Price element not found or not visible');
         return null;
     }
     const text = priceEl.textContent.trim();
     const match = text.match(/(\d{1,3}(?:[\s\.]?\d{3})*[,\.]\d{2})/);
-    if (!match) {
-        console.log('[AE_PT] No price match in text:', text);
-        return null;
-    }
+    if (!match) return null;
     const raw = match[1];
     const price = normalizePrice(raw);
     if (isNaN(price) || price <= 0) return null;
-    console.log('[AE_PT] Found price:', price, 'from raw:', raw);
     return { price, raw };
 }
 
 function scanForPrice() {
-    console.log('[AE_PT] Starting scan...');
-    if (isComboBlastPage() && !isInModal()) {
-        console.log('[AE_PT] Combo Blast main page, waiting for modal');
-        return null;
-    }
+    if (isComboBlastPage() && !isInModal()) return null;
     const modal = document.querySelector('.pdp-mini-wrap') || null;
     const title = extractTitle(modal);
-    if (!title) {
-        console.log('[AE_PT] No title found');
-        return null;
-    }
+    if (!title) return null;
     if (modal && lastModalTitle && lastModalTitle !== title) {
-        console.log('[AE_PT] Modal changed, forcing update');
         lastModalTitle = title;
         currentProduct = null;
     }
-    if (modal) {
-        lastModalTitle = title;
-    }
+    if (modal) lastModalTitle = title;
     const variant = extractVariant(modal);
     const productId = extractProductId(modal, variant);
-    if (!productId) {
-        console.log('[AE_PT] No product ID found');
-        return null;
-    }
+    if (!productId) return null;
     const priceData = extractPrice(modal);
-    if (!priceData) {
-        console.log('[AE_PT] No price found');
-        return null;
-    }
-    console.log('[AE_PT] Scan complete:', { productId, title, price: priceData.price, variant });
+    if (!priceData) return null;
     return { productId, title, price: priceData.price, raw: priceData.raw, variant, isModal: !!modal };
 }
 
@@ -230,13 +249,10 @@ function updateHistory(productId, title, price, raw, variant) {
         };
     }
     const history = historyData[productId];
-    const lastRecord = history.records[history.records.length - 1];
-    let skip = false;
-    if (lastRecord && lastRecord.price === price && lastRecord.variant === variant) {
-        skip = true;
-        console.log('[AE_PT] Price and variant unchanged, skipping storage update');
-    }
-    if (skip) {
+    const lastRecord = history.records.length ? history.records[history.records.length - 1] : null;
+    const lastPrice = lastRecord ? lastRecord.price : null;
+    const lastVariant = lastRecord ? lastRecord.variant : null;
+    if (lastPrice === price && (lastVariant === variant || (lastVariant == null && !variant))) {
         return false;
     }
     history.title = title;
@@ -248,7 +264,6 @@ function updateHistory(productId, title, price, raw, variant) {
         pageUrl: window.location.href
     });
     storage_set(STORAGE_KEY, historyData);
-    console.log(`[AE_PT] Saved new price: ${price} for ${productId}`);
     return true;
 }
 
@@ -295,7 +310,28 @@ font-size: 12px;
         storage_set('ae_pt_minimized', minimized);
     };
     document.getElementById('ae-pt-export').onclick = exportData;
-    document.getElementById('ae-pt-delete').onclick = deleteCurrentHistory;
+
+    const deleteBtn = document.getElementById('ae-pt-delete');
+    let deleteConfirmTimeout = null;
+    deleteBtn.onclick = function() {
+        if (deleteBtn.dataset.confirm === 'true') {
+            clearTimeout(deleteConfirmTimeout);
+            deleteBtn.dataset.confirm = '';
+            deleteBtn.textContent = 'Delete';
+            deleteBtn.style.background = '#d32f2f';
+            deleteCurrentHistory();
+        } else {
+            deleteBtn.dataset.confirm = 'true';
+            deleteBtn.textContent = 'Confirm?';
+            deleteBtn.style.background = '#f57c00';
+            deleteConfirmTimeout = setTimeout(() => {
+                deleteBtn.dataset.confirm = '';
+                deleteBtn.textContent = 'Delete';
+                deleteBtn.style.background = '#d32f2f';
+            }, 2500);
+        }
+    };
+
     return panel;
 }
 
@@ -333,7 +369,6 @@ function exportData() {
     a.download = `website-prices-${Date.now()}.json`;
     a.click();
     URL.revokeObjectURL(url);
-    console.log('[AE_PT] Exported data');
 }
 
 function deleteCurrentHistory() {
@@ -342,7 +377,6 @@ function deleteCurrentHistory() {
         storage_set(STORAGE_KEY, historyData);
         currentProduct = null;
         updateUI();
-        console.log('[AE_PT] Deleted current product history');
     }
 }
 
@@ -353,7 +387,7 @@ function performScan() {
         const isDifferentVariant = currentProduct && currentProduct.variant !== result.variant;
         if (isDifferentProduct || isDifferentVariant) {
             currentProduct = result;
-            const updated = updateHistory(result.productId, result.title, result.price, result.raw, result.variant);
+            updateHistory(result.productId, result.title, result.price, result.raw, result.variant);
             updateUI();
         } else if (currentProduct && currentProduct.price !== result.price) {
             currentProduct = result;
@@ -371,7 +405,6 @@ function scheduleScan() {
 function init() {
     historyData = storage_get(STORAGE_KEY, {});
     minimized = storage_get('ae_pt_minimized', false);
-    console.log('[AE_PT] Loaded history:', Object.keys(historyData).length, 'products');
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', () => {
             createUI();
@@ -390,12 +423,10 @@ function init() {
         attributes: true,
         attributeFilter: ['class']
     });
-    console.log('[AE_PT] Initialized with mutation observer');
 }
 
 window.AE_PT_force = performScan;
 window.AE_PT_export = () => {
-    console.log('[AE_PT] Current data:', historyData);
     return historyData;
 };
 
