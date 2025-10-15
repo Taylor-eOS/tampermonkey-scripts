@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Price Tracker
-// @version      2.5
+// @version      2.5.1
 // @description  Track product prices
 // @match        *://*/*
 // @grant        GM_setValue
@@ -289,7 +289,7 @@ function createUI() {
     panel.id = 'ae-price-tracker-panel';
     panel.style.cssText = `
 position: fixed;
-top: 10px;
+top: 50px;
 right: 10px;
 background: white;
 border: 2px solid #ff6a00;
