@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Price Tracker
-// @version      2.5.1
+// @version      2.6
 // @description  Track product prices
 // @match        *://*/*
 // @grant        GM_setValue
@@ -45,7 +45,6 @@ function storage_set(key, value) {
             try {
                 GM_setValue(key, value);
             } catch(e) {
-                // some GM implementations require string
                 try { GM_setValue(key, JSON.stringify(value)); } catch(e2) {}
             }
             return;
@@ -73,6 +72,18 @@ function isInModal() {
 
 function isComboBlastPage() {
     return window.location.href.includes('/BundleDeals');
+}
+
+function isSearchOrListingPage() {
+    const url = window.location.href;
+    if (url.includes('/w/wholesale-') || url.includes('SearchText=') || url.includes('/category/')) {
+        return true;
+    }
+    const title = document.title.trim();
+    if (/with free shipping on aliexpress/i.test(title) || /buy .+ with free shipping/i.test(title)) {
+        return true;
+    }
+    return false;
 }
 
 function extractVariant(modal) {
@@ -148,7 +159,6 @@ function normalizePartsForId(parts) {
 
 function extractProductId(modal, forcedVariant) {
     const variant = typeof forcedVariant !== 'undefined' ? forcedVariant : extractVariant(modal);
-    // Prefer stable identifiers in this order: URL path item id, og:url, modal data-attributes, fallback to modal title
     const urlMatch = window.location.href.match(/\/item\/(\d+)\.html/);
     if (urlMatch) {
         const baseId = `item-${urlMatch[1]}`;
@@ -167,7 +177,6 @@ function extractProductId(modal, forcedVariant) {
             const normalized = normalizePartsForId(parts);
             return `${baseId}--${normalized}`;
         }
-        // fallback: use og:url value hashed to stable id
         const safe = ogUrl.content.replace(/[^a-zA-Z0-9]/g, '_').slice(0, 120);
         const baseId = `og-${safe}`;
         if (!variant) return baseId;
@@ -175,9 +184,7 @@ function extractProductId(modal, forcedVariant) {
         const normalized = normalizePartsForId(parts);
         return `${baseId}--${normalized}`;
     }
-    // modal-based stable id using data attributes or known title container
     if (modal) {
-        // try data-sku or data-pid attributes
         const dataAttr = modal.querySelector('[data-sku], [data-pid], [data-itemid]');
         if (dataAttr) {
             const idVal = dataAttr.getAttribute('data-sku') || dataAttr.getAttribute('data-pid') || dataAttr.getAttribute('data-itemid');
@@ -199,7 +206,6 @@ function extractProductId(modal, forcedVariant) {
             return `${baseId}--${normalized}`;
         }
     }
-    // last resort: derive from document.title and location
     const docTitle = document.title ? document.title.trim().replace(/\s+/g, ' ').substring(0, 80) : 'unknown';
     const safeDoc = docTitle.replace(/[^a-zA-Z0-9-]/g, '_');
     const baseId = `doc-${safeDoc}`;
@@ -240,9 +246,13 @@ function extractPrice(modal) {
 
 function scanForPrice() {
     if (isComboBlastPage() && !isInModal()) return null;
+    if (isSearchOrListingPage() && !isInModal()) return null;
     const modal = document.querySelector('.pdp-mini-wrap') || null;
     const title = extractTitle(modal);
     if (!title) return null;
+    if (/with free shipping on aliexpress/i.test(title) || /buy .+ with free shipping/i.test(title)) {
+        return null;
+    }
     if (modal && lastModalTitle && lastModalTitle !== title) {
         lastModalTitle = title;
         currentProduct = null;
