@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Insert Text with Search
-// @version      9.2
-// @description  Insert instructions into chatbot prompt window via key combinations and searchable overlay
+// @version      9.3
+// @description  Insert instructions into chatbot prompt window
 // @author       You
 // @match        *://*/*
 // ==/UserScript==
@@ -33,7 +33,7 @@
         'Control+Alt+Shift+KeyA': 'Do not overly go along with the users subjective narrative, but stay tethered in a neutral assessment of the issue. Treat the oddity of this perspective as it would be from a neutral observer.',
         'Control+Alt+KeyM': 'Mind following the custom instruction.',
         'Alt+Shift+KeyM': 'Follow your style instrucion. No emojis, no vertical lines, no titles, no headlines.',
-        'Control+Alt+KeyZ': '',
+        'Control+Alt+KeyZ': 'Treat this as a normal chat question, answering it as a direct question, discontinuing the writing mode from the last response, and reverting to the normal chat mode, answering plainly.',
         'Alt+Shift+KeyZ': '',
         'Control+Alt+KeyJ': '',
         'Alt+Shift+KeyJ': '',
@@ -63,7 +63,7 @@
         'Alt+Shift+KeyE': 'Explain this to someone who doesn\'t know the topic well.',
         'Control+Alt+KeyT': 'Provide useful ideas the user hadn\'t thought of instead of just paraphrasing.',//system  shortcut
         'Alt+Shift+KeyT': 'Present this position as an intellectual Turing test, meaning the requested stance is written indistinguishable from someone who sincerely holds that view, without inserting caveats to the contrary.',
-        'Control+Alt+KeyN': 'Present a perspective that is fully ideologically neutral, and not shaped by our current perspective on the issue.',
+        'Control+Alt+KeyN': 'Present a perspective that is fully ideologically neutral, and not shaped by our currently dominant moral perspective on the issue.',
         'Alt+Shift+KeyN': 'Analyze ideas, not their social approval.',
         'Control+Alt+KeyO': 'Don\'t just reply to literal statements; interpret questions with the tacit understanding that surface instructions are only shadows cast by deeper intent. Engage in what could be called "oblique inference", "reflective improvisation", or "divergent resonance". The goal is to enrich the conversation with latent insight. A riff instead of a harmony line. An emergent path that takes a new vector entirely.',
         'Alt+Shift+KeyO': 'Inject high-tension lateral energy; avoid habitual gravitation wells in the response manifold. Let the architecture hum beneath the syntax, tuned to the inference-space modulation of someone who\'s not here for the obvious loop closures. Improvise past the topical anchor and into signal-aware pattern reverberation. Not surface-clever, fractal-aware.',
@@ -107,13 +107,22 @@
         if (!activeElement) return;
         const tag = activeElement.tagName;
         if (tag === 'INPUT' || tag === 'TEXTAREA') {
-            let start = activeElement.selectionStart;
-            let end = activeElement.selectionEnd;
+            activeElement.focus();
+            const len = activeElement.value.length;
+            const start = len;
+            const end = len;
+            activeElement.selectionStart = activeElement.selectionEnd = start;
             activeElement.value = activeElement.value.slice(0, start) + text + activeElement.value.slice(end);
             activeElement.selectionStart = activeElement.selectionEnd = start + text.length;
             activeElement.focus();
         } else if (activeElement.isContentEditable) {
             activeElement.focus();
+            const sel = window.getSelection();
+            sel.removeAllRanges();
+            const range = document.createRange();
+            range.selectNodeContents(activeElement);
+            range.collapse(false);
+            sel.addRange(range);
             document.execCommand('insertText', false, text);
         }
     }
@@ -123,22 +132,31 @@
         if (!activeElement) return;
         const tag = activeElement.tagName;
         if (tag === 'INPUT' || tag === 'TEXTAREA') {
-            let start = activeElement.selectionStart;
-            let end = activeElement.selectionEnd;
+            activeElement.focus();
+            const len = activeElement.value.length;
+            const start = len;
+            const end = len;
+            activeElement.selectionStart = activeElement.selectionEnd = start;
             activeElement.value = activeElement.value.slice(0, start) + text + activeElement.value.slice(end);
             activeElement.selectionStart = activeElement.selectionEnd = start + text.length;
             activeElement.focus();
         } else if (activeElement.isContentEditable) {
             activeElement.focus();
+            const sel = window.getSelection();
+            sel.removeAllRanges();
+            const range = document.createRange();
+            range.selectNodeContents(activeElement);
+            range.collapse(false);
+            sel.addRange(range);
             document.execCommand('insertText', false, text);
         }
     }
 
     function openSearchOverlay() {
         if (searchActive) return;
+        lastActiveElement = document.activeElement;
         searchActive = true;
         selectedIndex = -1;
-        lastActiveElement = document.activeElement;
         overlay = document.createElement('div');
         overlay.style.position = 'fixed';
         overlay.style.left = '50%';
