@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Insert Text with Search
-// @version      9.3
+// @version      9.4
 // @description  Insert instructions into chatbot prompt window
 // @author       You
 // @match        *://*/*
@@ -77,6 +77,9 @@
     let resultsEl = null;
     let selectedIndex = -1;
     let lastActiveElement = null;
+    let lastSelectionStart = null;
+    let lastSelectionEnd = null;
+    let lastRange = null;
     const MAX_RESULTS = 4;
     const OPEN_KEY = 'Control+Shift+KeyF';
 
@@ -91,8 +94,8 @@
         const keyString = keys.join('+');
         if (keyString === 'Control+Shift+Equal') {
             e.preventDefault();
-            insertBackticks('```\n```');
-        } else if (keyMap[keyString]) {
+            insertBackticks();
+        } else if (keyMap && keyMap[keyString]) {
             e.preventDefault();
             insertTextAtCursor(keyMap[keyString]);
         } else if (keyString === OPEN_KEY) {
@@ -109,37 +112,103 @@
         if (tag === 'INPUT' || tag === 'TEXTAREA') {
             activeElement.focus();
             const len = activeElement.value.length;
-            const start = len;
-            const end = len;
-            activeElement.selectionStart = activeElement.selectionEnd = start;
-            activeElement.value = activeElement.value.slice(0, start) + text + activeElement.value.slice(end);
-            activeElement.selectionStart = activeElement.selectionEnd = start + text.length;
+            let start = Number.isInteger(lastSelectionStart) && lastActiveElement === activeElement ? lastSelectionStart : (Number.isInteger(activeElement.selectionStart) ? activeElement.selectionStart : len);
+            let end = Number.isInteger(lastSelectionEnd) && lastActiveElement === activeElement ? lastSelectionEnd : (Number.isInteger(activeElement.selectionEnd) ? activeElement.selectionEnd : start);
+            if (document.activeElement !== activeElement && (start === 0 && end === 0 && len > 0)) {
+                start = len;
+                end = len;
+            }
+            const before = activeElement.value.slice(0, start);
+            const after = activeElement.value.slice(end);
+            let prefix = '';
+            if (before.length === 0) prefix = '';
+            else {
+                const prevChar = before.charAt(before.length - 1);
+                if (prevChar === ' ') prefix = '';
+                else prefix = ' ';
+            }
+            const inserted = prefix + text;
+            activeElement.value = before + inserted + after;
+            const caret = (before + inserted).length;
+            activeElement.selectionStart = activeElement.selectionEnd = caret;
             activeElement.focus();
+            lastSelectionStart = null;
+            lastSelectionEnd = null;
+            lastRange = null;
         } else if (activeElement.isContentEditable) {
             activeElement.focus();
             const sel = window.getSelection();
+            let range = null;
+            if (lastRange && lastActiveElement === activeElement) range = lastRange.cloneRange();
+            else if (sel.rangeCount) range = sel.getRangeAt(0).cloneRange();
+            else {
+                range = document.createRange();
+                range.selectNodeContents(activeElement);
+                range.collapse(false);
+            }
+            function charBeforeRange(r) {
+                const node = r.startContainer;
+                const offset = r.startOffset;
+                if (node.nodeType === 3) {
+                    if (offset > 0) return node.data.charAt(offset - 1);
+                    let prev = node.previousSibling;
+                    while (prev && prev.nodeType !== 3) prev = prev.previousSibling;
+                    if (prev && prev.nodeType === 3) return prev.data.charAt(prev.data.length - 1);
+                    return null;
+                }
+                if (node.nodeType === 1) {
+                    if (offset > 0) {
+                        const child = node.childNodes[offset - 1];
+                        if (!child) return null;
+                        if (child.nodeType === 3) return child.data.charAt(child.data.length - 1);
+                        if (child.nodeName === 'BR') return '\n';
+                        return null;
+                    }
+                    let prev = node.previousSibling;
+                    while (prev && prev.nodeType !== 3) prev = prev.previousSibling;
+                    if (prev && prev.nodeType === 3) return prev.data.charAt(prev.data.length - 1);
+                    return null;
+                }
+                return null;
+            }
+            const prevChar = charBeforeRange(range);
+            let prefix = '';
+            if (prevChar === ' ') prefix = '';
+            else prefix = ' ';
+            const node = document.createTextNode(prefix + text);
+            range.insertNode(node);
+            const newRange = document.createRange();
+            newRange.setStartAfter(node);
+            newRange.collapse(true);
             sel.removeAllRanges();
-            const range = document.createRange();
-            range.selectNodeContents(activeElement);
-            range.collapse(false);
-            sel.addRange(range);
-            document.execCommand('insertText', false, text);
+            sel.addRange(newRange);
+            lastSelectionStart = null;
+            lastSelectionEnd = null;
+            lastRange = null;
         }
     }
 
-    function insertBackticks(text) {
+    function insertBackticks() {
         const activeElement = lastActiveElement || document.activeElement;
         if (!activeElement) return;
         const tag = activeElement.tagName;
+        const content = '```\n\n```';
         if (tag === 'INPUT' || tag === 'TEXTAREA') {
             activeElement.focus();
             const len = activeElement.value.length;
-            const start = len;
-            const end = len;
-            activeElement.selectionStart = activeElement.selectionEnd = start;
-            activeElement.value = activeElement.value.slice(0, start) + text + activeElement.value.slice(end);
-            activeElement.selectionStart = activeElement.selectionEnd = start + text.length;
+            let start = Number.isInteger(lastSelectionStart) && lastActiveElement === activeElement ? lastSelectionStart : (Number.isInteger(activeElement.selectionStart) ? activeElement.selectionStart : len);
+            let end = Number.isInteger(lastSelectionEnd) && lastActiveElement === activeElement ? lastSelectionEnd : (Number.isInteger(activeElement.selectionEnd) ? activeElement.selectionEnd : start);
+            if (document.activeElement !== activeElement && (start === 0 && end === 0 && len > 0)) {
+                start = len;
+                end = len;
+            }
+            activeElement.value = activeElement.value.slice(0, start) + content + activeElement.value.slice(end);
+            const caret = start + 4;
+            activeElement.selectionStart = activeElement.selectionEnd = caret;
             activeElement.focus();
+            lastSelectionStart = null;
+            lastSelectionEnd = null;
+            lastRange = null;
         } else if (activeElement.isContentEditable) {
             activeElement.focus();
             const sel = window.getSelection();
@@ -148,13 +217,44 @@
             range.selectNodeContents(activeElement);
             range.collapse(false);
             sel.addRange(range);
-            document.execCommand('insertText', false, text);
+            const first = document.createTextNode('```');
+            const br1 = document.createElement('br');
+            const br2 = document.createElement('br');
+            const last = document.createTextNode('```');
+            const frag = document.createDocumentFragment();
+            frag.appendChild(first);
+            frag.appendChild(br1);
+            frag.appendChild(br2);
+            frag.appendChild(last);
+            range.insertNode(frag);
+            const newRange = document.createRange();
+            newRange.setStartAfter(br1);
+            newRange.collapse(true);
+            sel.removeAllRanges();
+            sel.addRange(newRange);
+            lastSelectionStart = null;
+            lastSelectionEnd = null;
+            lastRange = null;
         }
     }
 
     function openSearchOverlay() {
         if (searchActive) return;
-        lastActiveElement = document.activeElement;
+        const active = document.activeElement;
+        lastActiveElement = active;
+        lastSelectionStart = null;
+        lastSelectionEnd = null;
+        lastRange = null;
+        if (active) {
+            const tag = active.tagName;
+            if (tag === 'INPUT' || tag === 'TEXTAREA') {
+                lastSelectionStart = Number.isInteger(active.selectionStart) ? active.selectionStart : null;
+                lastSelectionEnd = Number.isInteger(active.selectionEnd) ? active.selectionEnd : null;
+            } else if (active.isContentEditable) {
+                const sel = window.getSelection();
+                if (sel && sel.rangeCount) lastRange = sel.getRangeAt(0).cloneRange();
+            }
+        }
         searchActive = true;
         selectedIndex = -1;
         overlay = document.createElement('div');
@@ -212,7 +312,7 @@
 
     function updateSuggestions() {
         const q = inputEl.value.trim().toLowerCase();
-        const entries = Object.values(keyMap).filter(v => v.toLowerCase().includes(q));
+        const entries = Object.values(keyMap || {}).filter(v => v.toLowerCase().includes(q));
         const slice = entries.slice(0, MAX_RESULTS);
         resultsEl.innerHTML = '';
         slice.forEach((text, idx) => {
