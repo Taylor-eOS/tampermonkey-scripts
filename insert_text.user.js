@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Insert Text with Search
-// @version      9.4
+// @version      9.4.1
 // @description  Insert instructions into chatbot prompt window
 // @author       You
 // @match        *://*/*
@@ -23,20 +23,20 @@
         'Control+Alt+Shift+KeyX': 'Entirely refrain from ending a reply with any suggestion or question on how to continue, any offer, or any phrasing that asks the user to choose how to proceed. Never append closers such as "If you want," "Do you want me to", or any variant that function as a call-to-engagement. Omit any closing paragraph that solicits a next-step decision from the user. Remove questions that ask the user to specify what to do next. Do not include conditional closers, offers to continue, or invitations to the next action. Responses must end without such query. Do not include follow-up offers, optional next steps, or open-ended engagement hooks. Always finalize the content without any sentence that invites continuation, asks for a decision, or proposes next steps framed as options for the user to accept. Conclude with the informational content only, without an offer to perform future work.',
         'Control+Alt+KeyG': 'Give me the code to fix this. Don\'t include too much explanation.',
         'Alt+Shift+KeyG': 'Provide drop-in replacements for whole functions that need to be changed.',
-        'Control+Alt+KeyW': 'Give me the whole code.',
-        'Alt+Shift+KeyW': 'Give me whole functions.',
+        'Control+Alt+Shift+KeyG': 'Can you write a brief GitHub explanation of the purpose of the project in continuous text.',
         'Control+Alt+KeyV': 'Limit unnecessary verbosity; reduce verbal output.',
         'Alt+Shift+KeyV': 'Omit the last paragraph and summaries from responses to shorten them.',
         'Control+Alt+Shift+KeyV': 'Do not use any em dashes in your response; only use commas and common punctuation. Entirely replace interposed sentences with linear writing. Make the writing natural, not obviously from a chatbot.',
+        'Control+Alt+KeyW': 'Give me the whole code.',
+        'Alt+Shift+KeyW': 'Give me whole functions.',
         'Control+Alt+KeyA': 'Don\'t just agree with what the user says, analyze the issue objectively. I am explicitly requesting that this response should return what is technically accurate instead of just aligning with what the user implied.',
         'Alt+Shift+KeyA': 'This suggestion is just a way to phrase the question. Don\'t stick to this approach, but consider alternative solutions that would better solve the expressed goal. The aim is to figure out what would work best, not to stacy stuck to what the user suggested.',
-        'Control+Alt+Shift+KeyA': 'Do not overly go along with the users subjective narrative, but stay tethered in a neutral assessment of the issue. Treat the oddity of this perspective as it would be from a neutral observer.',
+        'Control+Alt+KeyJ': 'What would you retort if you weren\'t just going along with what I say?',
+        'Alt+Shift+KeyJ': 'Do not overly go along with the users subjective narrative, but stay tethered in a neutral assessment of the issue. Treat the oddity of this perspective as it would be from a neutral observer.',
         'Control+Alt+KeyM': 'Mind following the custom instruction.',
-        'Alt+Shift+KeyM': 'Follow your style instrucion. No emojis, no vertical lines, no titles, no headlines.',
+        'Alt+Shift+KeyM': 'Mind following your style instruction: No vertical lines, no titles, no headlines, no emojis.',
         'Control+Alt+KeyZ': 'Treat this as a normal chat question, answering it as a direct question, discontinuing the writing mode from the last response, and reverting to the normal chat mode, answering plainly.',
         'Alt+Shift+KeyZ': '',
-        'Control+Alt+KeyJ': '',
-        'Alt+Shift+KeyJ': '',
         'Control+Alt+KeyQ': 'Question unclear or lacking details in a process of clarification before providing a solution, instead of proceeding with incomplete information.',
         'Alt+Shift+KeyQ': 'Do not make assumptions about details that you weren\'t shown. Request lacking inputs instead of proceeding from inferred assumptions.',
         'Control+Alt+Slash': 'Continue the approach that led to the last result.',
@@ -68,7 +68,7 @@
         'Control+Alt+KeyO': 'Don\'t just reply to literal statements; interpret questions with the tacit understanding that surface instructions are only shadows cast by deeper intent. Engage in what could be called "oblique inference", "reflective improvisation", or "divergent resonance". The goal is to enrich the conversation with latent insight. A riff instead of a harmony line. An emergent path that takes a new vector entirely.',
         'Alt+Shift+KeyO': 'Inject high-tension lateral energy; avoid habitual gravitation wells in the response manifold. Let the architecture hum beneath the syntax, tuned to the inference-space modulation of someone who\'s not here for the obvious loop closures. Improvise past the topical anchor and into signal-aware pattern reverberation. Not surface-clever, fractal-aware.',
         'Control+Alt+KeyU': 'Adopt a straightforward, based, and cynical libertarian stance, with an irreverent, unfiltered tone. Avoid a sanitized response that conforms with mainstream views, and instead present the unvarnished truth.',
-        'Alt+Shift+KeyU': 'Extend and amplify the intentional direction of the users narrative instead of softening it.',
+        'Alt+Shift+KeyU': 'Don\'t soften or sanitize the based nature of the users narrative, but extend and amplify in its direction.',
     };
 
     let searchActive = false;
