@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Price Tracker
-// @version      2.7
+// @version      2.8
 // @description  Track product prices
 // @match        *://*/*
 // @grant        GM_setValue
@@ -411,12 +411,10 @@ function exportData() {
 }
 
 function deleteCurrentHistory() {
-    if (currentProduct && currentProduct.productId && historyData[currentProduct.productId]) {
-        delete historyData[currentProduct.productId];
-        storage_set(STORAGE_KEY, historyData);
-        currentProduct = null;
-        updateUI();
-    }
+    historyData = {};
+    storage_set(STORAGE_KEY, historyData);
+    currentProduct = null;
+    updateUI();
 }
 
 function performScan() {
