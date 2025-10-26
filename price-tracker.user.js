@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Price Tracker
-// @version      2.6
+// @version      2.7
 // @description  Track product prices
 // @match        *://*/*
 // @grant        GM_setValue
@@ -13,12 +13,19 @@
 
 const DEBOUNCE_MS = 800;
 const STORAGE_KEY = 'ae_price_tracker_v2';
+const CAP_LENGTH = 70;
 
 let historyData = {};
 let debounceTimer = null;
 let currentProduct = null;
 let lastModalTitle = null;
 let minimized = false;
+
+function capString(s) {
+    if (s === undefined || s === null) return null;
+    s = String(s).replace(/\s+/g, ' ').trim();
+    return s.length > CAP_LENGTH ? s.slice(0, CAP_LENGTH) : s;
+}
 
 function storage_get(key, defaultVal) {
     try {
@@ -106,7 +113,8 @@ function extractVariant(modal) {
         for (const p of parts) {
             const m = p.match(/([A-Za-z0-9\u00C0-\u017F\s\-]{1,60})[:：]\s*(.+)/);
             const val = m && m[2] ? `${m[1].trim()}: ${m[2].trim()}` : p.replace(/\s+/g, ' ').trim();
-            if (val && !seen.has(val)) { seen.add(val); variants.push(val); }
+            const capped = capString(val);
+            if (capped && !seen.has(capped)) { seen.add(capped); variants.push(capped); }
         }
     }
     if (variants.length === 0) {
@@ -132,7 +140,8 @@ function extractVariant(modal) {
                     const val = m[2].trim();
                     if (key.length > 40 || val.length > 120) continue;
                     const candidate = `${key}: ${val}`.replace(/\s+/g, ' ').trim();
-                    if (!seen.has(candidate)) { seen.add(candidate); localFound.push(candidate); totalFound++; }
+                    const capped = capString(candidate);
+                    if (!seen.has(capped)) { seen.add(capped); localFound.push(capped); totalFound++; }
                     if (totalFound >= 8) break;
                 }
                 if (totalFound >= 8) break;
@@ -143,18 +152,19 @@ function extractVariant(modal) {
     }
     if (variants.length === 0) return null;
     const clean = [...new Set(variants.map(s => s.replace(/\s+/g, ' ').trim()))];
-    clean.sort((a, b) => {
+    const cappedClean = clean.map(s => capString(s));
+    cappedClean.sort((a, b) => {
         const ka = (a.split(':')[0] || '').toLowerCase().trim();
         const kb = (b.split(':')[0] || '').toLowerCase().trim();
         if (ka < kb) return -1;
         if (ka > kb) return 1;
         return a.localeCompare(b);
     });
-    return clean.join(' | ');
+    return cappedClean.join(' | ');
 }
 
 function normalizePartsForId(parts) {
-    return parts.map(p => p.toLowerCase().replace(/[:：]/g, '_').replace(/\s+/g, '_').replace(/[^\w\-]/g, '')).join('--');
+    return parts.map(p => capString(p) || '').map(p => p.toLowerCase().replace(/[:：]/g, '_').replace(/\s+/g, '_').replace(/[^\w\-]/g, '')).join('--');
 }
 
 function extractProductId(modal, forcedVariant) {
@@ -177,7 +187,7 @@ function extractProductId(modal, forcedVariant) {
             const normalized = normalizePartsForId(parts);
             return `${baseId}--${normalized}`;
         }
-        const safe = ogUrl.content.replace(/[^a-zA-Z0-9]/g, '_').slice(0, 120);
+        const safe = capString(ogUrl.content).replace(/[^a-zA-Z0-9]/g, '_');
         const baseId = `og-${safe}`;
         if (!variant) return baseId;
         const parts = variant.split('|').map(s => s.trim());
@@ -189,7 +199,7 @@ function extractProductId(modal, forcedVariant) {
         if (dataAttr) {
             const idVal = dataAttr.getAttribute('data-sku') || dataAttr.getAttribute('data-pid') || dataAttr.getAttribute('data-itemid');
             if (idVal) {
-                const baseId = `modal-id-${idVal}`.replace(/[^a-zA-Z0-9\-_]/g, '_');
+                const baseId = `modal-id-${String(idVal)}`.replace(/[^a-zA-Z0-9\-_]/g, '_');
                 if (!variant) return baseId;
                 const parts = variant.split('|').map(s => s.trim());
                 const normalized = normalizePartsForId(parts);
@@ -198,7 +208,7 @@ function extractProductId(modal, forcedVariant) {
         }
         const titleEl = modal.querySelector('.title--wrap--UUHae_g');
         if (titleEl) {
-            const titleText = titleEl.textContent.trim().replace(/\s+/g, ' ').substring(0, 80);
+            const titleText = capString(titleEl.textContent.trim().replace(/\s+/g, ' '));
             const baseId = `modal-${titleText}`.replace(/[^a-zA-Z0-9-]/g, '_');
             if (!variant) return baseId;
             const parts = variant.split('|').map(s => s.trim());
@@ -206,7 +216,7 @@ function extractProductId(modal, forcedVariant) {
             return `${baseId}--${normalized}`;
         }
     }
-    const docTitle = document.title ? document.title.trim().replace(/\s+/g, ' ').substring(0, 80) : 'unknown';
+    const docTitle = document.title ? capString(document.title.trim().replace(/\s+/g, ' ')) : 'unknown';
     const safeDoc = docTitle.replace(/[^a-zA-Z0-9-]/g, '_');
     const baseId = `doc-${safeDoc}`;
     if (!variant) return baseId;
@@ -268,10 +278,12 @@ function scanForPrice() {
 
 function updateHistory(productId, title, price, raw, variant) {
     const normVariant = variant ? variant.replace(/\s+/g, ' ').trim() : null;
+    const cappedTitle = capString(title);
+    const cappedUrl = capString(window.location.href.split('?')[0]);
     if (!historyData[productId]) {
         historyData[productId] = {
-            title,
-            canonicalUrl: window.location.href.split('?')[0],
+            title: cappedTitle,
+            canonicalUrl: cappedUrl,
             records: []
         };
     }
@@ -282,13 +294,13 @@ function updateHistory(productId, title, price, raw, variant) {
     if (lastPrice === price && (lastVariant === normVariant || (lastVariant == null && !normVariant))) {
         return false;
     }
-    history.title = title;
+    history.title = cappedTitle;
     history.records.push({
         ts: new Date().toISOString(),
         price,
-        raw,
-        variant: normVariant || null,
-        pageUrl: window.location.href
+        raw: capString(raw),
+        variant: capString(normVariant) || null,
+        pageUrl: capString(window.location.href)
     });
     storage_set(STORAGE_KEY, historyData);
     return true;
@@ -372,8 +384,8 @@ function updateUI() {
     const history = historyData[currentProduct.productId];
     if (!history || history.records.length === 0) {
         content.innerHTML = `
-<div style="font-weight: bold; margin-bottom: 4px; font-size: 11px;">${currentProduct.title}</div>
-<div style="color: #ff6a00; font-weight: bold;">€${currentProduct.price}${currentProduct.variant ? ` <span style="color: #999; font-size: 9px; font-weight: normal;">${currentProduct.variant}</span>` : ''}</div>
+<div style="font-weight: bold; margin-bottom: 4px; font-size: 11px;">${capString(currentProduct.title)}</div>
+<div style="color: #ff6a00; font-weight: bold;">€${currentProduct.price}${currentProduct.variant ? ` <span style="color: #999; font-size: 9px; font-weight: normal;">${capString(currentProduct.variant)}</span>` : ''}</div>
 `;
         return;
     }
@@ -410,15 +422,23 @@ function deleteCurrentHistory() {
 function performScan() {
     const result = scanForPrice();
     if (result) {
-        const isDifferentProduct = !currentProduct || currentProduct.productId !== result.productId;
-        const isDifferentVariant = currentProduct && currentProduct.variant !== result.variant;
+        const sanitized = {
+            productId: result.productId,
+            title: capString(result.title),
+            price: result.price,
+            raw: capString(result.raw),
+            variant: capString(result.variant),
+            isModal: result.isModal
+        };
+        const isDifferentProduct = !currentProduct || currentProduct.productId !== sanitized.productId;
+        const isDifferentVariant = currentProduct && currentProduct.variant !== sanitized.variant;
         if (isDifferentProduct || isDifferentVariant) {
-            currentProduct = result;
-            updateHistory(result.productId, result.title, result.price, result.raw, result.variant);
+            currentProduct = sanitized;
+            updateHistory(sanitized.productId, sanitized.title, sanitized.price, sanitized.raw, sanitized.variant);
             updateUI();
-        } else if (currentProduct && currentProduct.price !== result.price) {
-            currentProduct = result;
-            const updated = updateHistory(result.productId, result.title, result.price, result.raw, result.variant);
+        } else if (currentProduct && currentProduct.price !== sanitized.price) {
+            currentProduct = sanitized;
+            const updated = updateHistory(sanitized.productId, sanitized.title, sanitized.price, sanitized.raw, sanitized.variant);
             if (updated) updateUI();
         }
     }
