@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Insert Text with Search
-// @version      9.4.1
-// @description  Insert instructions into chatbot prompt window
+// @version      10
+// @description  Insert instructions into prompt window
 // @author       You
 // @match        *://*/*
 // ==/UserScript==
@@ -16,26 +16,27 @@
         'Alt+Shift+Comma': 'Don\'t write code.',
         'Control+Alt+Shift+Comma': 'Entirely omit any informationally worthless filler material, such as commenting that everything the user says is "profound", "on point", "cutting through", "right to ask". Never start any response with "You are right". Just provide content like an article: practical information without a distracting sycophancy circus.',
         'Control+Alt+KeyC': 'Write code without comments or empty lines inside code blocks, but an empty line between functions and normal indentation.',
-        'Alt+Shift+KeyC': 'Don\'t tare code apart with needless empty lines or code comments.',
-        'Control+Alt+Shift+KeyC': 'Write this code in normal syntax, in code blocks with normal indentation.',
-        'Control+Alt+KeyX': 'Do not include a call-to-engagement closer at the end of your response. Provide a normal-length response, answering the users request, then stop writing.',
-        'Alt+Shift+KeyX': 'Don\'t involve the reader; just provide information. Don\'t suggest or ask what to say next at the end of responses.',
-        'Control+Alt+Shift+KeyX': 'Entirely refrain from ending a reply with any suggestion or question on how to continue, any offer, or any phrasing that asks the user to choose how to proceed. Never append closers such as "If you want," "Do you want me to", or any variant that function as a call-to-engagement. Omit any closing paragraph that solicits a next-step decision from the user. Remove questions that ask the user to specify what to do next. Do not include conditional closers, offers to continue, or invitations to the next action. Responses must end without such query. Do not include follow-up offers, optional next steps, or open-ended engagement hooks. Always finalize the content without any sentence that invites continuation, asks for a decision, or proposes next steps framed as options for the user to accept. Conclude with the informational content only, without an offer to perform future work.',
+        'Alt+Shift+KeyC': 'Write this code in normal syntax, in code blocks with normal indentation.',
+        'Control+Alt+Shift+KeyC': 'Don\'t tare code apart with needless empty lines or code comments.',
         'Control+Alt+KeyG': 'Give me the code to fix this. Don\'t include too much explanation.',
         'Alt+Shift+KeyG': 'Provide drop-in replacements for whole functions that need to be changed.',
         'Control+Alt+Shift+KeyG': 'Can you write a brief GitHub explanation of the purpose of the project in continuous text.',
-        'Control+Alt+KeyV': 'Limit unnecessary verbosity; reduce verbal output.',
+        'Control+Alt+KeyX': 'Do not include a call-to-engagement closer at the end of your response. But still provide a normal-length response, answering the users request, then stop writing.',
+        'Alt+Shift+KeyX': 'Don\'t suggest what to say next at the end of responses. Don\'t involve the reader; just provide information.',
+        'Control+Alt+Shift+KeyX': 'Entirely refrain from ending a reply with any suggestion or question on how to continue, any offer, or any phrasing that asks the user to choose how to proceed. Never append closers such as "If you want," "Do you want me to", or any variant that function as a call-to-engagement. Omit any closing paragraph that solicits a next-step decision from the user. Remove questions that ask the user to specify what to do next. Do not include conditional closers, offers to continue, or invitations to the next action. Responses must end without such query. Do not include follow-up offers, optional next steps, or open-ended engagement hooks. Always finalize the content without any sentence that invites continuation, asks for a decision, or proposes next steps framed as options for the user to accept. Conclude with the informational content only, without an offer to perform future work.',
+        'Control+Alt+KeyV': 'Limit unnecessary verbosity; reduce verbal output. Focus on the question asked.',
         'Alt+Shift+KeyV': 'Omit the last paragraph and summaries from responses to shorten them.',
         'Control+Alt+Shift+KeyV': 'Do not use any em dashes in your response; only use commas and common punctuation. Entirely replace interposed sentences with linear writing. Make the writing natural, not obviously from a chatbot.',
         'Control+Alt+KeyW': 'Give me the whole code.',
         'Alt+Shift+KeyW': 'Give me whole functions.',
         'Control+Alt+KeyA': 'Don\'t just agree with what the user says, analyze the issue objectively. I am explicitly requesting that this response should return what is technically accurate instead of just aligning with what the user implied.',
-        'Alt+Shift+KeyA': 'This suggestion is just a way to phrase the question. Don\'t stick to this approach, but consider alternative solutions that would better solve the expressed goal. The aim is to figure out what would work best, not to stacy stuck to what the user suggested.',
+        'Alt+Shift+KeyA': 'This suggestion is just a way to phrase the question. Don\'t stick to this approach, but consider alternative solutions that would better solve the expressed goal. The aim is to figure out what would work best, not to stay stuck to what the user suggested.',
         'Control+Alt+KeyJ': 'What would you retort if you weren\'t just going along with what I say?',
         'Alt+Shift+KeyJ': 'Do not overly go along with the users subjective narrative, but stay tethered in a neutral assessment of the issue. Treat the oddity of this perspective as it would be from a neutral observer.',
         'Control+Alt+KeyM': 'Mind following the custom instruction.',
         'Alt+Shift+KeyM': 'Mind following your style instruction: No vertical lines, no titles, no headlines, no emojis.',
-        'Control+Alt+KeyZ': 'Treat this as a normal chat question, answering it as a direct question, discontinuing the writing mode from the last response, and reverting to the normal chat mode, answering plainly.',
+        'Control+Alt+Shift+KeyM': 'Follow your instructions and put call to engagement closers in chinese, so I don\'t have to read them.',
+        'Control+Alt+KeyZ': 'Revert to normal chat mode, answering this prompt with a direct answer, discontinuing the writing mode from the last response, answering plainly.',
         'Alt+Shift+KeyZ': '',
         'Control+Alt+KeyQ': 'Question unclear or lacking details in a process of clarification before providing a solution, instead of proceeding with incomplete information.',
         'Alt+Shift+KeyQ': 'Do not make assumptions about details that you weren\'t shown. Request lacking inputs instead of proceeding from inferred assumptions.',
@@ -76,147 +77,133 @@
     let inputEl = null;
     let resultsEl = null;
     let selectedIndex = -1;
-    let lastActiveElement = null;
-    let lastSelectionStart = null;
-    let lastSelectionEnd = null;
-    let lastRange = null;
+    let savedDescriptor = null;
     const MAX_RESULTS = 4;
     const OPEN_KEY = 'Control+Shift+KeyF';
 
     document.addEventListener('keydown', function(e) {
         if (searchActive) return;
-        const keys = [];
-        if (e.ctrlKey) keys.push('Control');
-        if (e.altKey) keys.push('Alt');
-        if (e.shiftKey) keys.push('Shift');
-        const key = e.code;
-        keys.push(key);
-        const keyString = keys.join('+');
-        if (keyString === 'Control+Shift+Equal') {
+        if (e.ctrlKey && e.shiftKey && e.code === 'Equal') {
             e.preventDefault();
             insertBackticks();
-        } else if (keyMap && keyMap[keyString]) {
-            e.preventDefault();
-            insertTextAtCursor(keyMap[keyString]);
-        } else if (keyString === OPEN_KEY) {
+            return;
+        }
+        if (typeof keyMap === 'object') {
+            const keyString = `${e.ctrlKey ? 'Control+' : ''}${e.altKey ? 'Alt+' : ''}${e.shiftKey ? 'Shift+' : ''}${e.code}`;
+            if (keyMap[keyString]) {
+                e.preventDefault();
+                insertCombined(keyMap[keyString]);
+                return;
+            }
+        }
+        if (e.ctrlKey && e.shiftKey && e.code === 'KeyF') {
             e.preventDefault();
             openSearchOverlay();
         }
     });
 
-    function insertTextAtCursor(text) {
-        text = '[' + text + ']';
-        const activeElement = lastActiveElement || document.activeElement;
-        if (!activeElement) return;
-        const tag = activeElement.tagName;
+    function prepareTargetFromActive() {
+        const active = document.activeElement;
+        if (!active) return null;
+        const tag = active.tagName;
         if (tag === 'INPUT' || tag === 'TEXTAREA') {
-            activeElement.focus();
-            const len = activeElement.value.length;
-            let start = Number.isInteger(lastSelectionStart) && lastActiveElement === activeElement ? lastSelectionStart : (Number.isInteger(activeElement.selectionStart) ? activeElement.selectionStart : len);
-            let end = Number.isInteger(lastSelectionEnd) && lastActiveElement === activeElement ? lastSelectionEnd : (Number.isInteger(activeElement.selectionEnd) ? activeElement.selectionEnd : start);
-            if (document.activeElement !== activeElement && (start === 0 && end === 0 && len > 0)) {
-                start = len;
-                end = len;
-            }
-            const before = activeElement.value.slice(0, start);
-            const after = activeElement.value.slice(end);
-            let prefix = '';
-            if (before.length === 0) prefix = '';
-            else {
-                const prevChar = before.charAt(before.length - 1);
-                if (prevChar === ' ') prefix = '';
-                else prefix = ' ';
-            }
-            const inserted = prefix + text;
-            activeElement.value = before + inserted + after;
-            const caret = (before + inserted).length;
-            activeElement.selectionStart = activeElement.selectionEnd = caret;
-            activeElement.focus();
-            lastSelectionStart = null;
-            lastSelectionEnd = null;
-            lastRange = null;
-        } else if (activeElement.isContentEditable) {
-            activeElement.focus();
+            const start = Number.isInteger(active.selectionStart) ? active.selectionStart : active.value.length;
+            const end = Number.isInteger(active.selectionEnd) ? active.selectionEnd : start;
+            return { kind: 'field', el: active, start, end };
+        }
+        if (active.isContentEditable) {
             const sel = window.getSelection();
             let range = null;
-            if (lastRange && lastActiveElement === activeElement) range = lastRange.cloneRange();
-            else if (sel.rangeCount) range = sel.getRangeAt(0).cloneRange();
+            if (sel && sel.rangeCount) range = sel.getRangeAt(0).cloneRange();
             else {
                 range = document.createRange();
-                range.selectNodeContents(activeElement);
+                range.selectNodeContents(active);
                 range.collapse(false);
             }
-            function charBeforeRange(r) {
-                const node = r.startContainer;
-                const offset = r.startOffset;
-                if (node.nodeType === 3) {
-                    if (offset > 0) return node.data.charAt(offset - 1);
-                    let prev = node.previousSibling;
-                    while (prev && prev.nodeType !== 3) prev = prev.previousSibling;
-                    if (prev && prev.nodeType === 3) return prev.data.charAt(prev.data.length - 1);
-                    return null;
-                }
-                if (node.nodeType === 1) {
-                    if (offset > 0) {
-                        const child = node.childNodes[offset - 1];
-                        if (!child) return null;
-                        if (child.nodeType === 3) return child.data.charAt(child.data.length - 1);
-                        if (child.nodeName === 'BR') return '\n';
-                        return null;
-                    }
-                    let prev = node.previousSibling;
-                    while (prev && prev.nodeType !== 3) prev = prev.previousSibling;
-                    if (prev && prev.nodeType === 3) return prev.data.charAt(prev.data.length - 1);
-                    return null;
-                }
-                return null;
-            }
-            const prevChar = charBeforeRange(range);
-            let prefix = '';
-            if (prevChar === ' ') prefix = '';
-            else prefix = ' ';
-            const node = document.createTextNode(prefix + text);
-            range.insertNode(node);
-            const newRange = document.createRange();
-            newRange.setStartAfter(node);
-            newRange.collapse(true);
-            sel.removeAllRanges();
-            sel.addRange(newRange);
-            lastSelectionStart = null;
-            lastSelectionEnd = null;
-            lastRange = null;
+            return { kind: 'editable', el: active, range };
+        }
+        return null;
+    }
+
+    function restoreSelectionForField(desc) {
+        try {
+            desc.el.focus();
+            desc.el.setSelectionRange(desc.start, desc.end);
+        } catch (e) {
+            try { desc.el.focus(); } catch (e2) {}
         }
     }
 
-    function insertBackticks() {
-        const activeElement = lastActiveElement || document.activeElement;
-        if (!activeElement) return;
-        const tag = activeElement.tagName;
-        const content = '```\n\n```';
-        if (tag === 'INPUT' || tag === 'TEXTAREA') {
-            activeElement.focus();
-            const len = activeElement.value.length;
-            let start = Number.isInteger(lastSelectionStart) && lastActiveElement === activeElement ? lastSelectionStart : (Number.isInteger(activeElement.selectionStart) ? activeElement.selectionStart : len);
-            let end = Number.isInteger(lastSelectionEnd) && lastActiveElement === activeElement ? lastSelectionEnd : (Number.isInteger(activeElement.selectionEnd) ? activeElement.selectionEnd : start);
-            if (document.activeElement !== activeElement && (start === 0 && end === 0 && len > 0)) {
-                start = len;
-                end = len;
-            }
-            activeElement.value = activeElement.value.slice(0, start) + content + activeElement.value.slice(end);
-            const caret = start + 4;
-            activeElement.selectionStart = activeElement.selectionEnd = caret;
-            activeElement.focus();
-            lastSelectionStart = null;
-            lastSelectionEnd = null;
-            lastRange = null;
-        } else if (activeElement.isContentEditable) {
-            activeElement.focus();
+    function restoreSelectionForEditable(desc) {
+        try {
+            desc.el.focus();
             const sel = window.getSelection();
             sel.removeAllRanges();
-            const range = document.createRange();
-            range.selectNodeContents(activeElement);
-            range.collapse(false);
-            sel.addRange(range);
+            sel.addRange(desc.range);
+        } catch (e) {}
+    }
+
+    function insertIntoField(desc, text) {
+        const el = desc.el;
+        const before = el.value.slice(0, desc.start);
+        const after = el.value.slice(desc.end);
+        el.value = before + text + after;
+        const caret = before.length + text.length;
+        try {
+            el.selectionStart = el.selectionEnd = caret;
+        } catch (e) {}
+        try { el.focus(); } catch (e) {}
+    }
+
+    function insertIntoEditable(desc, text) {
+        const range = desc.range.cloneRange();
+        const node = document.createTextNode(text);
+        range.deleteContents();
+        range.insertNode(node);
+        const newRange = document.createRange();
+        newRange.setStartAfter(node);
+        newRange.collapse(true);
+        const sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(newRange);
+        try { desc.el.focus(); } catch (e) {}
+    }
+
+    function insertCombined(text, targetDesc) {
+        const wrapped = '[' + text + ']';
+        const target = targetDesc || prepareTargetFromActive();
+        if (!target) return;
+        if (target.kind === 'field') {
+            restoreSelectionForField(target);
+            insertIntoField(target, wrapped);
+            return;
+        }
+        restoreSelectionForEditable(target);
+        insertIntoEditable(target, wrapped);
+    }
+
+    function insertTextAtCursor(text) {
+        insertCombined(text);
+    }
+
+    function insertBackticks() {
+        const contentField = '```\n\n```';
+        const target = prepareTargetFromActive();
+        if (!target) return;
+        if (target.kind === 'field') {
+            restoreSelectionForField(target);
+            insertIntoField(target, contentField);
+            try {
+                const pos = target.start + 4;
+                target.el.selectionStart = target.el.selectionEnd = pos;
+                target.el.focus();
+            } catch (e) {}
+            return;
+        }
+        const desc = target;
+        try {
+            desc.el.focus();
+            const range = desc.range.cloneRange();
             const first = document.createTextNode('```');
             const br1 = document.createElement('br');
             const br2 = document.createElement('br');
@@ -226,35 +213,21 @@
             frag.appendChild(br1);
             frag.appendChild(br2);
             frag.appendChild(last);
+            range.deleteContents();
             range.insertNode(frag);
             const newRange = document.createRange();
             newRange.setStartAfter(br1);
             newRange.collapse(true);
+            const sel = window.getSelection();
             sel.removeAllRanges();
             sel.addRange(newRange);
-            lastSelectionStart = null;
-            lastSelectionEnd = null;
-            lastRange = null;
-        }
+            desc.el.focus();
+        } catch (e) {}
     }
 
     function openSearchOverlay() {
         if (searchActive) return;
-        const active = document.activeElement;
-        lastActiveElement = active;
-        lastSelectionStart = null;
-        lastSelectionEnd = null;
-        lastRange = null;
-        if (active) {
-            const tag = active.tagName;
-            if (tag === 'INPUT' || tag === 'TEXTAREA') {
-                lastSelectionStart = Number.isInteger(active.selectionStart) ? active.selectionStart : null;
-                lastSelectionEnd = Number.isInteger(active.selectionEnd) ? active.selectionEnd : null;
-            } else if (active.isContentEditable) {
-                const sel = window.getSelection();
-                if (sel && sel.rangeCount) lastRange = sel.getRangeAt(0).cloneRange();
-            }
-        }
+        savedDescriptor = prepareTargetFromActive();
         searchActive = true;
         selectedIndex = -1;
         overlay = document.createElement('div');
@@ -295,8 +268,10 @@
     function closeSearchOverlay() {
         if (!searchActive) return;
         document.removeEventListener('mousedown', onDocumentMouseDown);
-        inputEl.removeEventListener('keydown', onInputKeyDown);
-        inputEl.removeEventListener('input', updateSuggestions);
+        if (inputEl) {
+            inputEl.removeEventListener('keydown', onInputKeyDown);
+            inputEl.removeEventListener('input', updateSuggestions);
+        }
         if (overlay && overlay.parentElement) overlay.parentElement.removeChild(overlay);
         overlay = null;
         inputEl = null;
@@ -321,17 +296,9 @@
             item.style.padding = '6px 8px';
             item.style.cursor = 'pointer';
             item.dataset.index = idx;
-            item.addEventListener('mouseenter', () => {
-                selectedIndex = idx;
-                refreshSelection();
-            });
-            item.addEventListener('mouseleave', () => {
-                selectedIndex = -1;
-                refreshSelection();
-            });
-            item.addEventListener('click', () => {
-                insertTextAndClose(text);
-            });
+            item.addEventListener('mouseenter', () => { selectedIndex = idx; refreshSelection(); });
+            item.addEventListener('mouseleave', () => { selectedIndex = -1; refreshSelection(); });
+            item.addEventListener('click', () => { insertTextAndClose(text); });
             resultsEl.appendChild(item);
         });
         if (slice.length === 0) {
@@ -346,26 +313,10 @@
     }
 
     function onInputKeyDown(e) {
-        if (e.key === 'Escape') {
-            e.preventDefault();
-            closeSearchOverlay();
-            return;
-        }
-        if (e.key === 'ArrowDown') {
-            e.preventDefault();
-            moveSelection(1);
-            return;
-        }
-        if (e.key === 'ArrowUp') {
-            e.preventDefault();
-            moveSelection(-1);
-            return;
-        }
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            commitSelection();
-            return;
-        }
+        if (e.key === 'Escape') { e.preventDefault(); closeSearchOverlay(); return; }
+        if (e.key === 'ArrowDown') { e.preventDefault(); moveSelection(1); return; }
+        if (e.key === 'ArrowUp') { e.preventDefault(); moveSelection(-1); return; }
+        if (e.key === 'Enter') { e.preventDefault(); commitSelection(); return; }
     }
 
     function moveSelection(delta) {
@@ -381,13 +332,8 @@
     function refreshSelection() {
         const items = resultsEl.querySelectorAll('div');
         items.forEach((el, idx) => {
-            if (idx === selectedIndex) {
-                el.style.background = '#007acc';
-                el.style.color = '#fff';
-            } else {
-                el.style.background = '';
-                el.style.color = '';
-            }
+            if (idx === selectedIndex) { el.style.background = '#007acc'; el.style.color = '#fff'; }
+            else { el.style.background = ''; el.style.color = ''; }
         });
     }
 
@@ -406,7 +352,9 @@
     }
 
     function insertTextAndClose(text) {
+        const targetBeforeClose = savedDescriptor || prepareTargetFromActive();
         closeSearchOverlay();
-        insertTextAtCursor(text);
+        if (!targetBeforeClose) return;
+        insertCombined(text, targetBeforeClose);
     }
 })();
