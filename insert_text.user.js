@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Insert Text with Search
-// @version      10.1
+// @version      10.2
 // @description  Insert instructions into prompt window
 // @author       You
 // @match        *://*/*
@@ -11,22 +11,22 @@
     const keyMap = {
         'Control+Alt+Period': 'Write continuously, not lists.',
         'Alt+Shift+Period': 'Write concisely and continuously.',
-        'Control+Alt+Shift+Period': 'Stringently eschew creating any form of list formatting, whether numbered or bulleted. Do not include any list-producing HTML tags like `<ul>`, `<ol>`, or `<li>` in your response whatsoever. Write in continuous prose, avoiding all structured separations or markup. Provide the response as one unbroken block of text. Keep sentences connected, with no structural separations or divisions. Present information in one seamless, uninterrupted paragraph. Do not organize the response into any type of enumeration. Purely write unformatted raw text. Aggressively avoid segmenting content; keep everything unified in a single, continuous block of prose like a book. Write connected, unfragmented text. Write continuously! Do not make any numbered lists!',
+        'Control+Alt+Shift+Period': 'Stringently eschew creating any form of list, whether numbered or bulleted. Do not include any list-producing HTML tags like `<ul>`, `<ol>`, or `<li>` in your response whatsoever. Write in continuous prose, avoiding all structured separations or markup. Provide the response as one unbroken block of text. Keep sentences connected, with no structural separations or divisions. Do not organize the response into any type of enumeration. Purely write unformatted raw text. Aggressively avoid segmenting content; keep everything unified in a continuous block of prose like a book. Write connected, unfragmented text.',
         'Control+Alt+Comma': 'Target an answer to this question in continuous text.',
         'Alt+Shift+Comma': 'Just answer in text.',
         'Control+Alt+Shift+Comma': 'Don\' write code unless it was requested by the user.',
         'Control+Alt+KeyC': 'Write code without code comments or empty lines inside code blocks, but an empty line between functions and normal width 4 indentation.',
         'Alt+Shift+KeyC': 'Don\'t tare code apart with needless empty lines or code comments.',
-        'Control+Alt+Shift+KeyC': '',
+        'Control+Alt+Shift+KeyC': 'Write normal code, in normal code blocks, with normal syntax, and normal indentation.',
         'Control+Alt+KeyG': 'Give me the code to fix this. Don\'t include too much explanation.',
-        'Alt+Shift+KeyG': 'Provide drop-in replacements for whole functions that need to be changed.',
-        'Control+Alt+Shift+KeyG': 'Can you write a brief GitHub explanation of the purpose of the project in continuous text.',
+        'Alt+Shift+KeyG': 'Give me drop-in replacements for whole functions that need to be changed.',
+        'Control+Alt+Shift+KeyG': 'Write a continuous GitHub README segment explaining the purpose of the project to a user who is not familiar with the code, who came across it in an online search. Also include how to use it.',
         'Control+Alt+KeyV': 'Limit unnecessary verbosity; reduce verbal output. Focus on the question asked.',
         'Alt+Shift+KeyV': 'I can\'t read all this. I don\'t need to become an expert in , I just want to solve this issue.',
         'Control+Alt+Shift+KeyV': 'Entirely omit any informationally worthless filler material, such as commenting that everything the user says is "profound", "on point", "cutting through", "right to ask". Never start any response with "You are right". Just provide content like an article: practical information without a distracting sycophancy circus.',
-        'Control+Alt+KeyW': 'Give me the whole code, without function name changes.',
+        'Control+Alt+KeyW': 'Give me the whole code.',
         'Alt+Shift+KeyW': 'Give me whole functions.',
-        'Control+Alt+Shift+KeyW': '',
+        'Control+Alt+Shift+KeyW': 'Don\'t make unnecessary function name changes',
         'Control+Alt+KeyA': 'Don\'t just agree with what the user says, analyze the issue objectively. I am explicitly requesting that this response should return what is technically accurate instead of just aligning with what the user implied.',
         'Alt+Shift+KeyA': 'This suggestion is just a way to phrase the question. Don\'t stick to the approach the user had, but consider alternative solutions that would better solve the expressed goal. The aim is to figure out what would work best, not to stay stuck to what the user suggested.',
         'Control+Alt+Shift+KeyA': '',
