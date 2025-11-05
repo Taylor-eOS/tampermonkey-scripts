@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         Extract Element
-// @description  Find element similarity
-// @version      5
+// @name         Extract Elements
+// @description  Find element similarity in web page
+// @version      5.5
 // @match        *://*/*
 // @grant        GM_addStyle
 // @grant        GM_registerMenuCommand
@@ -12,7 +12,6 @@
     try{
         const INDICATOR_ID = 'teach_indicator_key'
         const PANEL_ID = 'teach_panel_key'
-        const STORAGE_KEY = 'teach_samples_key_v1'
         let samples = []
         let recording = false
         let lastMouse = {x:0,y:0}
@@ -111,14 +110,6 @@
             })
         }
 
-        function saveSamples(){
-            try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(samples)) }catch(e){ console.warn('saveSamples failed', e) }
-        }
-
-        function loadSamples(){
-            try{ const raw = localStorage.getItem(STORAGE_KEY); return raw? JSON.parse(raw) : [] }catch(e){ console.warn('loadSamples failed', e); return [] }
-        }
-
         function addSampleFromElement(el){
             if(!el || el.nodeType!==1) return null
             const pattern = getElementPattern(el)
@@ -132,13 +123,11 @@
                 matchCount: similarElements.length
             }
             samples.push(s)
-            saveSamples()
             return s
         }
 
         function clearSamples(){
             samples = []
-            saveSamples()
             const panel = document.getElementById(PANEL_ID)
             if(panel && panel.style.display==='block') showPanel()
             showToast(window.innerWidth/2, 24, 'cleared')
@@ -243,7 +232,7 @@
             const btnClear = document.createElement('button')
             btnClear.className = 'teach_btn'
             btnClear.textContent = 'Clear all samples'
-            btnClear.addEventListener('click', ()=>{ if(confirm('Clear all samples?')) clearSamples() })
+            btnClear.addEventListener('click', clearSamples)
             const btnCopy = document.createElement('button')
             btnCopy.className = 'teach_btn'
             btnCopy.textContent = 'Copy all samples'
@@ -350,14 +339,13 @@
 
         ensureBody(()=>{
             try{
-                samples = loadSamples()
                 createIndicator()
                 createPanel()
                 window.addEventListener('mousemove', onMouseMove, true)
                 window.addEventListener('keydown', onKeyDown, true)
                 if(typeof GM_registerMenuCommand === 'function'){
                     try{ GM_registerMenuCommand('Teach: Show panel', ()=>{ showPanel() }) }catch(e){}
-                    try{ GM_registerMenuCommand('Teach: Clear all samples', ()=>{ if(confirm('Clear all samples?')) clearSamples() }) }catch(e){}
+                    try{ GM_registerMenuCommand('Teach: Clear all samples', clearSamples) }catch(e){}
                 }
             }catch(e){
                 console.error('Teach initialization failed inside ensureBody', e)
