@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Save Conversation
 // @namespace    http://tampermonkey.net/
-// @version      3.3
+// @version      3.4
 // @description  Save the conversation as a .txt file
 // @match        *://*/*
 // @grant        none
@@ -64,12 +64,14 @@
             if (!role) return;
             const bubble = group.querySelector('div.message-bubble');
             if (!bubble) return;
-            let tempBubble = bubble.cloneNode(true);
-            const unwanted = tempBubble.querySelectorAll('div.search-results');
+            const markdownDiv = bubble.querySelector('div.response-content-markdown');
+            if (!markdownDiv) return;
+            let tempDiv = markdownDiv.cloneNode(true);
+            const unwanted = tempDiv.querySelectorAll('div.search-results');
             unwanted.forEach(el => el.remove());
-            const citations = tempBubble.querySelectorAll('a.citation');
+            const citations = tempDiv.querySelectorAll('a.citation');
             citations.forEach(el => el.remove());
-            let text = tempBubble.innerText.trim();
+            let text = tempDiv.innerText.trim();
             text = text.replace(/\[\w+:\d+\]/g, '').trim();
             text = text.split('\n').filter(line => {
                 const trimmed = line.trim();
