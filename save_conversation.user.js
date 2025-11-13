@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Save Conversation
 // @namespace    http://tampermonkey.net/
-// @version      3.4
+// @version      3.41
 // @description  Save the conversation as a .txt file
 // @match        *://*/*
 // @grant        none
@@ -17,7 +17,7 @@
 
     function generateFileName(messages) {
         let raw = (document.querySelector('title') || {}).textContent || '';
-        raw = raw.replace(/ - Grok$/i, '').trim().slice(0, 40);
+        raw = raw.replace(/ - Grok$/i, '').trim().slice(0, 45);
         if (raw) return raw;
         if (!messages.length) return 'conversation';
         let firstWords = messages[0].text.split(/\s+/).slice(0, 5).join(' ');
