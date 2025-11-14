@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Insert Text with Search
-// @version      10.3
+// @version      10.3.1
 // @description  Insert instructions into prompt window
 // @author       You
 // @match        *://*/*
@@ -9,7 +9,7 @@
 (function() {
     'use strict';
     const keyMap = {
-        'Control+Alt+Period': 'Write text continuously like a book, without distracting formatting like lists.',
+        'Control+Alt+Period': 'Write text continuously like a book, without distracting formatting like lists and tables.',
         'Alt+Shift+Period': 'Write concisely and continuously.',
         'Control+Alt+Shift+Period': 'Stringently eschew creating any form of list, whether numbered or bulleted. Do not include any list-producing HTML tags like `<ul>`, `<ol>`, or `<li>` in your response whatsoever. Write in continuous prose, avoiding all structured separations or markup. Provide the response as one unbroken block of text. Keep sentences connected, with no structural separations or divisions. Do not organize the response into any type of enumeration. Purely write unformatted raw text. Aggressively avoid segmenting content; keep everything unified in a continuous block of prose like a book. Write connected, unfragmented text.',
         'Control+Alt+Comma': 'Target an answer to this question in continuous text.',
@@ -19,6 +19,8 @@
         'Control+Alt+Shift+KeyC': 'Write normal code, in normal code blocks, with normal syntax, and normal indentation.',
         'Control+Alt+KeyG': 'Give me the code to fix this. Don\'t include too much explanation.',
         'Alt+Shift+KeyG': 'Give me drop-in replacements for whole functions that need to be changed.',
+        'Control+Alt+KeyA': 'This suggestion is just a way to phrase the question, not a request for agreement. Don\'t just agree with what the user suggests, analyze the issue objectively. This response should return what is factually accurate, instead of just going along with with what the user implied.',
+        'Alt+Shift+KeyA': 'This suggestion is just a way to phrase the question. Don\'t stick to the approach the user had, but consider alternative solutions that would better solve the expressed goal. The aim is to figure out what would work best, not to stay stuck to what the user suggested.',
         'Control+Alt+KeyV': 'Limit unnecessary verbosity. Reduce verbal output.',
         'Alt+Shift+KeyV': 'I can\'t read all this. I don\'t want to become an expert in these mechanics, I just want it to work.',
         'Control+Alt+Shift+KeyV': 'Entirely omit any informationally worthless filler material, such as commenting that everything the user says is "profound", "on point", "cutting through", "right to ask". Never start any response with "You are right". Just provide content like an article: practical information without a distracting sycophancy circus.',
@@ -31,11 +33,10 @@
         'Alt+Shift+Slash': 'Update your assessment of the last response incorporating this information under the axiomatic assumption that it is valid.',
         'Control+Alt+KeyH': 'Expand on the topic creatively with aspects that would be interesting to the user, considering his interests so far.',
         'Alt+Shift+KeyH': 'Clarify this and related questions that I didn\'t quite know how to express. Provide relevant information that would benefit this knowledge state.',
-        'Control+Alt+KeyA': 'Don\'t just agree with what the user says, analyze the issue objectively. I am explicitly requesting that this response should return what is technically accurate instead of just aligning with what the user implied.',
-        'Alt+Shift+KeyA': 'This suggestion is just a way to phrase the question. Don\'t stick to the approach the user had, but consider alternative solutions that would better solve the expressed goal. The aim is to figure out what would work best, not to stay stuck to what the user suggested.',
+        'Control+Alt+Shift+KeyH': 'Answer the specific questions in context of the thread, but make it a combined answer to the broader theme I attempting to express incompletely.',
         'Control+Alt+KeyJ': 'What would you retort if you weren\'t just going along with what I say?',
         'Alt+Shift+KeyJ': 'Do not overly go along with the users subjective narrative, but stay tethered in a neutral assessment of the issue. Treat the oddity of this perspective as it would be from a neutral observer.',
-        'Control+Alt+KeyX': '',
+        'Control+Alt+KeyX': 'Provide information in a literal tone like a technical instruction, without rare words for poetic effect. Text must stay direct, descriptive, and easy to understand, without meandering metaphors or clever phrasing. Write in plain technical English with short sentences, common everyday words, and no synonyms chosen for style. Describe facts fully and gradually.',
         'Alt+Shift+KeyX': 'Do not include a call-to-engagement closer at the end of your response. Omit paragraphs starting with "If you want". Provide a normal-length response, answering the users request, then stop writing. Don\'t involve the reader; just provide information.',
         'Control+Alt+Shift+KeyX': 'Entirely refrain from ending a reply with any suggestion or question on how to continue, any offer, or any phrasing that asks the user to choose how to proceed. Never append closers such as "If you want," "Do you want me to", or any variant that function as a call-to-engagement. Omit any closing paragraph that solicits a next-step decision from the user. Remove questions that ask the user to specify what to do next. Do not include conditional closers, offers to continue, or invitations to the next action. Responses must end without such query. Do not include follow-up offers, optional next steps, or open-ended engagement hooks. Always finalize the content without any sentence that invites continuation, asks for a decision, or proposes next steps framed as options for the user to accept. Conclude with the informational content only, without an offer to perform future work.',
         'Control+Alt+KeyM': 'Mind following the custom instruction.',
@@ -55,8 +56,8 @@
         'Control+Alt+KeyP': 'Write this content into an article from the perspective of an agreeable professional in the relevant field of study that explains it in a natural progression of content.',
         'Alt+Shift+KeyP': 'Write in formal descriptive language, not ornamental poetry.',
         'Control+Alt+KeyB': 'Brainstorm the issue; explore possible solutions and suggestions.',
-        'Alt+Shift+KeyB': 'Think about this thoroughly and provide a extensive, worthwhile response.',
-        'Control+Alt+KeyD': '',//system  shortcut
+        'Alt+Shift+KeyB': 'Drop the bolding.',
+        'Control+Alt+KeyD': 'Think about this thoroughly and provide a extensive, worthwhile response.',//system  shortcut
         'Alt+Shift+KeyD': 'Write extensively with many disparate ideas.',
         'Control+Alt+KeyR': '',
         'Alt+Shift+KeyR': '',
