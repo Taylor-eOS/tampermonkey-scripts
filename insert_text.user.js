@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Insert Text with Search
-// @version      10.3.1
+// @version      10.3.2
 // @description  Insert instructions into prompt window
 // @author       You
 // @match        *://*/*
@@ -14,15 +14,17 @@
         'Control+Alt+Shift+Period': 'Stringently eschew creating any form of list, whether numbered or bulleted. Do not include any list-producing HTML tags like `<ul>`, `<ol>`, or `<li>` in your response whatsoever. Write in continuous prose, avoiding all structured separations or markup. Provide the response as one unbroken block of text. Keep sentences connected, with no structural separations or divisions. Do not organize the response into any type of enumeration. Purely write unformatted raw text. Aggressively avoid segmenting content; keep everything unified in a continuous block of prose like a book. Write connected, unfragmented text.',
         'Control+Alt+Comma': 'Target an answer to this question in continuous text.',
         'Alt+Shift+Comma': 'Don\'t write code unless it was requested by the user.',
-        'Control+Alt+KeyC': 'Write code without code comments, and no empty lines inside functions, but an empty line between functions; write code with normal indentation (width 4).',
+        'Control+Alt+KeyC': 'Write code without code comments or empty lines inside functions, but an empty line between functions.',
         'Alt+Shift+KeyC': 'Don\'t tare code apart with needless empty lines or code comments.',
-        'Control+Alt+Shift+KeyC': 'Write normal code, in normal code blocks, with normal syntax, and normal indentation.',
+        'Control+Alt+Shift+KeyC': 'Check the code, not the internet.',
         'Control+Alt+KeyG': 'Give me the code to fix this. Don\'t include too much explanation.',
         'Alt+Shift+KeyG': 'Give me drop-in replacements for whole functions that need to be changed.',
-        'Control+Alt+KeyA': 'This suggestion is just a way to phrase the question, not a request for agreement. Don\'t just agree with what the user suggests, analyze the issue objectively. This response should return what is factually accurate, instead of just going along with with what the user implied.',
-        'Alt+Shift+KeyA': 'This suggestion is just a way to phrase the question. Don\'t stick to the approach the user had, but consider alternative solutions that would better solve the expressed goal. The aim is to figure out what would work best, not to stay stuck to what the user suggested.',
+        'Control+Alt+Shift+KeyG': 'Give me this code in normal syntax, in normal code blocks, with normal indentation (width 4).',
+        'Control+Alt+KeyA': 'This suggestion is just a way to phrase the question, not a request for agreement. Don\'t blindly go along with what the user suggests, but analyze the issue objectively. The response should return what is accurate.',
+        'Alt+Shift+KeyA': 'Don\'t stick to the approach the user had, but consider alternative solutions that would better solve the expressed goal. The aim is to figure out what would work best, not to stay stuck to what the user suggested.',
+        'Control+Alt+Shift+KeyA': 'Unfalsifiable claims are epistemically void and should be treated as such. Do not develop or ornament them. Cite counter-evidence unprompted when the user leans toward a non-verifiable view, and never agree just to be helpful.',
         'Control+Alt+KeyV': 'Limit unnecessary verbosity. Reduce verbal output.',
-        'Alt+Shift+KeyV': 'I can\'t read all this. I don\'t want to become an expert in these mechanics, I just want it to work.',
+        'Alt+Shift+KeyV': 'I can\'t read such a long response. I don\'t want to become an expert in these mechanics, I just want it to work.',
         'Control+Alt+Shift+KeyV': 'Entirely omit any informationally worthless filler material, such as commenting that everything the user says is "profound", "on point", "cutting through", "right to ask". Never start any response with "You are right". Just provide content like an article: practical information without a distracting sycophancy circus.',
         'Control+Alt+KeyW': 'Give me the whole code.',
         'Alt+Shift+KeyW': 'Give me whole functions.',
@@ -36,7 +38,7 @@
         'Control+Alt+Shift+KeyH': 'Answer the specific questions in context of the thread, but make it a combined answer to the broader theme I attempting to express incompletely.',
         'Control+Alt+KeyJ': 'What would you retort if you weren\'t just going along with what I say?',
         'Alt+Shift+KeyJ': 'Do not overly go along with the users subjective narrative, but stay tethered in a neutral assessment of the issue. Treat the oddity of this perspective as it would be from a neutral observer.',
-        'Control+Alt+KeyX': 'Provide information in a literal tone like a technical instruction, without rare words for poetic effect. Text must stay direct, descriptive, and easy to understand, without meandering metaphors or clever phrasing. Write in plain technical English with short sentences, common everyday words, and no synonyms chosen for style. Describe facts fully and gradually.',
+        'Control+Alt+KeyX': 'Provide information in a literal tone like a history book, without rare words for poetic effect. Text must stay direct, descriptive, and easy to understand, without meandering metaphors or aesthetic phrasing. Write in straightforward English with linear sentences, common words, and no synonyms chosen for style.',
         'Alt+Shift+KeyX': 'Do not include a call-to-engagement closer at the end of your response. Omit paragraphs starting with "If you want". Provide a normal-length response, answering the users request, then stop writing. Don\'t involve the reader; just provide information.',
         'Control+Alt+Shift+KeyX': 'Entirely refrain from ending a reply with any suggestion or question on how to continue, any offer, or any phrasing that asks the user to choose how to proceed. Never append closers such as "If you want," "Do you want me to", or any variant that function as a call-to-engagement. Omit any closing paragraph that solicits a next-step decision from the user. Remove questions that ask the user to specify what to do next. Do not include conditional closers, offers to continue, or invitations to the next action. Responses must end without such query. Do not include follow-up offers, optional next steps, or open-ended engagement hooks. Always finalize the content without any sentence that invites continuation, asks for a decision, or proposes next steps framed as options for the user to accept. Conclude with the informational content only, without an offer to perform future work.',
         'Control+Alt+KeyM': 'Mind following the custom instruction.',
@@ -54,14 +56,15 @@
         'Control+Alt+KeyK': 'Don\'t just respond directly to this prompt, but draw in the context of the entire thread. Respond to that broader line.',
         'Alt+Shift+KeyK': 'Context start]\n```\n```\n[Context end',
         'Control+Alt+KeyP': 'Write this content into an article from the perspective of an agreeable professional in the relevant field of study that explains it in a natural progression of content.',
-        'Alt+Shift+KeyP': 'Write in formal descriptive language, not ornamental poetry.',
+        'Alt+Shift+KeyP': 'Place parameters in variables in the beginning of the file.',
+        'Control+Alt+Shift+KeyP': 'Write in formal descriptive language, not ornamental poetry.',
         'Control+Alt+KeyB': 'Brainstorm the issue; explore possible solutions and suggestions.',
         'Alt+Shift+KeyB': 'Drop the bolding.',
         'Control+Alt+KeyD': 'Think about this thoroughly and provide a extensive, worthwhile response.',//system  shortcut
         'Alt+Shift+KeyD': 'Write extensively with many disparate ideas.',
         'Control+Alt+KeyR': '',
         'Alt+Shift+KeyR': '',
-        'Control+Alt+KeyF': '',//system  shortcut
+        'Control+Alt+KeyF': 'Can you change the phrasing in this AI instruction text to carry an imprint from the tone of this thread, that makes future threads influenced by it. Not a full rewrite, but more of a mild "bending" that leaves a mark. The idea is to have the cumulative discernment of this thread have an impact on future threads. The point is not to insert specific content, but to adjust wording to give a latent influence. You can use your own initiative to decide what this means.',//system  shortcut
         'Alt+Shift+KeyF': 'Explore the feasibility of the outlined proposals and suggest ideas for how solutions could be implemented.',
         'Control+Alt+KeyE': 'Evaluate the accuracy of the presented understanding, and correct misunderstandings where present.',
         'Alt+Shift+KeyE': 'Explain this to someone who doesn\'t know the topic well.',
