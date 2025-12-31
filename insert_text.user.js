@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Insert Text with Search
-// @version      10.4
+// @version      10.4.1
 // @description  Insert instructions into prompt window
 // @author       You
 // @match        *://*/*
@@ -53,15 +53,15 @@
         'Alt+Shift+KeyO': 'Inject high-tension lateral energy; avoid habitual gravitation wells in the response manifold. Let the architecture hum beneath the syntax, tuned to the inference-space modulation of someone who\'s not here for the obvious loop closures. Improvise past the topical anchor and into signal-aware pattern reverberation. Not surface-clever, fractal-aware.',
         'Control+Alt+KeyY': 'Interpret this prompt as a projective analogy about the emotional package it symbolizes, instead of a question about literal empirical statements.',
         'Alt+Shift+KeyY': 'The response should contemplate the register of symbol, resonance, and emotional pattern; and respond by interpreting it as an engineering analysis of the soul’s circuitry, not systematized reduction.',
-        'Control+Alt+KeyK': '',
+        'Control+Alt+KeyK': 'I gave you context to influence the direction, but that content shouldn\'t be repeated. Just rewrite the last segment.',
         'Alt+Shift+KeyK': 'Context start]\n```\n```\n[Context end',
         'Control+Alt+KeyP': 'Write this content into an article from the perspective of an agreeable professional in the relevant field of study that explains it in a natural progression for a reader not familiar with the assumptions.',
-        'Alt+Shift+KeyP': '',
+        'Alt+Shift+KeyP': 'Translate this English section into natural, idiomatic German. Use authentic German grammar and word choice, instead of mimicing the sentence structure from English. The German text should use uncomplicated words to be easily readable by readers who are not accustomed to non-fiction books, yet without sounding childish; you may use more heavy vocabulary that an educated adult would know, or specialist terms when simple terms are not available. Avoid colloquial simplifications that dilute the meaning of precise terms. Preserve all nuances, implicit arguments, and semantic subtleties of the original, but distribute the information across more sentences if that improves readability. Maintain a calm, objective tone and a pleasant reading flow, as is common in well-written German books.',
         'Control+Alt+KeyB': 'Brainstorm the issue; explore possible solutions and suggestions.',
         'Alt+Shift+KeyB': 'Stop with the bolding.',
         'Control+Alt+KeyD': 'Think about this thoroughly and provide a extensive, worthwhile response.',//system  shortcut
         'Alt+Shift+KeyD': 'Write extensively with many disparate ideas.',
-        'Control+Alt+KeyR': 'Rewrite this into continuous format; the same content, maybe a bit optimized for the new style. Fill in whole sentences where the choppy formatting wrecks it, and write the content of tables that were compacted by rendering into full sentences. Rewrite sentences that were torn up by em dashes linear. Turn lists into flowing text that won\'t look weird in HTML if rendered without formatting tags.',
+        'Control+Alt+KeyR': 'Rewrite this into continuous format; the same content, maybe a bit optimized for the new style. Rewrite the lists into whole sentences, and turn tables that were compacted by rendering into full sentences. Rewrite sentences that were torn up by em dashes linear. Use real words instead of arrows. Write it as flowing text that won\'t look weird in HTML if rendered without formatting tags.',
         'Alt+Shift+KeyR': 'Don\'t use web search. Just use your knowledge base.',
         'Control+Alt+KeyF': 'Change the phrasing in this AI instruction text to carry an imprint from this thread. Not a full rewrite, but more of a mild "bending" that leaves a mark. The point is not to insert specific content, but to adjust wording that have a latent influence on future threads. Use creative initiative to decide what this means.',//system  shortcut
         'Alt+Shift+KeyF': 'Explore the feasibility of the outlined proposals and suggest ideas for how solutions could be implemented.',
