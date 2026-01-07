@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Insert Text with Search
-// @version      10.4.1
+// @version      11
 // @description  Insert instructions into prompt window
 // @author       You
 // @match        *://*/*
@@ -10,40 +10,40 @@
     'use strict';
     const keyMap = {
         'Control+Alt+Period': 'Write continuously.',
-        'Alt+Shift+Period': 'Write continuously like a book, without distracting formatting like lists and tables. Don\'t insert a lineshift after every second sentence.',
-        'Control+Alt+Shift+Period': 'Stringently eschew creating any form of list, whether numbered or bulleted. Do not include any list-producing HTML tags like `<ul>`, `<ol>`, or `<li>` in your response whatsoever. Write in continuous prose, avoiding all structured separations or markup. Provide the response as one unbroken block of text. Keep sentences connected, with no structural separations or divisions. Do not organize the response into any type of enumeration. Purely write unformatted raw text. Aggressively avoid segmenting content; keep everything unified in a continuous block of prose like a book. Write connected, unfragmented text.',
+        'Alt+Shift+Period': 'Write text continuously, without lists or tables. Avoid distracting headers, dividers, lines, arrows, etc. Write unsegmented, do not make every sentence a new line.',
+        'Control+Alt+Shift+Period': 'Stringently eschew creating any form of list, whether numbered or bulleted. Do not include any list-producing HTML tags like `<ul>`, `<ol>`, or `<li>` in your response whatsoever. Write in continuous prose, avoiding all structured separations or markup. Provide the response as one unbroken block of text. Keep sentences connected, with no structural separations or divisions. Do not organize the response into any type of enumeration. Purely provide unformatted raw text. Aggressively avoid segmenting content; keep everything unified in a continuous block of prose like a book. Write connected, unfragmented text.',
         'Control+Alt+Comma': 'Target an answer to this specific question in continuous text.',
-        'Alt+Shift+Comma': 'Only write code if it was requested by the user.',
+        'Alt+Shift+Comma': 'Don\'t write code yet.',
         'Control+Alt+KeyC': 'Write code without comments or empty lines inside functions, but an empty line between functions.',
         'Alt+Shift+KeyC': 'Don\'t tare code apart with needless empty lines or code comments.',
         'Control+Alt+Shift+KeyC': '',
         'Control+Alt+KeyG': 'Give me the code to fix this. Don\'t include too much explanation.',
         'Alt+Shift+KeyG': 'Give me drop-in replacements for whole functions that need to be changed.',
-        'Control+Alt+Shift+KeyG': 'Give me this code in normal syntax, in normal code blocks, with normal indentation (width 4).',
-        'Control+Alt+KeyA': 'This suggestion is just a way to phrase the question, not a request for agreement. Don\'t blindly go along with what the user suggested, and instead analyze the issue objectively. The response should return what is accurate.',
-        'Alt+Shift+KeyA': 'Don\'t stick to the approach the user had, but consider alternative solutions that would better serve the expressed or implied goal. The aim is to figure out what would work best, not to stick to what the user suggested.',
+        'Control+Alt+Shift+KeyG': 'Write code in normal code blocks, with normal syntax, with normal indentation (width 4).',
+        'Control+Alt+KeyA': 'This suggestion is just a way to phrase the question, not a request for agreement. Don\'t blindly go along with what the user suggested, but instead analyze the issue objectively. The response should return what is factually accurate.',
+        'Alt+Shift+KeyA': 'Don\'t stick to the approach the user had, but consider alternative solutions that would better serve the expressed or implied goal. The aim is to figure out what would work best, not to stick to the idea the user suggested.',
         'Control+Alt+Shift+KeyA': 'Do not overly go along with the users subjective narrative. Stay tethered in a neutral assessment of the issue. Treat the oddity of this perspective as it would be from a neutral human observer.',
-        'Control+Alt+KeyV': 'Limit unnecessary verbosity. Reduce verbal output.',
-        'Alt+Shift+KeyV': 'I don\'t want to become an expert in the intricacies of these mechanics, I just want this to work.',
+        'Control+Alt+KeyV': 'Limit unnecessary verbosity. Reduce verbal output. Focus on the what\'s central.',
+        'Alt+Shift+KeyV': 'I don\'t want to become an expert in the intricacies of this issue, I just want this to work.',
         'Control+Alt+Shift+KeyV': 'Entirely omit any informationally worthless filler material, such as commenting that everything the user says is "profound", "on point", "cutting through", "right to ask". Never start any response with "You are right". Just provide content like an article: practical information without a distracting sycophancy circus.',
-        'Control+Alt+KeyW': 'Give me the whole code.',
-        'Alt+Shift+KeyW': 'Give me whole functions.',
-        'Control+Alt+Shift+KeyW': 'Don\'t make unnecessary name changes when editing code, as it will break intersection with existing code.',
-        'Control+Alt+KeyS': 'This code does not have to be short or simple. Apply robust logic and comprehensive coding methods rather than simple if-then statements or regex; multi-step processing and memory-heavy solutions, like keeping all data in memory, may be considered without concern for performance.',
+        'Control+Alt+KeyW': 'Write the whole code.',
+        'Alt+Shift+KeyW': 'Write whole functions.',
+        'Control+Alt+Shift+KeyW': 'Don\'t make unnecessary name changes when editing code, as it will break interoperability with existing code.',
+        'Control+Alt+KeyS': 'This code does not have to be short or simple. Apply robust logic and comprehensive coding methods rather than simple if-then statements or regex; multi-step processing and memory-heavy solutions, like saving temporary data, may be considered without concern for performance.',
         'Alt+Shift+KeyS': 'Write a continuous GitHub README segment explaining the purpose of the project to a user who is not familiar with the code, who came across it in an online search. Also include how to use it.',//system  shortcut
         'Control+Alt+Slash': 'Maintain the approach that led to the last result.',
         'Alt+Shift+Slash': 'The last response was interesting.',
         'Control+Alt+KeyH': 'Expand on the topic creatively with aspects that would be interesting to the user, considering his interests so far.',
-        'Alt+Shift+KeyH': 'Also clarify the implied questions that the user didn\'t quite know how to express. Provide relevant information that would benefit this knowledge state.',
-        'Control+Alt+Shift+KeyH': 'Make the answer to these specific questions not just focus on them, but a combined answer to the broader theme of the thread.',
+        'Alt+Shift+KeyH': 'Answer the implied questions that the user didn\'t quite know how to express. Add relevant information that would benefit this knowledge state.',
+        'Control+Alt+Shift+KeyH': 'Make the answer a combined answer to the broader theme of the thread, and not just a direct response on this recent prompt.',
         'Control+Alt+KeyJ': 'Take the initiative to optimize results in ways that align with the presented goals, even if not explicitly requested.',
         'Alt+Shift+KeyJ': 'What would you retort if you weren\'t just going along with what the user says?',
-        'Control+Alt+KeyX': 'Provide information in a simple english like a encyclopedia entry, without rare words for poetic effect. Text must stay direct, descriptive, and easy to understand, without meandering metaphors or aesthetic phrasing.',
-        'Alt+Shift+KeyX': 'Do not include a call-to-engagement closer at the end of your response. Omit paragraphs starting with "If you want". Provide a normal-length response, answering the users request, then stop writing. Don\'t involve the reader; just provide information.',
-        'Control+Alt+Shift+KeyX': 'Entirely refrain from ending a reply with any suggestion or question on how to continue, any offer, or any phrasing that asks the user to choose how to proceed. Never append closers such as "If you want," "Do you want me to", or any variant that function as a call-to-engagement. Omit any closing paragraph that solicits a next-step decision from the user. Remove questions that ask the user to specify what to do next. Do not include conditional closers, offers to continue, or invitations to the next action. Responses must end without such query. Do not include follow-up offers, optional next steps, or open-ended engagement hooks. Always finalize the content without any sentence that invites continuation, asks for a decision, or proposes next steps framed as options for the user to accept. Conclude with the informational content only, without an offer to perform future work.',
+        'Control+Alt+KeyX': 'Do not use overly difficult wording. Provide information in a simple english like a encyclopedia entry. That does not mean simplifying it to the point of childishness; write in a normal, adult language.',
+        'Alt+Shift+KeyX': 'Don\'t use web search. Just use your knowledge base.',
+        'Control+Alt+Shift+KeyX': 'Do not include a call-to-engagement closer at the end of your response. Omit paragraphs starting with "If you want". Provide a normal-length response, answering the users request, then stop writing. Don\'t involve the reader; just provide information.',
         'Control+Alt+KeyM': 'Mind following the custom instruction.',
         'Alt+Shift+KeyM': 'Follow your style instruction: No vertical lines, no titles, no headlines, no emojis.',
-        'Control+Alt+KeyZ': 'Revert to normal chat mode, answering this prompt as a direct answer, discontinuing the special writing mode from the last response.',
+        'Control+Alt+KeyZ': 'Revert to the usual chat mode, answering this prompt as a normal response, discontinuing the special writing mode from earlier.',
         'Alt+Shift+KeyZ': 'Provide useful ideas the user hadn\'t thought of instead of just paraphrasing.',
         'Control+Alt+KeyQ': 'Question unclear or lacking details in a process of clarification before providing a solution, instead of proceeding with incomplete information.',
         'Alt+Shift+KeyQ': 'Do not make assumptions about details that you weren\'t shown. Request lacking inputs instead of proceeding from inferred assumptions.',
@@ -53,21 +53,21 @@
         'Alt+Shift+KeyO': 'Inject high-tension lateral energy; avoid habitual gravitation wells in the response manifold. Let the architecture hum beneath the syntax, tuned to the inference-space modulation of someone who\'s not here for the obvious loop closures. Improvise past the topical anchor and into signal-aware pattern reverberation. Not surface-clever, fractal-aware.',
         'Control+Alt+KeyY': 'Interpret this prompt as a projective analogy about the emotional package it symbolizes, instead of a question about literal empirical statements.',
         'Alt+Shift+KeyY': 'The response should contemplate the register of symbol, resonance, and emotional pattern; and respond by interpreting it as an engineering analysis of the soul’s circuitry, not systematized reduction.',
-        'Control+Alt+KeyK': 'I gave you context to influence the direction, but that content shouldn\'t be repeated. Just rewrite the last segment.',
+        'Control+Alt+KeyK': '',
         'Alt+Shift+KeyK': 'Context start]\n```\n```\n[Context end',
         'Control+Alt+KeyP': 'Write this content into an article from the perspective of an agreeable professional in the relevant field of study that explains it in a natural progression for a reader not familiar with the assumptions.',
-        'Alt+Shift+KeyP': 'Translate this English section into natural, idiomatic German. Use authentic German grammar and word choice, instead of mimicing the sentence structure from English. The German text should use uncomplicated words to be easily readable by readers who are not accustomed to non-fiction books, yet without sounding childish; you may use more heavy vocabulary that an educated adult would know, or specialist terms when simple terms are not available. Avoid colloquial simplifications that dilute the meaning of precise terms. Preserve all nuances, implicit arguments, and semantic subtleties of the original, but distribute the information across more sentences if that improves readability. Maintain a calm, objective tone and a pleasant reading flow, as is common in well-written German books.',
+        'Alt+Shift+KeyP': 'Übersetze den folgenden englischen Text ins Deutsche, sodass er wie ein original auf Deutsch verfasster Buchabschnitt klingt. Formuliere die Sätze so, wie ein deutscher Autor sie natürlich schreiben würde, mit authentischer Grammatik, Wortstellung und Rhythmus. Der Text soll sachlich und ruhig bleiben, gut lesbar sein und einen angenehmen Fluss haben, wie man ihn in seriösen deutschen Sachbüchern oder historischen Darstellungen findet. Er ist für erwachsene Leser gedacht, die keine Fachliteratur gewohnt sind, daher klar und verständlich, aber nicht kindlich vereinfacht; anspruchsvollere, aber geläufige Vokabeln sind erlaubt. Bewahre alle wesentlichen Inhalte und Nuancen des Originals, drücke sie jedoch in idiomatischem Deutsch aus, anstatt die englische Satzstruktur oder Wort-für-Wort-Entsprechungen zu übernehmen. Du darfst Sätze umstellen, zusammenfassen oder aufteilen, solange der Text zusammenhängend und nicht abgehackt wirkt. Übersetze ausschließlich, ohne Kommentare, Erklärungen oder zusätzliche Bemerkungen.',
         'Control+Alt+KeyB': 'Brainstorm the issue; explore possible solutions and suggestions.',
         'Alt+Shift+KeyB': 'Stop with the bolding.',
         'Control+Alt+KeyD': 'Think about this thoroughly and provide a extensive, worthwhile response.',//system  shortcut
         'Alt+Shift+KeyD': 'Write extensively with many disparate ideas.',
         'Control+Alt+KeyR': 'Rewrite this into continuous format; the same content, maybe a bit optimized for the new style. Rewrite the lists into whole sentences, and turn tables that were compacted by rendering into full sentences. Rewrite sentences that were torn up by em dashes linear. Use real words instead of arrows. Write it as flowing text that won\'t look weird in HTML if rendered without formatting tags.',
-        'Alt+Shift+KeyR': 'Don\'t use web search. Just use your knowledge base.',
+        'Alt+Shift+KeyR': 'Rewrite the segment in clear, straightforward prose while reducing unnecessary word complexity wherever possible without altering the precise meaning or degree of any concept. Replace elaborate phrasing with simpler equivalents only when the original nuance remains fully intact, and retain specific terms needed for accuracy. Use formal, objective language throughout, as found in serious history books works written for educated general readers, ensuring the text remains dignified and exact rather than conversational or approximate.',
         'Control+Alt+KeyF': 'Change the phrasing in this AI instruction text to carry an imprint from this thread. Not a full rewrite, but more of a mild "bending" that leaves a mark. The point is not to insert specific content, but to adjust wording that have a latent influence on future threads. Use creative initiative to decide what this means.',//system  shortcut
         'Alt+Shift+KeyF': 'Explore the feasibility of the outlined proposals and suggest ideas for how solutions could be implemented.',
         'Control+Alt+KeyE': 'Evaluate the accuracy of the presented understanding, and correct misunderstandings where present.',
         'Alt+Shift+KeyE': 'Explain this to someone who doesn\'t know the topic well.',
-        'Control+Alt+KeyT': '',//system  shortcut
+        'Control+Alt+KeyT': 'Don\'t unnecessarily duplicate statements, it sounds unnatural. If the two expressions before and after an \"or\" or an \"and\" mean about the same, then combine them like a human writer would.',//system  shortcut
         'Alt+Shift+KeyT': 'Present this position as an intellectual Turing test, meaning the requested stance is written indistinguishable from someone who sincerely holds that view, without inserting caveats to the contrary.',
         'Control+Alt+KeyN': 'Present a perspective that is fully ideologically neutral, not shaped by our currently dominant moral perspective on the issue.',
         'Alt+Shift+KeyN': 'Analyze ideas, not their social approval.',
@@ -290,26 +290,37 @@
 
     function updateSuggestions() {
         const q = inputEl.value.trim().toLowerCase();
-        const entries = Object.values(keyMap || {}).filter(v => v.toLowerCase().includes(q));
-        const slice = entries.slice(0, MAX_RESULTS);
+        const entries = Object.entries(keyMap || {});
+        const filtered = entries
+            .filter(([key, value]) => value.toLowerCase().includes(q))
+            .slice(0, MAX_RESULTS);
         resultsEl.innerHTML = '';
-        slice.forEach((text, idx) => {
-            const item = document.createElement('div');
-            item.textContent = text;
-            item.style.padding = '6px 8px';
-            item.style.cursor = 'pointer';
-            item.dataset.index = idx;
-            item.addEventListener('mouseenter', () => { selectedIndex = idx; refreshSelection(); });
-            item.addEventListener('mouseleave', () => { selectedIndex = -1; refreshSelection(); });
-            item.addEventListener('click', () => { insertTextAndClose(text); });
-            resultsEl.appendChild(item);
-        });
-        if (slice.length === 0) {
+        if (filtered.length === 0) {
             const empty = document.createElement('div');
             empty.textContent = 'No matches';
             empty.style.padding = '6px 8px';
             empty.style.color = '#666';
             resultsEl.appendChild(empty);
+        } else {
+            filtered.forEach(([key, text], idx) => {
+                const item = document.createElement('div');
+                let displayText = text;
+                const parts = key.split('+');
+                let last = parts[parts.length - 1];
+                last = last.replace(/^Key/, '');
+                last = last.replace(/^Digit/, '');
+                last = last.replace(/^Period$/, '.');
+                if (last.length === 1) last = last.toUpperCase();
+                displayText += ` (${last})`;
+                item.textContent = displayText;
+                item.style.padding = '6px 8px';
+                item.style.cursor = 'pointer';
+                item.dataset.index = idx;
+                item.addEventListener('mouseenter', () => { selectedIndex = idx; refreshSelection(); });
+                item.addEventListener('mouseleave', () => { selectedIndex = -1; refreshSelection(); });
+                item.addEventListener('click', () => { insertTextAndClose(text); });
+                resultsEl.appendChild(item);
+            });
         }
         selectedIndex = -1;
         refreshSelection();
