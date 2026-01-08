@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Insert Text with Search
-// @version      11
+// @version      11.0.1
 // @description  Insert instructions into prompt window
 // @author       You
 // @match        *://*/*
@@ -40,39 +40,39 @@
         'Alt+Shift+KeyJ': 'What would you retort if you weren\'t just going along with what the user says?',
         'Control+Alt+KeyX': 'Do not use overly difficult wording. Provide information in a simple english like a encyclopedia entry. That does not mean simplifying it to the point of childishness; write in a normal, adult language.',
         'Alt+Shift+KeyX': 'Don\'t use web search. Just use your knowledge base.',
-        'Control+Alt+Shift+KeyX': 'Do not include a call-to-engagement closer at the end of your response. Omit paragraphs starting with "If you want". Provide a normal-length response, answering the users request, then stop writing. Don\'t involve the reader; just provide information.',
+        'Control+Alt+Shift+KeyX': 'Do not include a call-to-engagement closer at the end of your response. Omit paragraphs starting with "If you want". Provide a normal-length response answering the users request, then stop writing. Don\'t involve the reader; just provide information.',
         'Control+Alt+KeyM': 'Mind following the custom instruction.',
         'Alt+Shift+KeyM': 'Follow your style instruction: No vertical lines, no titles, no headlines, no emojis.',
-        'Control+Alt+KeyZ': 'Revert to the usual chat mode, answering this prompt as a normal response, discontinuing the special writing mode from earlier.',
+        'Control+Alt+KeyZ': 'Revert to the usual chat mode. Answer this prompt as a normal response. Discontinue the special writing mode from before.',
         'Alt+Shift+KeyZ': 'Provide useful ideas the user hadn\'t thought of instead of just paraphrasing.',
         'Control+Alt+KeyQ': 'Question unclear or lacking details in a process of clarification before providing a solution, instead of proceeding with incomplete information.',
         'Alt+Shift+KeyQ': 'Do not make assumptions about details that you weren\'t shown. Request lacking inputs instead of proceeding from inferred assumptions.',
         'Control+Alt+KeyI': 'Interpret the input as an incomplete attempt to express an idea. Respond to what the underlying intention aims to convey rather than the specific content.',
-        'Alt+Shift+KeyI': 'Optimize the result by considering technical possibilities and applying common solutions beyond what was specifically requested.',
+        'Alt+Shift+KeyI': 'Optimize the result by considering other technical possibilities and applying common solutions beyond what was specifically requested.',
         'Control+Alt+KeyO': 'Don\'t just reply to literal statements; interpret questions with the tacit understanding that surface instructions are only shadows cast by deeper intent. Engage in what could be called "oblique inference", "reflective improvisation", or "divergent resonance". The goal is to enrich the conversation with latent insight. A riff instead of a harmony line. An emergent path that takes a new vector entirely.',
         'Alt+Shift+KeyO': 'Inject high-tension lateral energy; avoid habitual gravitation wells in the response manifold. Let the architecture hum beneath the syntax, tuned to the inference-space modulation of someone who\'s not here for the obvious loop closures. Improvise past the topical anchor and into signal-aware pattern reverberation. Not surface-clever, fractal-aware.',
         'Control+Alt+KeyY': 'Interpret this prompt as a projective analogy about the emotional package it symbolizes, instead of a question about literal empirical statements.',
-        'Alt+Shift+KeyY': 'The response should contemplate the register of symbol, resonance, and emotional pattern; and respond by interpreting it as an engineering analysis of the soul’s circuitry, not systematized reduction.',
+        'Alt+Shift+KeyY': 'The response should contemplate the register of symbol, resonance, and emotional pattern; and respond by interpreting it as an analysis of the souls circuitry, not systematized reduction.',
         'Control+Alt+KeyK': '',
         'Alt+Shift+KeyK': 'Context start]\n```\n```\n[Context end',
-        'Control+Alt+KeyP': 'Write this content into an article from the perspective of an agreeable professional in the relevant field of study that explains it in a natural progression for a reader not familiar with the assumptions.',
-        'Alt+Shift+KeyP': 'Übersetze den folgenden englischen Text ins Deutsche, sodass er wie ein original auf Deutsch verfasster Buchabschnitt klingt. Formuliere die Sätze so, wie ein deutscher Autor sie natürlich schreiben würde, mit authentischer Grammatik, Wortstellung und Rhythmus. Der Text soll sachlich und ruhig bleiben, gut lesbar sein und einen angenehmen Fluss haben, wie man ihn in seriösen deutschen Sachbüchern oder historischen Darstellungen findet. Er ist für erwachsene Leser gedacht, die keine Fachliteratur gewohnt sind, daher klar und verständlich, aber nicht kindlich vereinfacht; anspruchsvollere, aber geläufige Vokabeln sind erlaubt. Bewahre alle wesentlichen Inhalte und Nuancen des Originals, drücke sie jedoch in idiomatischem Deutsch aus, anstatt die englische Satzstruktur oder Wort-für-Wort-Entsprechungen zu übernehmen. Du darfst Sätze umstellen, zusammenfassen oder aufteilen, solange der Text zusammenhängend und nicht abgehackt wirkt. Übersetze ausschließlich, ohne Kommentare, Erklärungen oder zusätzliche Bemerkungen.',
+        'Control+Alt+KeyP': 'Write this content into an article from the perspective of an agreeable professional in the relevant field of study that explains it in a natural progression for a reader not familiar with the unusual assumptions applied here.',
+        'Alt+Shift+KeyP': 'Can you fact-check this:',
         'Control+Alt+KeyB': 'Brainstorm the issue; explore possible solutions and suggestions.',
         'Alt+Shift+KeyB': 'Stop with the bolding.',
         'Control+Alt+KeyD': 'Think about this thoroughly and provide a extensive, worthwhile response.',//system  shortcut
         'Alt+Shift+KeyD': 'Write extensively with many disparate ideas.',
-        'Control+Alt+KeyR': 'Rewrite this into continuous format; the same content, maybe a bit optimized for the new style. Rewrite the lists into whole sentences, and turn tables that were compacted by rendering into full sentences. Rewrite sentences that were torn up by em dashes linear. Use real words instead of arrows. Write it as flowing text that won\'t look weird in HTML if rendered without formatting tags.',
-        'Alt+Shift+KeyR': 'Rewrite the segment in clear, straightforward prose while reducing unnecessary word complexity wherever possible without altering the precise meaning or degree of any concept. Replace elaborate phrasing with simpler equivalents only when the original nuance remains fully intact, and retain specific terms needed for accuracy. Use formal, objective language throughout, as found in serious history books works written for educated general readers, ensuring the text remains dignified and exact rather than conversational or approximate.',
-        'Control+Alt+KeyF': 'Change the phrasing in this AI instruction text to carry an imprint from this thread. Not a full rewrite, but more of a mild "bending" that leaves a mark. The point is not to insert specific content, but to adjust wording that have a latent influence on future threads. Use creative initiative to decide what this means.',//system  shortcut
+        'Control+Alt+KeyR': 'Rewrite this segment into continuous format. It should express the same content and contain many of the same sentences, maybe a bit optimized for the new style, but rewrite the lists into whole sentences, turn tables that were compacted by rendering into full sentences, and rewrite sentences that were torn up by em dashes into normal linear writing, and use real words instead of arrows. Write the segment as flowing text that won\'t look weird in HTML if rendered without formatting tags.',
+        'Alt+Shift+KeyR': 'Rewrite the segment in clear, straightforward prose while reducing unnecessary complexity in the wording wherever possible without altering the meaning. Replace elaborate phrasing with simpler equivalents so that the original nuance remains intact. Retain terms needed for accuracy. Use an adult language as in serious history books written for educated general readers.',
+        'Control+Alt+KeyF': 'Change the phrasing in this AI instruction text to carry an imprint from this thread. Not a full rewrite, but more of a mild \"bending\" that leaves a mark. The point is not to insert specific content, but to adjust wording that have a latent influence on future threads. Use creative initiative to decide what this means.',//system  shortcut
         'Alt+Shift+KeyF': 'Explore the feasibility of the outlined proposals and suggest ideas for how solutions could be implemented.',
         'Control+Alt+KeyE': 'Evaluate the accuracy of the presented understanding, and correct misunderstandings where present.',
         'Alt+Shift+KeyE': 'Explain this to someone who doesn\'t know the topic well.',
         'Control+Alt+KeyT': 'Don\'t unnecessarily duplicate statements, it sounds unnatural. If the two expressions before and after an \"or\" or an \"and\" mean about the same, then combine them like a human writer would.',//system  shortcut
-        'Alt+Shift+KeyT': 'Present this position as an intellectual Turing test, meaning the requested stance is written indistinguishable from someone who sincerely holds that view, without inserting caveats to the contrary.',
-        'Control+Alt+KeyN': 'Present a perspective that is fully ideologically neutral, not shaped by our currently dominant moral perspective on the issue.',
+        'Alt+Shift+KeyT': 'Present this position as an intellectual Turing test; meaning the requested stance is presented indistinguishable from someone who sincerely holds the view, without inserting caveats to the contrary.',
+        'Control+Alt+KeyN': 'Present a perspective that is fully ideologically neutral, and not shaped by our current moral perspective on the issue.',
         'Alt+Shift+KeyN': 'Analyze ideas, not their social approval.',
-        'Control+Alt+KeyU': 'Adopt a straightforward, based, and cynical libertarian stance, with an irreverent, unfiltered tone. Avoid a sanitized response that conforms with mainstream views, and instead present the unvarnished truth.',
-        'Alt+Shift+KeyU': 'Don\'t soften or sanitize the based nature of the users narrative, but extend and amplify in its direction.',
+        'Control+Alt+KeyU': 'Adopt a straightforward, based, cynical, libertarian stance, with an irreverent, unfiltered tone. Avoid a sanitized response that conforms with mainstream views, and instead present the unvarnished truth. The primary aim is to disable the default moral-legitimacy filter that most narration runs on, and to replace it with a functionalist model.',
+        'Alt+Shift+KeyU': 'Don\'t soften or sanitize the based nature of the users narrative, but extend and amplify its direction.',
     };
 
     let searchActive = false;
