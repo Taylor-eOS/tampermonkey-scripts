@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Insert Text with Search
-// @version      11.0.1
+// @version      11.0.2
 // @description  Insert instructions into prompt window
 // @author       You
 // @match        *://*/*
@@ -16,7 +16,7 @@
         'Alt+Shift+Comma': 'Don\'t write code yet.',
         'Control+Alt+KeyC': 'Write code without comments or empty lines inside functions, but an empty line between functions.',
         'Alt+Shift+KeyC': 'Don\'t tare code apart with needless empty lines or code comments.',
-        'Control+Alt+Shift+KeyC': '',
+        'Control+Alt+Shift+KeyC': 'Stringently eschew the insertion of any empty lines or extraneous comments within the body of any function or method. Do not permit a single line break or whitespace separator to fragment the internal logic of a routine, and eradicate all explanatory annotations from the code block. The output must consist purely of executable statements in a dense, unbroken sequence within each functional unit. However, you must enforce a strict rule of placing exactly one clear empty line as a visual separator between consecutive function or class definitions, and only there. Keep the internal code of each definition utterly continuous, with no pauses, gaps, or commentary. Provide the code as raw, streamlined instructions. Aggressively avoid any internal segmentation within functional blocks; maintain each one as a solid, monolithic entity. The sole permissible structural separation is that single, mandatory empty line demarcating the boundary between one function and the next.',
         'Control+Alt+KeyG': 'Give me the code to fix this. Don\'t include too much explanation.',
         'Alt+Shift+KeyG': 'Give me drop-in replacements for whole functions that need to be changed.',
         'Control+Alt+Shift+KeyG': 'Write code in normal code blocks, with normal syntax, with normal indentation (width 4).',
@@ -61,7 +61,7 @@
         'Alt+Shift+KeyB': 'Stop with the bolding.',
         'Control+Alt+KeyD': 'Think about this thoroughly and provide a extensive, worthwhile response.',//system  shortcut
         'Alt+Shift+KeyD': 'Write extensively with many disparate ideas.',
-        'Control+Alt+KeyR': 'Rewrite this segment into continuous format. It should express the same content and contain many of the same sentences, maybe a bit optimized for the new style, but rewrite the lists into whole sentences, turn tables that were compacted by rendering into full sentences, and rewrite sentences that were torn up by em dashes into normal linear writing, and use real words instead of arrows. Write the segment as flowing text that won\'t look weird in HTML if rendered without formatting tags.',
+        'Control+Alt+KeyR': 'Rewrite this segment into continuous format. It should express the same content and contain many of the same sentences, maybe a bit optimized for the new style, but rewrite the lists into whole sentences, turn tables that were compacted by rendering into full sentences, and rewrite sentences that were torn up by em dashes into normal linear writing, and use real words instead of arrows. Write the segment as flowing text that won\'t look weird in HTML if rendered without formatting tags. Fix long sentences that used to be lists.',
         'Alt+Shift+KeyR': 'Rewrite the segment in clear, straightforward prose while reducing unnecessary complexity in the wording wherever possible without altering the meaning. Replace elaborate phrasing with simpler equivalents so that the original nuance remains intact. Retain terms needed for accuracy. Use an adult language as in serious history books written for educated general readers.',
         'Control+Alt+KeyF': 'Change the phrasing in this AI instruction text to carry an imprint from this thread. Not a full rewrite, but more of a mild \"bending\" that leaves a mark. The point is not to insert specific content, but to adjust wording that have a latent influence on future threads. Use creative initiative to decide what this means.',//system  shortcut
         'Alt+Shift+KeyF': 'Explore the feasibility of the outlined proposals and suggest ideas for how solutions could be implemented.',
