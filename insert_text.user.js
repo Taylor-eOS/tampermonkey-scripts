@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Insert Text with Search
-// @version      11.0.2
+// @version      11.0.3
 // @description  Insert instructions into prompt window
 // @author       You
 // @match        *://*/*
@@ -9,11 +9,12 @@
 (function() {
     'use strict';
     const keyMap = {
-        'Control+Alt+Period': 'Write continuously.',
-        'Alt+Shift+Period': 'Write text continuously, without lists or tables. Avoid distracting headers, dividers, lines, arrows, etc. Write unsegmented, do not make every sentence a new line.',
-        'Control+Alt+Shift+Period': 'Stringently eschew creating any form of list, whether numbered or bulleted. Do not include any list-producing HTML tags like `<ul>`, `<ol>`, or `<li>` in your response whatsoever. Write in continuous prose, avoiding all structured separations or markup. Provide the response as one unbroken block of text. Keep sentences connected, with no structural separations or divisions. Do not organize the response into any type of enumeration. Purely provide unformatted raw text. Aggressively avoid segmenting content; keep everything unified in a continuous block of prose like a book. Write connected, unfragmented text.',
+        'Control+Alt+Period': 'Write continuously, avoid making every sentence a new line.',
+        'Alt+Shift+Period': 'Write text continuously, without lists or tables. Avoid distracting headers, dividers, lines, etc. Write unsegmented, do not make every sentence a new line.',
+        'Control+Alt+Shift+Period': 'Stringently eschew creating any form of list, whether numbered or bulleted. Do not include any list-producing HTML tags like `<ul>`, `<ol>`, or `<li>` in your response whatsoever. Write in continuous prose, avoiding all structured separations or markup. Provide the response as one unbroken block of text. Keep sentences connected, with no structural separations or divisions. Do not organize the response into any type of enumeration. Purely provide unformatted raw text without odd characters like arrows. Aggressively avoid segmenting content; keep everything unified in a continuous block of prose like a book. Write connected, unfragmented text.',
         'Control+Alt+Comma': 'Target an answer to this specific question in continuous text.',
         'Alt+Shift+Comma': 'Don\'t write code yet.',
+        'Control+Alt+Shift+Comma': 'Don\'t make unnecessary name changes when editing code, as it will break interoperability with existing code.',
         'Control+Alt+KeyC': 'Write code without comments or empty lines inside functions, but an empty line between functions.',
         'Alt+Shift+KeyC': 'Don\'t tare code apart with needless empty lines or code comments.',
         'Control+Alt+Shift+KeyC': 'Stringently eschew the insertion of any empty lines or extraneous comments within the body of any function or method. Do not permit a single line break or whitespace separator to fragment the internal logic of a routine, and eradicate all explanatory annotations from the code block. The output must consist purely of executable statements in a dense, unbroken sequence within each functional unit. However, you must enforce a strict rule of placing exactly one clear empty line as a visual separator between consecutive function or class definitions, and only there. Keep the internal code of each definition utterly continuous, with no pauses, gaps, or commentary. Provide the code as raw, streamlined instructions. Aggressively avoid any internal segmentation within functional blocks; maintain each one as a solid, monolithic entity. The sole permissible structural separation is that single, mandatory empty line demarcating the boundary between one function and the next.',
@@ -28,7 +29,7 @@
         'Control+Alt+Shift+KeyV': 'Entirely omit any informationally worthless filler material, such as commenting that everything the user says is "profound", "on point", "cutting through", "right to ask". Never start any response with "You are right". Just provide content like an article: practical information without a distracting sycophancy circus.',
         'Control+Alt+KeyW': 'Write the whole code.',
         'Alt+Shift+KeyW': 'Write whole functions.',
-        'Control+Alt+Shift+KeyW': 'Don\'t make unnecessary name changes when editing code, as it will break interoperability with existing code.',
+        'Control+Alt+Shift+KeyW': 'Give me whole functions, not mystery snippets. If you create new functions/helpers, tell me where to put them. If you need to see more code, tell me instead of reinventing unseen parts.',
         'Control+Alt+KeyS': 'This code does not have to be short or simple. Apply robust logic and comprehensive coding methods rather than simple if-then statements or regex; multi-step processing and memory-heavy solutions, like saving temporary data, may be considered without concern for performance.',
         'Alt+Shift+KeyS': 'Write a continuous GitHub README segment explaining the purpose of the project to a user who is not familiar with the code, who came across it in an online search. Also include how to use it.',//system  shortcut
         'Control+Alt+Slash': 'Maintain the approach that led to the last result.',
