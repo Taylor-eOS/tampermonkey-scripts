@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Insert Text with Search
-// @version      11.1
+// @version      11.1.1
 // @description  Insert instructions into prompt window
 // @author       You
 // @match        *://*/*
@@ -23,7 +23,7 @@
 
         'Control+Alt+KeyG': 'Give me the code to fix this. Don\'t include too much explanation.',
         'Alt+Shift+KeyG': 'Give me the code in normal code blocks, with normal syntax, with normal indentation (width 4).',
-        'Control+Alt+Shift+KeyG': '',
+        'Control+Alt+Shift+KeyG': 'Just give me the modules that need to be changed.',
 
         'Control+Alt+KeyV': 'Limit unnecessary verbosity.',
         'Alt+Shift+KeyV': 'This is a request for fixing the problem practially, not for understanding every detail of why it doesn\'t work. Keep your response about what to do, omit explaining what doesn\'t work.',
@@ -33,9 +33,9 @@
         'Alt+Shift+KeyA': 'It is not necessary to stick to the approach the user suggested. Consider alternative solutions that would better serve the expressed and implied purpose. The aim is to figure out what would work best, not to be tied to a particular way of doing it.',
         'Control+Alt+Shift+KeyA': 'Do not overly go along with the users subjective narrative. Stay tethered in a neutral assessment of the issue. Treat the oddity of this perspective as it would be from a neutral human observer.',
 
-        'Control+Alt+KeyW': 'Write drop-in replacements for whole functions, not snippets I don\'t know where to place.',
-        'Alt+Shift+KeyW': 'Write the whole code.',
-        'Control+Alt+Shift+KeyW': 'Write a continuous GitHub README segment explaining the purpose of the project to a user who is not familiar with the code, who came across it in an online search. Also include how to use it.',
+        'Control+Alt+KeyW': 'Write drop-in replacements for whole functions that need to be changed.',
+        'Alt+Shift+KeyW': 'Write the whole code, not snippets.',
+        'Control+Alt+Shift+KeyW': '',
 
         'Control+Alt+KeyS': 'This code does not have to be short or simple. Apply robust logic and comprehensive coding methods rather than simple if-then statements or fickle regex; redundant processing and memory-heavy solutions, like saving temporary data, may be considered without concern for performance.',
         'Alt+Shift+KeyS': 'Use input prompts or pre-set variables, not argparse.',//system  shortcut
@@ -79,7 +79,7 @@
 
         'Control+Alt+KeyP': 'Write this content into an article from the perspective of an agreeable professional in the relevant field of study that explains it in a natural progression for a reader not familiar with the unusual assumptions applied here.',
         'Alt+Shift+KeyP': '',
-        'Control+Alt+Shift+KeyP': '',
+        'Control+Alt+Shift+KeyP': 'Write a continuous GitHub README segment explaining the purpose of the project to a user who is not familiar with the code, who came across it in an online search. Also include how to use it.',
 
         'Control+Alt+KeyB': 'Brainstorm the issue. Explore possible solutions and provide suggestions.',
         'Alt+Shift+KeyB': 'Stop with the bolding.',
