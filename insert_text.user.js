@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Insert Text with Search
-// @version      11.1.1
+// @version      11.1.2
 // @description  Insert instructions into prompt window
 // @author       You
 // @match        *://*/*
@@ -23,7 +23,7 @@
 
         'Control+Alt+KeyG': 'Give me the code to fix this. Don\'t include too much explanation.',
         'Alt+Shift+KeyG': 'Give me the code in normal code blocks, with normal syntax, with normal indentation (width 4).',
-        'Control+Alt+Shift+KeyG': 'Just give me the modules that need to be changed.',
+        'Control+Alt+Shift+KeyG': 'Give me only the modules that have to be changed.',
 
         'Control+Alt+KeyV': 'Limit unnecessary verbosity.',
         'Alt+Shift+KeyV': 'This is a request for fixing the problem practially, not for understanding every detail of why it doesn\'t work. Keep your response about what to do, omit explaining what doesn\'t work.',
@@ -33,8 +33,8 @@
         'Alt+Shift+KeyA': 'It is not necessary to stick to the approach the user suggested. Consider alternative solutions that would better serve the expressed and implied purpose. The aim is to figure out what would work best, not to be tied to a particular way of doing it.',
         'Control+Alt+Shift+KeyA': 'Do not overly go along with the users subjective narrative. Stay tethered in a neutral assessment of the issue. Treat the oddity of this perspective as it would be from a neutral human observer.',
 
-        'Control+Alt+KeyW': 'Write drop-in replacements for whole functions that need to be changed.',
-        'Alt+Shift+KeyW': 'Write the whole code, not snippets.',
+        'Control+Alt+KeyW': 'Write the whole code, not snippets.',
+        'Alt+Shift+KeyW': 'Write drop-in replacements for whole functions that need to be changed.',
         'Control+Alt+Shift+KeyW': '',
 
         'Control+Alt+KeyS': 'This code does not have to be short or simple. Apply robust logic and comprehensive coding methods rather than simple if-then statements or fickle regex; redundant processing and memory-heavy solutions, like saving temporary data, may be considered without concern for performance.',
@@ -59,10 +59,10 @@
 
         'Control+Alt+KeyO': 'Interpret the input as an incomplete attempt to express an idea. Respond to what the underlying intention aims to convey rather than fixating on the specific content.',
         'Alt+Shift+KeyO': 'Optimize the result by considering other technical possibilities and applying common solutions beyond what was specifically requested.',
-        'Control+Alt+Shift+KeyO': 'Implement a solution that would be a natural best practice, avoiding complexity and later complication.',
+        'Control+Alt+Shift+KeyO': '',
 
         'Control+Alt+KeyM': 'Mind following the custom instruction.',
-        'Alt+Shift+KeyM': '',
+        'Alt+Shift+KeyM': 'For crying out loud, you are not telling me where to make these changes. I don\'t know where to put these lines of code. I explicitly instructed you to not give me snippets, and all I get is these out-of-context mystery lines that have no recognizable equivalents in my code. I might have to add them, I might have to replace a line, or a whole block. What are your suggested changes?',
         'Control+Alt+Shift+KeyM': 'You have to put exemplified formatting tags into blocks with backticks or else this interface will render them, which entirely breaks the formatting of the entire response.',
 
         'Control+Alt+KeyZ': 'Provide useful ideas the user hadn\'t thought of instead of just paraphrasing.',
@@ -82,12 +82,12 @@
         'Control+Alt+Shift+KeyP': 'Write a continuous GitHub README segment explaining the purpose of the project to a user who is not familiar with the code, who came across it in an online search. Also include how to use it.',
 
         'Control+Alt+KeyB': 'Brainstorm the issue. Explore possible solutions and provide suggestions.',
-        'Alt+Shift+KeyB': 'Stop with the bolding.',
-        'Control+Alt+Shift+KeyB': '',
+        'Alt+Shift+KeyB': 'Implement a solution that would be a natural best practice.',
+        'Control+Alt+Shift+KeyB': 'Stop with the bolding.',
 
         'Control+Alt+KeyI': 'Make the art style like the image was an editorial comic drawn for a newspaper, not like AI slop. In color.',
-        'Alt+Shift+KeyI': 'Show it zoomed out, and from a top angle.',
-        'Control+Alt+Shift+KeyI': '',
+        'Alt+Shift+KeyI': 'Can you implement this.',
+        'Control+Alt+Shift+KeyI': 'Show it zoomed out, and from a top angle.',
 
         'Control+Alt+KeyD': 'Think about this thoroughly and provide a extensive, worthwhile response.',//system  shortcut
         'Alt+Shift+KeyD': 'Write extensively with many disparate ideas.',
