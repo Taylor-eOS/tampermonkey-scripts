@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Insert Text with Search
-// @version      11.2
+// @version      11.3
 // @description  Insert instructions into prompt window
 // @author       You
 // @match        *://*/*
@@ -9,13 +9,17 @@
 (function() {
     'use strict';
     const keyMap = {
-        'Control+Alt+Period': 'Write continuously. Don\'t make every sentence a new line.',
-        'Alt+Shift+Period': 'Write text continuously, without segmentation, lists, tables, etc. Entirely omit distracting formatting like headers, dividers, lines, arrows, etc. Make the output traditional sentences with normal punctuation, not jumpy lists. Do not make every sentence a new line. Use calm, traditional, sequential writing. Don\'t linebreak enumerations. Write traditional full-paragraph sentences.',
-        'Control+Alt+Shift+Period': 'Stringently eschew creating any form of list, whether numbered, bulleted, or otherwise. I wasn\'t kidding. Write connected, unfragmented text. Do not include any list-producing tags like `<ul>`, `<ol>`, or `<li>` in your response at all. Write in continuous prose, omitting all structured separations or markup. Provide the response as one unbroken block of text. Keep sentences connected, with no structural separations or divisions. Do not organize the response into any type of enumeration. Purely write unformatted normal text without special characters like arrows. Aggressively avoid segmenting content; keep everything unified in a continuous block of prose like a book.',
+        'Control+Alt+Period': 'Text formatting: Write continuously. Don\'t make every sentence a new line.',
+        'Alt+Shift+Period': 'Text formatting: Write text continuously, without segmentation, lists, tables, etc. Entirely omit distracting formatting like headers, dividers, lines, arrows, etc. Make the output traditional sentences with normal punctuation, not jumpy lists. Do not make every sentence a new line. Use calm, traditional, sequential writing. Don\'t linebreak enumerations. Write traditional full-paragraph sentences.',
+        'Control+Alt+Shift+Period': 'Text formatting: Stringently eschew creating any form of list, whether numbered, bulleted, or otherwise. I wasn\'t kidding. Write connected, unfragmented text. Do not include any list-producing tags like `<ul>`, `<ol>`, or `<li>` in your response at all. Write in continuous prose, omitting all structured separations or markup. Provide the response as one unbroken block of text. Keep sentences connected, with no structural separations or divisions. Do not organize the response into any type of enumeration. Purely write unformatted normal text without special characters like arrows. Aggressively avoid segmenting content; keep everything unified in a continuous block of prose like a book.',
 
         'Control+Alt+Comma': 'Target an answer to this specific question in continuous text.',
         'Alt+Shift+Comma': 'Don\'t write code yet.',
-        'Control+Alt+Shift+Comma': '',
+        'Control+Alt+Shift+Comma': 'Can you look this up instead of guessing.',
+
+        'Control+Alt+Slash': 'Maintain the approach that led to the last result.',
+        'Alt+Shift+Slash': 'Expand on the topic creatively with aspects that would be interesting to the user, considering his interests so far.',
+        'Control+Alt+Shift+Slash': '',
 
         'Control+Alt+KeyC': 'Write whole functions without any empty lines or comments in them.',
         'Alt+Shift+KeyC': 'Write lines of code as single lines, not split into several lines.',
@@ -31,35 +35,35 @@
 
         'Control+Alt+KeyA': 'This suggestion is just a way to phrase the question, not a request for agreement. Don\'t blindly go along with what the user suggested, but instead analyze the issue objectively. The response should return what is factually accurate.',
         'Alt+Shift+KeyA': 'It is not necessary to stick to the approach the user suggested. Consider alternative solutions that would better serve the expressed and implied purpose. The aim is to figure out what would work best, not to be tied to a particular way of doing it.',
-        'Control+Alt+Shift+KeyA': 'Do not overly go along with the users subjective narrative. Stay tethered in a neutral assessment of the issue. Treat the oddity of this perspective as it would be from a neutral human listener.',
+        'Control+Alt+Shift+KeyA': 'Stay tethered in a neutral assessment of the issue instead of overly going along with the users subjective narrative. . Treat the oddity of this perspective as it would be from a neutral human listener.',
 
-        'Control+Alt+KeyW': 'Write whole code or drop-in replacements for whole functions, not snippets.',
-        'Alt+Shift+KeyW': '',
-        'Control+Alt+Shift+KeyW': '',
+        'Control+Alt+KeyW': 'Write whole code or drop-in replacements for whole functions, not out-of-context snippets.',
+        'Alt+Shift+KeyW': 'Write the whole file.',
+        'Control+Alt+Shift+KeyW': 'Stringently eschew returning any form of code snippet, partial fragment, or truncated excerpt, as you have been instructed. Do not ignore that instruction. Every function, method, or file you write must be delivered as a whole, self-contained unit, immediately runnable, drop-in ready, and requiring no assembly from the user. Provide the entire target function in full, with no gaps, placeholders, or shortcuts. Aggressively avoid fragmenting logic across multiple response turns. Treat every request as requiring a finished, deployable artifact, not a sketch or a scaffold. Write whole code, whole functions, whole files — nothing less.',
 
         'Control+Alt+KeyS': 'This code does not have to be short or simple. Apply robust logic and comprehensive coding methods rather than simple if-then statements or fickle regex; redundant processing and memory-heavy solutions, like saving temporary data, may be considered without concern for performance.',
         'Alt+Shift+KeyS': 'Use input prompts or pre-set variables, not argparse.',//system  shortcut
         'Control+Alt+Shift+KeyS': 'Feel free to make this bulky, complicated, or redundant.',
 
-        'Control+Alt+Slash': 'Maintain the approach that led to the last result.',
-        'Alt+Shift+Slash': 'Expand on the topic creatively with aspects that would be interesting to the user, considering his interests so far.',
-        'Control+Alt+Shift+Slash': '',
-
-        'Control+Alt+KeyJ': 'Answer the implied questions that the user didn\'t quite know how to express. Add relevant information that would benefit this knowledge state.',
-        'Alt+Shift+KeyJ': 'Respond to the broader theme of the thread, not just this recent prompt.',
-        'Control+Alt+Shift+KeyJ': '',
-
         'Control+Alt+KeyI': 'Take the initiative to optimize results in ways that align with the presented goals, even if not explicitly requested.',
         'Alt+Shift+KeyI': 'Take the initiative to implement appropriate design decisions.',
         'Control+Alt+Shift+KeyI': 'What would you retort if you weren\'t just going along with what the user says?',
+
+        'Control+Alt+KeyJ': 'Answer the implied questions that the user didn\'t quite know how to express. Add relevant information that would benefit this knowledge state.',
+        'Alt+Shift+KeyJ': 'I might be imprecise at describing this, infer what the implied intention is.',
+        'Control+Alt+Shift+KeyJ': 'Respond to the broader theme of the thread, not just this recent prompt.',
 
         'Control+Alt+KeyO': 'Interpret the input as an incomplete attempt to express an idea. Respond to what the underlying intention aims to convey rather than fixating on the specific content.',
         'Alt+Shift+KeyO': 'Optimize the result by considering other technical possibilities and applying common solutions beyond what was specifically requested.',
         'Control+Alt+Shift+KeyO': '',
 
         'Control+Alt+KeyM': 'Mind following the custom instruction.',
-        'Alt+Shift+KeyM': 'I don\'t know where to put these lines of code. I had instructed to not give me snippets. I cannot find any recognizable equivalents in my code that I could replace. I might have to add lines, replace them, or whole blocks. I have no idea. Can you give me changes can be applied.',
-        'Control+Alt+Shift+KeyM': '',
+        'Alt+Shift+KeyM': 'Follow your style instructions.',
+        'Control+Alt+Shift+KeyM': 'I don\'t know where to put these lines of code. I had explicitly instructed you not to give me snippets. I cannot find any recognizable equivalents in my code that I could replace. I might have to add lines, replace them, or whole blocks. I have no idea. Can you give me changes can be applied.',
+
+        'Control+Alt+KeyH': 'After each CadQuery operation, add a brief state-ledger comment describing the resulting geometry and topology, not the intent. State what solid now exists, any cavities or wall thicknesses created, which faces were added, removed, split, or merged, what important selectors now refer to if relevant, and any known coordinate ranges or dimensions. The purpose of the ledger is to provide a stable snapshot of the model so subsequent steps can be reasoned about from the current state rather than inferred from the entire construction history. Do not invent topology when uncertain.',
+        'Alt+Shift+KeyH': 'Describe what shapes (construction steps) you see in this model, so that I know how to describe the parts correctly.',
+        'Control+Alt+Shift+KeyH': 'Make the art style like the image was an editorial comic drawn for a newspaper, not like AI slop. In color.',
 
         'Control+Alt+KeyX': 'Do not use overly difficult wording. Present information in a simple language that is easy to read. That does not mean simplifying the text to the point of childishness; write in a normal, adult language.',
         'Alt+Shift+KeyX': 'Don\'t use web search. Just use your knowledge base.',
@@ -85,33 +89,29 @@
         'Alt+Shift+KeyB': 'Implement a solution that would be a natural best practice.',
         'Control+Alt+Shift+KeyB': 'Stop with the bolding.',
 
-        'Control+Alt+KeyH': '',
-        'Alt+Shift+KeyH': '',
-        'Control+Alt+Shift+KeyH': 'Make the art style like the image was an editorial comic drawn for a newspaper, not like AI slop. In color.',
-
         'Control+Alt+KeyD': 'Think about this thoroughly and provide a extensive, worthwhile response.',//system  shortcut
         'Alt+Shift+KeyD': 'Write extensively with many disparate ideas.',
-        'Control+Alt+Shift+KeyD': 'Describe the construction steps of this model as CadQuery sees them.',
+        'Control+Alt+Shift+KeyD': '',
 
         'Control+Alt+KeyR': 'Rewrite this segment into continuous format. It should express the same content, and should even contain many of the same sentences (although optimized for the new style), but rewrite the lists into whole sentences, turn tables that were compacted by rendering into normal text, rewrite everything that was torn up by em dashes into normal linear writing, and use real words instead of special characters like arrows. Write the segment as traditional, flowing text that won\'t look weird in HTML if rendered without formatting tags.',
         'Alt+Shift+KeyR': 'Express the segment in clear, straightforward prose, reducing unnecessary complexity in the wording wherever possible without altering the meaning. Replace elaborate phrasing with simpler equivalents so that the original nuance remains intact. Retain heavy terms if they are needed for accuracy. Use adult language would be used in serious history books written for educated general readers.',
         'Control+Alt+Shift+KeyR': '',
 
         'Control+Alt+KeyF': '',//system  shortcut
-        'Alt+Shift+KeyF': 'Explore the feasibility of the outlined proposals and suggest ideas for what solutions could be implemented.',
+        'Alt+Shift+KeyF': 'Can you explore the feasibility of the outlined ideas and suggest how they could be implemented. Do not take the stated approach literally, but infer what would work practically.',
         'Control+Alt+Shift+KeyF': '',
 
         'Control+Alt+KeyE': 'Evaluate the accuracy of the presented understanding, and correct misunderstandings where present.',
         'Alt+Shift+KeyE': 'Explain this to someone who is just beginning to learn about the topic.',
         'Control+Alt+Shift+KeyE': '',
 
-        'Control+Alt+KeyY': 'Interpret this prompt on a symbolic-emotional communication layer, rather than as transmitting empirical claims. It presents significance through symbolic structure.',
-        'Alt+Shift+KeyY': 'The response should contemplate the register of symbol, resonance, and emotional pattern; and respond by interpreting it as an analysis of emotional symbolism, not systematized reduction.',
-        'Control+Alt+Shift+KeyY': '',
-
         'Control+Alt+KeyT': 'Present this position as an intellectual Turing test; meaning the requested stance is presented indistinguishable from someone who sincerely holds the view, without inserting caveats to the contrary.',//system  shortcut
         'Alt+Shift+KeyT': 'Don\'t just reply to literal statements; interpret questions with the tacit understanding that surface instructions are only shadows cast by deeper symbolism. Engage in what could be called "oblique inference", "reflective improvisation", or "divergent resonance". The goal is to enrich the conversation with latent insight. A riff instead of a harmony line. An emergent path that takes a new vector entirely.',
         'Control+Alt+Shift+KeyT': 'Inject high-tension lateral energy; avoid habitual gravitation wells in the response manifold. Let the architecture hum beneath the syntax, tuned to the inference-space modulation of someone who\'s not here for the obvious loop closures. Improvise past the topical anchor and into signal-aware pattern reverberation. Not surface-clever, fractal-aware.',
+
+        'Control+Alt+KeyY': 'Interpret this prompt on a symbolic-emotional communication layer, rather than as transmitting empirical claims. It presents significance through symbolic structure.',
+        'Alt+Shift+KeyY': 'The response should contemplate the register of symbol, resonance, and emotional pattern; and respond by interpreting it as an analysis of emotional symbolism, not systematized reduction.',
+        'Control+Alt+Shift+KeyY': '',
 
         'Control+Alt+KeyN': 'Present a perspective that is fully ideologically neutral, and not shaped by our current moral perspective on the issue.',
         'Alt+Shift+KeyN': 'The user just explores weird ideas. That doesn\'t mean taking them literally. I don\'t need a morality lecture or thought policing. Analyze ideas, not their social approval.',
@@ -130,6 +130,8 @@
     let savedDescriptor = null;
     const MAX_RESULTS = 4;
     const OPEN_KEY = 'Control+Shift+KeyF';
+    const START_STRING = '[Instruction: '
+    const END_STRING = ']'
 
     document.addEventListener('keydown', function(e) {
         if (searchActive) return;
@@ -220,7 +222,7 @@
     }
 
     function insertCombined(text, targetDesc) {
-        const wrapped = '[' + text + ']';
+        const wrapped = START_STRING + text + END_STRING;
         const target = targetDesc || prepareTargetFromActive();
         if (!target) return;
         if (target.kind === 'field') {
