@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Extract Elements
 // @description  Streamlined element selector recorder with hover preview
-// @version      5.7
+// @version      5.8
 // @match        *://*/*
 // @grant        GM_addStyle
 // @run-at       document-idle
@@ -10,12 +10,14 @@
     try{
         const INDICATOR_ID = 'teach_indicator_key'
         const COPY_ID = 'teach_copy_key'
+        const RESET_ID = 'teach_reset_key'
         let samples = []
         let recording = false
         let lastHoveredEl = null
         try{ GM_addStyle && GM_addStyle(`
 #${INDICATOR_ID}{position:fixed;left:12px;top:12px;z-index:2147483647;background:#0fb87f;color:#022;padding:6px 8px;border-radius:6px;font-weight:700;cursor:pointer;font-family:Arial,sans-serif;user-select:none}
 #${COPY_ID}{position:fixed;left:240px;top:12px;z-index:2147483647;background:#222;color:#fff;padding:6px 8px;border-radius:6px;font-weight:700;cursor:pointer;font-family:Arial,sans-serif;user-select:none;border:1px solid #444}
+#${RESET_ID}{position:fixed;left:350px;top:12px;z-index:2147483647;background:#d93838;color:#fff;padding:6px 8px;border-radius:6px;font-weight:700;cursor:pointer;font-family:Arial,sans-serif;user-select:none;border:1px solid #900}
 .teach_highlight{outline:3px solid #ff0;box-shadow:0 0 0 6px rgba(255,255,0,0.06) !important}
 .teach_toast{position:fixed;z-index:2147483648;padding:6px 8px;border-radius:6px;background:#222;color:#fff;font-family:Arial,sans-serif;font-weight:700;pointer-events:none;transform:translate(-50%,-140%);opacity:0;transition:opacity .18s}
 .teach_hover{outline:2px dashed #0fb87f !important}
@@ -117,6 +119,10 @@
                 cb(false)
             }
         }
+        function clearSamples(){
+            samples = []
+            try{ showToast(window.innerWidth/2, 24, 'Results cleared') }catch(e){}
+        }
         function createInterface(){
             if(document.getElementById(INDICATOR_ID)) return
             const ind = document.createElement('div')
@@ -127,8 +133,13 @@
             cop.id = COPY_ID
             cop.textContent = 'Copy Results'
             cop.addEventListener('click', ev=>{ ev.preventDefault(); ev.stopPropagation(); copySamplesToClipboard() })
+            const res = document.createElement('div')
+            res.id = RESET_ID
+            res.textContent = 'Reset'
+            res.addEventListener('click', ev=>{ ev.preventDefault(); ev.stopPropagation(); clearSamples() })
             document.body.appendChild(ind)
             document.body.appendChild(cop)
+            document.body.appendChild(res)
         }
         function showToast(x,y,text){
             try{
@@ -144,7 +155,7 @@
         }
         function onWindowClick(e){
             const el = document.elementFromPoint(e.clientX, e.clientY)
-            if(el && (el.id === INDICATOR_ID || el.id === COPY_ID)) return
+            if(el && (el.id === INDICATOR_ID || el.id === COPY_ID || el.id === RESET_ID)) return
             e.preventDefault()
             e.stopPropagation()
             if(!el) return
@@ -161,7 +172,7 @@
                     try{ lastHoveredEl.classList.remove('teach_hover') }catch(_){}
                 }
                 lastHoveredEl = el
-                if(el && el.id !== INDICATOR_ID && el.id !== COPY_ID){
+                if(el && el.id !== INDICATOR_ID && el.id !== COPY_ID && el.id !== RESET_ID){
                     try{ el.classList.add('teach_hover') }catch(_){}
                 }
             }
