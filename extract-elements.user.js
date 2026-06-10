@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Extract Elements
 // @description  Find element similarity in web page
-// @version      5.5
+// @version      5.6
 // @match        *://*/*
 // @grant        GM_addStyle
 // @grant        GM_registerMenuCommand
@@ -15,7 +15,7 @@
         let samples = []
         let recording = false
         let lastMouse = {x:0,y:0}
-
+        let lastHoveredEl = null
         try{ GM_addStyle && GM_addStyle(`
 #${INDICATOR_ID}{position:fixed;left:12px;top:12px;z-index:2147483647;background:#0fb87f;color:#022;padding:6px 8px;border-radius:6px;font-weight:700;cursor:pointer;font-family:Arial,sans-serif;user-select:none}
 #${PANEL_ID}{position:fixed;left:12px;top:52px;z-index:2147483646;background:#111;color:#fff;padding:10px;border-radius:6px;max-width:720px;max-height:60vh;overflow:auto;font-family:monospace;display:none;white-space:pre-wrap}
@@ -23,6 +23,7 @@
 .teach_toast{position:fixed;z-index:2147483648;padding:6px 8px;border-radius:6px;background:#222;color:#fff;font-family:Arial,sans-serif;font-weight:700;pointer-events:none;transform:translate(-50%,-140%);opacity:0;transition:opacity .18s}
 .teach_btn{background:#222;color:#fff;border:1px solid #444;padding:4px 8px;border-radius:4px;margin-right:6px;cursor:pointer;font-family:monospace}
 .teach_input{width:56px;padding:4px;background:#222;color:#fff;border:1px solid #444;border-radius:4px;margin-right:6px}
+.teach_hover{outline:2px dashed #0fb87f !important}
 `)}catch(e){ console.warn('GM_addStyle failed', e) }
 
         function ensureBody(cb){
@@ -317,6 +318,16 @@
         function onMouseMove(e){
             lastMouse.x = e.clientX
             lastMouse.y = e.clientY
+            const el = document.elementFromPoint(e.clientX, e.clientY)
+            if(lastHoveredEl !== el){
+                if(lastHoveredEl){
+                    try{ lastHoveredEl.classList.remove('teach_hover') }catch(_){}
+                }
+                lastHoveredEl = el
+                if(el && el.id !== INDICATOR_ID && el.id !== PANEL_ID && !el.closest('#' + PANEL_ID)){
+                    try{ el.classList.add('teach_hover') }catch(_){}
+                }
+            }
         }
 
         function startRecording(){
@@ -335,6 +346,10 @@
             if(ind){ ind.textContent = 'Teach ON  (press "a" to capture)'; ind.style.background = '#0fb87f' }
             window.removeEventListener('keydown', onKeyDown, true)
             window.removeEventListener('mousemove', onMouseMove, true)
+            if(lastHoveredEl){
+                try{ lastHoveredEl.classList.remove('teach_hover') }catch(_){}
+                lastHoveredEl = null
+            }
         }
 
         ensureBody(()=>{
