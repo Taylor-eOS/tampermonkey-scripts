@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Insert Text with Search
-// @version      11.4
+// @version      11.4.1
 // @description  Insert prompts with keyboard combinations
 // @author       Taylor-eOS
 // @match        *://*/*
@@ -10,8 +10,8 @@
     'use strict';
     const keyMap = {
         'Control+Alt+Period': 'Write continuously. Don\'t make every sentence a new line.',
-        'Alt+Shift+Period': 'Write text without segmentation, lists, tables, etc. Entirely omit distracting formatting like headers, dividers, lines, arrows, etc. Make the output traditional sentences with normal punctuation, not jumpy lists. Use calm, traditional, sequential writing. Write traditional full-paragraph sentences. Don\'t linebreak enumerations.',
-        'Control+Alt+Shift+Period': 'Stringently eschew creating any form of list, whether numbered, bulleted, or otherwise. I am not kidding. Write connected, unfragmented text. Do not include any list-producing tags like `<ul>`, `<ol>`, or `<li>` in your response at all. Write in continuous prose, omitting all structured separations or markup. Provide the response as one unbroken block of text. Keep sentences connected, with no structural separations or divisions. Do not organize the response into any type of enumeration. Purely write unformatted normal text without special characters like arrows. Aggressively avoid segmenting content; keep everything unified in a continuous block of prose like a book.',
+        'Alt+Shift+Period': 'in continuous text',
+        'Control+Alt+Shift+Period': 'Write text without segmentation, lists, tables, etc. Entirely omit distracting formatting like headers, dividers, lines, arrows, etc. Make the output traditional sentences with normal punctuation, not jumpy lists. Use calm, traditional, sequential writing. Write traditional full-paragraph sentences. Don\'t linebreak enumerations.',
 
         'Control+Alt+Comma': 'Target an answer to this specific question in continuous text.',
         'Alt+Shift+Comma': 'Don\'t write code yet.',
@@ -23,11 +23,11 @@
 
         'Control+Alt+KeyC': 'Write functions or files without any empty lines or comments in them.',
         'Alt+Shift+KeyC': 'Write lines of code as single lines. Do not split them up into several lines.',
-        'Control+Alt+Shift+KeyC': 'Stringently eschew the insertion of any empty lines or comments within the body of any function or method. I am not kidding. Do not permit line break or whitespace separators to fragment the internal logic of a routine, and eradicate all explanatory annotations from the code block. The output must consist purely of executable statements in a dense, unbroken sequence within each functional unit. However, you must enforce a strict rule of placing exactly one (not two) clear empty line as a visual separator between consecutive function or class definitions, and only there. Keep the internal code of each definition utterly continuous, with no pauses, gaps, or commentary. Provide the code as raw, streamlined instructions. Aggressively avoid any internal segmentation within functional blocks; maintain each one as a solid, monolithic entity. The sole permissible structural separation is that single line demarcating the boundary between one function and the next. Write code lines in single lines, not split up. Stop splattering apart code.',
+        'Control+Alt+Shift+KeyC': '',
 
         'Control+Alt+KeyW': 'Write whole code or drop-in replacements for whole functions, not out-of-context snippets.',
         'Alt+Shift+KeyW': 'Write the whole file.',
-        'Control+Alt+Shift+KeyW': 'Stringently eschew returning any kind of code snippet, partial fragment, or truncated excerpt. I am not kidding. Every function, method, or file you write must be delivered as a whole, self-contained unit, immediately runnable, drop-in ready, and requiring no assembly from the user. Provide the entire target function or file in full, with no gaps or placeholders. Aggressively avoid fragmenting logic. Treat every request as requiring a finished, deployable artifact, not a sketch or change instruction. Write whole code, whole functions, whole files — nothing less.',
+        'Control+Alt+Shift+KeyW': '',
 
         'Control+Alt+KeyG': 'Give me the code to fix this. Skip the explanation.',
         'Alt+Shift+KeyG': 'Give me only the parts that need to be changed.',
@@ -97,9 +97,9 @@
         'Alt+Shift+KeyD': 'Write extensively with many disparate ideas.',
         'Control+Alt+Shift+KeyD': '',
 
-        'Control+Alt+KeyR': 'Rewrite this segment into continuous format. It should express the same content, and even contain many of the same sentences, albeit optimized for the new style, but written as traditional, flowing text that won\'t look weird in HTML if rendered without formatting tags. Rewrite lists into whole sentences, turn tables that were compacted by rendering into normal text, rewrite sentences that were torn apart by em dashes into normal linear writing, change sentences to use real words instead of special characters like arrows, and fill in a full provision of the content.',
+        'Control+Alt+KeyR': 'Rewrite this text segment into continuous format. It should express the same content, and even contain many of the same sentences, albeit optimized for the new style, but written as traditional, flowing text that won\'t look weird in HTML if rendered without formatting tags. Rewrite lists into whole sentences, turn tables that were compacted by rendering into normal text, rewrite sentences that were torn apart by em dashes into normal linear writing, change sentences to use real words instead of special characters like arrows, and fill in a full provision of the content.',
         'Alt+Shift+KeyR': 'Express the segment in clear, straightforward prose, reducing unnecessary complexity in the wording wherever possible without altering the meaning. Replace elaborate phrasing with simpler equivalents so that the original nuance remains intact. Retain heavy terms if they are needed for accuracy. Use adult language would be used in serious history books written for educated general readers.',
-        'Control+Alt+Shift+KeyR': 'Write a continuous GitHub Readme segment explaining the purpose of the project to a user who is not familiar with the code, who came across it in an online search. Also include how to use it.',
+        'Control+Alt+Shift+KeyR': 'Write a GitHub Readme segment in continuous text, giving a basic explaination of the purpose of the project to a internet user who is not familiar with the code, who came across it in an online search. Include a brief instruction how to use it, but only as far as it is unlicely to change.',
 
         'Control+Alt+KeyF': '',//system  shortcut
         'Alt+Shift+KeyF': 'Explore the feasibility of the outlined ideas and suggest how they could be implemented.',
