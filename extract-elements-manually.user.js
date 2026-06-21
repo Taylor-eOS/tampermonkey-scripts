@@ -2,7 +2,7 @@
 // @name         Save TXT Manually
 // @description  Clik to mark text elements.
 // @namespace    local
-// @version      1.0
+// @version      1.1
 // @match        *://*/*
 // @grant        none
 // ==/UserScript==
@@ -13,7 +13,6 @@
     const BTN_SAVE_ID = 'saveconv-save';
     const BTN_CLEAR_ID = 'saveconv-clear';
     const BTN_UNDO_ID = 'saveconv-undo';
-    const COUNTER_ID = 'saveconv-counter';
     const BTN_ACT_ID = 'saveconv-activate';
     let captured = [];
     let lastHovered = null;
@@ -30,28 +29,33 @@
         document.head.appendChild(s);
     }
 
-    function updateCounter() {
-        const el = document.getElementById(COUNTER_ID);
-        if (el) el.textContent = captured.length + ' captured';
-    }
-
-    const ownIDs = new Set([BTN_SAVE_ID, BTN_CLEAR_ID, BTN_UNDO_ID, COUNTER_ID, BTN_ACT_ID]);
+    const ownIDs = new Set([BTN_SAVE_ID, BTN_CLEAR_ID, BTN_UNDO_ID, BTN_ACT_ID]);
 
     function isOwnUI(el) {
         return el && ownIDs.has(el.id);
     }
 
+    let rafPending = false;
+    let pendingX = 0, pendingY = 0;
+
     function onMouseMove(e) {
-        const el = document.elementFromPoint(e.clientX, e.clientY);
-        if (lastHovered === el) return;
-        if (lastHovered && !isOwnUI(lastHovered)) lastHovered.classList.remove('saveconv-hover');
-        lastHovered = el;
-        if (el && !isOwnUI(el)) el.classList.add('saveconv-hover');
+        pendingX = e.clientX;
+        pendingY = e.clientY;
+        if (rafPending) return;
+        rafPending = true;
+        requestAnimationFrame(() => {
+            rafPending = false;
+            const el = document.elementFromPoint(pendingX, pendingY);
+            if (lastHovered === el) return;
+            if (lastHovered && !isOwnUI(lastHovered)) lastHovered.classList.remove('saveconv-hover');
+            lastHovered = el;
+            if (el && !isOwnUI(el)) el.classList.add('saveconv-hover');
+        });
     }
 
     function onClickCapture(e) {
         if (isOwnUI(e.target) || e.ctrlKey) return;
-        if (e.clientX < 290 && e.clientY < 40) return;
+        if (e.clientX < 220 && e.clientY < 40) return;
         e.preventDefault();
         e.stopPropagation();
         const el = e.target;
@@ -60,7 +64,6 @@
         captured.push({ el, text });
         el.classList.remove('saveconv-hover');
         el.classList.add('saveconv-captured');
-        updateCounter();
     }
 
     function generateFileName() {
@@ -85,13 +88,11 @@
         if (!captured.length) return;
         const last = captured.pop();
         try { last.el.classList.remove('saveconv-captured'); } catch (e) {}
-        updateCounter();
     }
 
     function clearAll() {
         captured.forEach(c => { try { c.el.classList.remove('saveconv-captured'); } catch (e) {} });
         captured = [];
-        updateCounter();
     }
 
     function makeBtn(id, label, left, bg, cb) {
@@ -113,8 +114,6 @@
         makeBtn(BTN_SAVE_ID, '💾 Save', '4px', '#555', saveCapture);
         makeBtn(BTN_UNDO_ID, '↩ Undo', '80px', '#555', undoLast);
         makeBtn(BTN_CLEAR_ID, '✕ Clear', '148px', '#933', clearAll);
-        makeBtn(COUNTER_ID, '0 captured','210px', '#222', () => {});
-        document.getElementById(COUNTER_ID).style.cursor = 'default';
     }
 
     function activate() {
