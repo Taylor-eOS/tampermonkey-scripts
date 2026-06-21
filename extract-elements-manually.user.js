@@ -2,7 +2,7 @@
 // @name         Save TXT Manually
 // @description  Clik to mark text elements.
 // @namespace    local
-// @version      1.1
+// @version      1.2
 // @match        *://*/*
 // @grant        none
 // ==/UserScript==
@@ -17,6 +17,7 @@
     let captured = [];
     let lastHovered = null;
     let active = false;
+    let nextRole = 'Assistant';
 
     function injectStyle() {
         if (document.getElementById(STYLE_ID)) return;
@@ -61,21 +62,45 @@
         const el = e.target;
         const text = (el.innerText || el.textContent || '').trim();
         if (!text) return;
-        captured.push({ el, text });
+        captured.push({ type: 'text', el, text });
         el.classList.remove('saveconv-hover');
         el.classList.add('saveconv-captured');
+    }
+
+    function onKeyDown(e) {
+        if (e.code !== 'Space') return;
+        const tag = (e.target || {}).tagName || '';
+        if (tag === 'INPUT' || tag === 'TEXTAREA' || (e.target || {}).isContentEditable) return;
+        e.preventDefault();
+        captured.push({ type: 'role', label: nextRole });
+        nextRole = nextRole === 'User' ? 'Assistant' : 'User';
+    }
+
+    function recomputeNextRole() {
+        const last = [...captured].reverse().find(c => c.type === 'role');
+        if (!last) { nextRole = 'Assistant'; return; }
+        nextRole = last.label === 'User' ? 'Assistant' : 'User';
     }
 
     function generateFileName() {
         const title = (document.querySelector('title') || {}).textContent || '';
         if (title.trim()) return title.trim().slice(0, 45);
-        if (captured.length) return captured[0].text.toLowerCase().replace(/[^a-z0-9 ]/g, '').replace(/\s+/g, '_').slice(0, 30);
+        const firstText = captured.find(c => c.type === 'text');
+        if (firstText) return firstText.text.toLowerCase().replace(/[^a-z0-9 ]/g, '').replace(/\s+/g, '_').slice(0, 30);
         return 'conversation';
     }
 
     function saveCapture() {
         if (!captured.length) { alert('Nothing captured yet.'); return; }
-        const blob = new Blob([captured.map(c => c.text).join('\n\n---\n\n')], { type: 'text/plain' });
+        const parts = ['User:\n'];
+        captured.forEach(c => {
+            if (c.type === 'role') {
+                parts.push(`\n\n---\n\n${c.label}:\n`);
+            } else {
+                parts.push(c.text.replace(/\n{2,}/g, '\n'));
+            }
+        });
+        const blob = new Blob([parts.join('')], { type: 'text/plain' });
         const url = URL.createObjectURL(blob);
         const a = Object.assign(document.createElement('a'), { href: url, download: generateFileName() + '.txt' });
         document.body.appendChild(a);
@@ -87,12 +112,18 @@
     function undoLast() {
         if (!captured.length) return;
         const last = captured.pop();
-        try { last.el.classList.remove('saveconv-captured'); } catch (e) {}
+        if (last.type === 'text') {
+            try { last.el.classList.remove('saveconv-captured'); } catch (e) {}
+        }
+        recomputeNextRole();
     }
 
     function clearAll() {
-        captured.forEach(c => { try { c.el.classList.remove('saveconv-captured'); } catch (e) {} });
+        captured.forEach(c => {
+            if (c.type === 'text') try { c.el.classList.remove('saveconv-captured'); } catch (e) {}
+        });
         captured = [];
+        nextRole = 'Assistant';
     }
 
     function makeBtn(id, label, left, bg, cb) {
@@ -124,6 +155,7 @@
         createUI();
         window.addEventListener('mousemove', onMouseMove, true);
         window.addEventListener('click', onClickCapture, true);
+        window.addEventListener('keydown', onKeyDown, true);
     }
 
     function init() {
