@@ -2,7 +2,7 @@
 // @name         Save TXT Manually
 // @description  Clik to mark text elements.
 // @namespace    local
-// @version      1.2
+// @version      1.3
 // @match        *://*/*
 // @grant        none
 // ==/UserScript==
@@ -13,11 +13,13 @@
     const BTN_SAVE_ID = 'saveconv-save';
     const BTN_CLEAR_ID = 'saveconv-clear';
     const BTN_UNDO_ID = 'saveconv-undo';
+    const BTN_ACT_AUTO_ID = 'saveconv-activate-auto';
     const BTN_ACT_ID = 'saveconv-activate';
     let captured = [];
     let lastHovered = null;
     let active = false;
-    let nextRole = 'Assistant';
+    let autoMode = false;
+    let nextRole = 'User';
 
     function injectStyle() {
         if (document.getElementById(STYLE_ID)) return;
@@ -30,7 +32,7 @@
         document.head.appendChild(s);
     }
 
-    const ownIDs = new Set([BTN_SAVE_ID, BTN_CLEAR_ID, BTN_UNDO_ID, BTN_ACT_ID]);
+    const ownIDs = new Set([BTN_SAVE_ID, BTN_CLEAR_ID, BTN_UNDO_ID, BTN_ACT_AUTO_ID, BTN_ACT_ID]);
 
     function isOwnUI(el) {
         return el && ownIDs.has(el.id);
@@ -62,6 +64,10 @@
         const el = e.target;
         const text = (el.innerText || el.textContent || '').trim();
         if (!text) return;
+        if (autoMode) {
+            captured.push({ type: 'role', label: nextRole });
+            nextRole = nextRole === 'User' ? 'Assistant' : 'User';
+        }
         captured.push({ type: 'text', el, text });
         el.classList.remove('saveconv-hover');
         el.classList.add('saveconv-captured');
@@ -78,7 +84,7 @@
 
     function recomputeNextRole() {
         const last = [...captured].reverse().find(c => c.type === 'role');
-        if (!last) { nextRole = 'Assistant'; return; }
+        if (!last) { nextRole = 'User'; return; }
         nextRole = last.label === 'User' ? 'Assistant' : 'User';
     }
 
@@ -92,10 +98,10 @@
 
     function saveCapture() {
         if (!captured.length) { alert('Nothing captured yet.'); return; }
-        const parts = ['User:\n'];
+        const parts = [];
         captured.forEach(c => {
             if (c.type === 'role') {
-                parts.push(`\n\n---\n\n${c.label}:\n`);
+                parts.push(`${parts.length ? '\n\n---\n\n' : ''}${c.label}:\n`);
             } else {
                 parts.push(c.text.replace(/\n{2,}/g, '\n'));
             }
@@ -114,6 +120,9 @@
         const last = captured.pop();
         if (last.type === 'text') {
             try { last.el.classList.remove('saveconv-captured'); } catch (e) {}
+            if (autoMode && captured.length && captured[captured.length - 1].type === 'role') {
+                captured.pop();
+            }
         }
         recomputeNextRole();
     }
@@ -123,7 +132,7 @@
             if (c.type === 'text') try { c.el.classList.remove('saveconv-captured'); } catch (e) {}
         });
         captured = [];
-        nextRole = 'Assistant';
+        nextRole = 'User';
     }
 
     function makeBtn(id, label, left, bg, cb) {
@@ -147,9 +156,11 @@
         makeBtn(BTN_CLEAR_ID, '✕ Clear', '148px', '#933', clearAll);
     }
 
-    function activate() {
+    function activate(isAuto) {
         if (active) return;
         active = true;
+        autoMode = isAuto;
+        document.getElementById(BTN_ACT_AUTO_ID).remove();
         document.getElementById(BTN_ACT_ID).remove();
         injectStyle();
         createUI();
@@ -159,17 +170,29 @@
     }
 
     function init() {
-        const btn = document.createElement('button');
-        btn.id = BTN_ACT_ID;
-        btn.title = 'Activate text capture';
-        btn.innerHTML = '📄';
-        Object.assign(btn.style, {
-            position: 'fixed', top: '2px', left: '2px',
+        const btnStyle = {
+            position: 'fixed', top: '2px',
             width: '21px', height: '21px', zIndex: '2147483647',
             backgroundColor: '#ececec', borderRadius: '3px',
             cursor: 'pointer', border: 'none', fontSize: '10px'
-        });
-        btn.addEventListener('click', e => { e.stopPropagation(); activate(); });
+        };
+
+        const btnAuto = document.createElement('button');
+        btnAuto.id = BTN_ACT_AUTO_ID;
+        btnAuto.title = 'Alternating labels';
+        btnAuto.innerHTML = '📄';
+        Object.assign(btnAuto.style, btnStyle);
+        btnAuto.style.left = '2px';
+        btnAuto.addEventListener('click', e => { e.stopPropagation(); activate(true); });
+        document.body.appendChild(btnAuto);
+
+        const btn = document.createElement('button');
+        btn.id = BTN_ACT_ID;
+        btn.title = 'Manual mode';
+        btn.innerHTML = '📝';
+        Object.assign(btn.style, btnStyle);
+        btn.style.left = '25px';
+        btn.addEventListener('click', e => { e.stopPropagation(); activate(false); });
         document.body.appendChild(btn);
     }
 
