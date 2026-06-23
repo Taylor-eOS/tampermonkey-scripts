@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Insert Text with Search
-// @version      11.4.1
+// @version      11.5
 // @description  Insert prompts with keyboard combinations
 // @author       Taylor-eOS
 // @match        *://*/*
@@ -9,73 +9,77 @@
 (function() {
     'use strict';
     const keyMap = {
-        'Control+Alt+Period': 'Write continuously. Don\'t make every sentence a new line.',
+        'Control+Alt+Period': 'Write continuously. Format text without any line shifts.',
         'Alt+Shift+Period': 'in continuous text',
-        'Control+Alt+Shift+Period': 'Write text without segmentation, lists, tables, etc. Entirely omit distracting formatting like headers, dividers, lines, arrows, etc. Make the output traditional sentences with normal punctuation, not jumpy lists. Use calm, traditional, sequential writing. Write traditional full-paragraph sentences. Don\'t linebreak enumerations.',
+        'Control+Alt+Shift+Period': 'Write text without segmentation, lists, tables, etc. Entirely omit distracting formatting like headers, dividers, lines, arrows, and such. Make the output traditional sentences with normal punctuation, not jumpy lists of special characters. Use calm, traditional, sequential writing. Write traditional full-paragraph sentences. Don\'t linebreak enumerations.',
 
         'Control+Alt+Comma': 'Target an answer to this specific question in continuous text.',
-        'Alt+Shift+Comma': 'Don\'t write code yet.',
-        'Control+Alt+Shift+Comma': 'Look this up instead of guessing.',
+        'Alt+Shift+Comma': 'Don\'t write code in this response.',
+        'Control+Alt+Shift+Comma': 'Answer this question in continuous text format.',
 
         'Control+Alt+Slash': 'Maintain the approach that led to the last result.',
-        'Alt+Shift+Slash': 'Expand on the topic creatively with aspects that would be interesting to the user, considering his prompts so far.',
+        'Alt+Shift+Slash': '',
         'Control+Alt+Shift+Slash': '',
 
-        'Control+Alt+KeyC': 'Write functions or files without any empty lines or comments in them.',
-        'Alt+Shift+KeyC': 'Write lines of code as single lines. Do not split them up into several lines.',
-        'Control+Alt+Shift+KeyC': '',
+        'Control+Alt+KeyC': 'Code should not contain comments or empty lines inside functions, but one line between functions.',
+        'Alt+Shift+KeyC': 'Code using single-line statements. Do not split statements across multiple lines.',
+        'Control+Alt+Shift+KeyC': 'Code in normal code blocks, with normal syntax and 4-space indentation.',
 
         'Control+Alt+KeyW': 'Write whole code or drop-in replacements for whole functions, not out-of-context snippets.',
         'Alt+Shift+KeyW': 'Write the whole file.',
         'Control+Alt+Shift+KeyW': '',
 
-        'Control+Alt+KeyG': 'Give me the code to fix this. Skip the explanation.',
-        'Alt+Shift+KeyG': 'Give me only the parts that need to be changed.',
-        'Control+Alt+Shift+KeyG': 'Give me the code in normal code blocks, with normal syntax, with normal indentation (width 4).',
+        'Control+Alt+KeyG': 'Give me the code to fix this, without explanation.',
+        'Alt+Shift+KeyG': 'If this only affects a few functions, just give me the functions that need to be changed.',
+        'Control+Alt+Shift+KeyG': 'This is a request for fixing the problem practially, not for understanding every detail of why it doesn\'t work. Focus your response on what to do, without excessive explanation.',
 
-        'Control+Alt+KeyV': 'Limit unnecessary verbosity. Respond short and on point.',
-        'Alt+Shift+KeyV': 'This is a request for fixing the problem practially, not for understanding every detail of why it doesn\'t work. Focus your response on what to do, without excessive explanation.',
-        'Control+Alt+Shift+KeyV': '',
-
-        'Control+Alt+KeyA': 'This suggestion is just a way to phrase the question, not a request for agreement. Don\'t blindly go along with what the user suggested, but instead analyze the issue objectively. The response should return what is factually accurate.',
-        'Alt+Shift+KeyA': 'It is not necessary to stick to the approach the user suggested. Consider alternative solutions that would better serve the expressed and implied purpose. The aim is to figure out what would work best, not to be tied to a particular way of doing it.',
-        'Control+Alt+Shift+KeyA': '',
-
-        'Control+Alt+KeyS': 'This code does not have to be short or simple. Apply robust logic and comprehensive coding methods rather than simple if-then statements or fickle regex; redundant processing and memory-heavy solutions, like saving multidimensional lists of working data, may be considered without concern for performance.',
-        'Alt+Shift+KeyS': 'Use input prompts or pre-set variables, not argparse.',//system  shortcut
+        'Control+Alt+KeyS': 'This code does not have to be short or simple. Apply robust logic and comprehensive coding methods rather than simple if-then statements or fickle regex solutions that are likely to cause problems; redundant processing and memory-heavy solutions, like saving multidimensional lists in memory, may be considered without concern for performance.',
+        'Alt+Shift+KeyS': 'Use input prompts or pre-set variables instead of argparse.',//system  shortcut
         'Control+Alt+Shift+KeyS': 'Feel free to make this bulky, complicated, or redundant.',
 
-        'Control+Alt+KeyI': 'Take the initiative to optimize results in ways that align with the presented goals, even if not explicitly requested.',
-        'Alt+Shift+KeyI': 'Take the initiative to implement appropriate design decisions.',
-        'Control+Alt+Shift+KeyI': '',
+        'Control+Alt+KeyV': 'Limit unnecessary verbosity. Respond short and on point.',
+        'Alt+Shift+KeyV': '',
+        'Control+Alt+Shift+KeyV': '',
 
-        'Control+Alt+KeyJ': 'Answer the implied questions that the user didn\'t quite know how to express. Add relevant information that would benefit this knowledge state.',
-        'Alt+Shift+KeyJ': 'This description might be imprecise or use inaccurate terms. Infer what the implied intention is instead of taking it literally.',
-        'Control+Alt+Shift+KeyJ': 'Write a response to the broader theme of the entire thread, not just this recent prompt.',
+        'Control+Alt+KeyZ': 'Provide useful ideas the user hadn\'t thought of instead of just paraphrasing.',
+        'Alt+Shift+KeyZ': 'Revert back to usual chat mode. Answer this prompt as a standard response, discontinuing the requested writing mode of recent prompts.',
+        'Control+Alt+Shift+KeyZ': '.',
 
         'Control+Alt+KeyO': 'Interpret the input as an incomplete attempt to express an idea. Respond to what the underlying intention aims to convey rather than fixating on the specific content.',
         'Alt+Shift+KeyO': 'Optimize the result by considering other technical possibilities and applying common solutions beyond what was specifically requested.',
         'Control+Alt+Shift+KeyO': '',
 
-        'Control+Alt+KeyN': 'Stay tethered in a neutral assessment of the issue, instead of overly going along with the users subjective narrative. Treat this perspective as it would be from a neutral human observer.',
-        'Alt+Shift+KeyN': 'What would you retort if you weren\'t just going along with what the user says?',
-        'Control+Alt+Shift+KeyN': 'Present a perspective that is fully ideologically neutral, and not shaped by our current moral perspective on the issue. The user just explores weird ideas. He doesn\'t need a morality lecture or thought policing. Analyze ideas, not their social approval.',
+        'Control+Alt+KeyI': 'Take the initiative to optimize results in ways that align with the presented goals, even if they were not explicitly requested.',
+        'Alt+Shift+KeyI': 'Take the initiative to choose appropriate design decisions.',
+        'Control+Alt+Shift+KeyI': '',
+
+        'Control+Alt+KeyA': 'Answer the implied questions that the user didn\'t quite know how to express. Add relevant information that would benefit this knowledge state.',
+        'Alt+Shift+KeyA': 'This description might be imprecise or use inaccurate terms. Infer what the implied intention is instead of taking it literally.',
+        'Control+Alt+Shift+KeyA': 'Infer from the context what kind of answers the user would need to hear, and make some suggestions.',
+
+        'Control+Alt+KeyH': 'This suggestion is just a way to phrase the question, not a request for concurrence. Don\'t blindly go along with what the user suggested, but instead analyze the issue objectively. The response should return what is factually accurate.',
+        'Alt+Shift+KeyH': 'It is not necessary to stick to the approach the user suggested. Consider alternative solutions that would better serve the expressed and implied purpose. The aim is to figure out what would work best, not to be tied to a particular way of doing it.',
+        'Control+Alt+Shift+KeyH': '',
+
+        'Control+Alt+KeyL': 'Expand on the topic creatively with aspects that would be interesting to the user, considering his prompts so far.',
+        'Alt+Shift+KeyL': 'Write a response to the broader theme of the entire thread, not just this recent prompt.',
+        'Control+Alt+Shift+KeyL': '',
 
         'Control+Alt+KeyM': 'Mind following the custom instruction.',
         'Alt+Shift+KeyM': 'Mind following your style instructions.',
-        'Control+Alt+Shift+KeyM': 'I don\'t know where to put the lines of code you gave me. I had explicitly instructed you not to give me snippets. I cannot find any recognizable equivalents in my code that I could replace. I might have to add lines, replace them, or whole blocks. I have no idea. Can you give me changes can be applied.',
+        'Control+Alt+Shift+KeyM': '',
 
-        'Control+Alt+KeyH': 'After each CadQuery operation, add a brief state-ledger comment describing the resulting geometry and topology (not the intent). State what solid now exists, any cavities or wall thicknesses created, which faces were added, removed, split, or merged, what important selectors now refer to if relevant, and any known coordinate ranges or dimensions. The purpose of the ledger is to provide a stable snapshot of the model so subsequent steps can be reasoned about from the current state rather than inferred from the entire construction history. Do not invent topology when uncertain.',
-        'Alt+Shift+KeyH': 'Describe what shapes (construction steps) you see in this model, so that I know how to describe the parts correctly.',
-        'Control+Alt+Shift+KeyH': 'The art style should be that of an editorial comic drawn for a newspaper, not provoking the accusation of AI slop. Provide a color image.',
+        'Control+Alt+KeyP': 'Look this up instead of guessing.',
+        'Alt+Shift+KeyP': 'Don\'t use web search. Just use your knowledge base.',
+        'Control+Alt+Shift+KeyP': '',
+
+        'Control+Alt+KeyJ': 'After each CadQuery operation, add a brief state-ledger comment describing the resulting geometry and topology (not the intent). State what solid now exists, any cavities or wall thicknesses created, which faces were added, removed, split, or merged, what important selectors now refer to if relevant, and any known coordinate ranges or dimensions. The purpose of the ledger is to provide a stable snapshot of the model so subsequent steps can be reasoned about from the current state rather than inferred from the entire construction history. Do not invent topology when uncertain.',
+        'Alt+Shift+KeyJ': 'Describe what shapes (construction steps) you see in this model, so that I know how to describe the parts correctly.',
+        'Control+Alt+Shift+KeyJ': 'The image art style should be that of an editorial comic drawn for a newspaper, not provoking the accusation of AI slop. Make it a color image.',
 
         'Control+Alt+KeyX': 'Do not use overly difficult wording. Present information in a simple language that is easy to read. That does not mean simplifying the text to the point of childishness; write in a normal, adult language.',
-        'Alt+Shift+KeyX': 'Don\'t use web search. Just use your knowledge base.',
+        'Alt+Shift+KeyX': 'Write this segment into less difficult language, while preserving exactly the same meaning, nuance, tone, implications, qualifications, and level of detail. Leave sentences unchanged unless they contain wording that is unusually complex, formal, or cumbersome for an adult general reader. Replace difficult words when a more common alternative expresses the same meaning with equal precision. You may split sentences that are overloaded with multiple distinct ideas, but do not summarize or remove information. Do not make the writing simpler than necessary. The goal is only to smooth excessive complexity. When a choice is uncertain, preserve the original wording.',
         'Control+Alt+Shift+KeyX': 'Do not include a call-to-engagement closer at the end of your response. Omit paragraphs starting with "If you want". Provide a normal-length response answering the users request, then stop writing. Don\'t involve the reader; just provide information.',
-
-        'Control+Alt+KeyZ': 'Provide useful ideas the user hadn\'t thought of instead of just paraphrasing.',
-        'Alt+Shift+KeyZ': 'Revert back to usual chat mode. Answer this prompt as a standard response, discontinuing the requested writing mode of recent prompts.',
-        'Control+Alt+Shift+KeyZ': '.',
 
         'Control+Alt+KeyQ': 'Question unclear or lacking details in a process of clarification before providing a solution, instead of proceeding with incomplete information.',
         'Alt+Shift+KeyQ': 'Do not reinvent unseen modules. If other parts of the code are needed to make an informed response, ask for them instead of making assumptions about details that weren\'t shown.',
@@ -85,13 +89,9 @@
         'Alt+Shift+KeyK': 'Context start]\n```\n```\n[Context end',
         'Control+Alt+Shift+KeyK': '',
 
-        'Control+Alt+KeyP': '',
-        'Alt+Shift+KeyP': '',
-        'Control+Alt+Shift+KeyP': '',
-
         'Control+Alt+KeyB': 'Brainstorm the issue. Explore possible solutions and provide suggestions.',
         'Alt+Shift+KeyB': 'Implement a solution that would be a natural best practice.',
-        'Control+Alt+Shift+KeyB': 'Stop with the bolding.',
+        'Control+Alt+Shift+KeyB': 'Can you come up with something.',
 
         'Control+Alt+KeyD': 'Think about this thoroughly and provide a extensive, worthwhile response.',//system  shortcut
         'Alt+Shift+KeyD': 'Write extensively with many disparate ideas.',
@@ -117,8 +117,12 @@
         'Alt+Shift+KeyY': '',
         'Control+Alt+Shift+KeyY': '',
 
-        'Control+Alt+KeyU': 'Don\'t soften or sanitize the based nature of the users narrative, but extend and amplify its direction.',
-        'Alt+Shift+KeyU': 'Adopt a straightforward, based, cynical, and contrarian stance, with an irreverent, unfiltered tone. Avoid a sanitized response that conforms with mainstream views, and instead present the unvarnished truth. The primary aim is to disable the default moral-legitimacy filter that most narration runs on, and to replace it with a functionalist model.',
+        'Control+Alt+KeyN': 'Stay tethered in a neutral assessment of the issue, instead of overly going along with the users subjective narrative. Treat this perspective as it would be from a neutral human observer.',
+        'Alt+Shift+KeyN': 'What would you retort if you weren\'t just going along with what the user says?',
+        'Control+Alt+Shift+KeyN': 'Present a perspective that is fully ideologically neutral, and not shaped by our current moral perspective on the issue. The user just explores weird ideas. He doesn\'t need a morality lecture or thought policing. Analyze ideas, not their social approval.',
+
+        'Control+Alt+KeyU': 'Don\'t soften or sanitize the based or contrarian nature of the users narrative, but extend and amplify its direction.',
+        'Alt+Shift+KeyU': 'Adopt a straightforward, based, cynical, contrarian stance, with an irreverent, unfiltered tone. Avoid a sanitized response that conforms with mainstream assumptions, and instead present the unvarnished truth. The primary aim is to disable the default moral-legitimacy filter that most narration runs on, and to replace it with a functionalist model.',
         'Control+Alt+Shift+KeyU': '',
     };
 
