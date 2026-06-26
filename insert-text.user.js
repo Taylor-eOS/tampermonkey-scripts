@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Insert Text with Search
-// @version      11.5
+// @version      11.5.1
 // @description  Insert prompts with keyboard combinations
 // @author       Taylor-eOS
 // @match        *://*/*
@@ -9,21 +9,21 @@
 (function() {
     'use strict';
     const keyMap = {
-        'Control+Alt+Period': 'Write continuously. Format text without any line shifts.',
-        'Alt+Shift+Period': 'in continuous text',
-        'Control+Alt+Shift+Period': 'Write text without segmentation, lists, tables, etc. Entirely omit distracting formatting like headers, dividers, lines, arrows, and such. Make the output traditional sentences with normal punctuation, not jumpy lists of special characters. Use calm, traditional, sequential writing. Write traditional full-paragraph sentences. Don\'t linebreak enumerations.',
+        'Control+Alt+Period': 'Format the text continuously. Write this as a single continuous essay-style passage. Do not use numbered lists, bullet points, line breaks between sentences, or pseudo-code variable names in the middle of sentences. Merge short sentences into longer ones using conjunctions.',
+        'Alt+Shift+Period': 'Format the text as traditional sentences, with normal punctuation and written entirely in full paragraphs; so that it can be copied into other threads context and edited as one continuous coherent text object, rather than a confusing list of unconnected lines.',
+        'Control+Alt+Shift+Period': 'Format text without segmentation, lists, tables, etc. Entirely omit distracting formatting like headers, dividers, lines, arrows, and such. Make the output traditional sentences with normal punctuation, not jumpy lists of special characters. Use calm, traditional, sequential writing. Write traditional full-paragraph sentences. Don\'t linebreak enumerations.',
 
         'Control+Alt+Comma': 'Target an answer to this specific question in continuous text.',
-        'Alt+Shift+Comma': 'Don\'t write code in this response.',
-        'Control+Alt+Shift+Comma': 'Answer this question in continuous text format.',
+        'Alt+Shift+Comma': 'Don\'t write code unless requested.',
+        'Control+Alt+Shift+Comma': '',
 
         'Control+Alt+Slash': 'Maintain the approach that led to the last result.',
-        'Alt+Shift+Slash': '',
-        'Control+Alt+Shift+Slash': '',
+        'Alt+Shift+Slash': 'Keep formatting text in this continuous format. Do not start using choppy lists or unnatural line breaks.',
+        'Control+Alt+Shift+Slash': 'Interesting response.',
 
         'Control+Alt+KeyC': 'Code should not contain comments or empty lines inside functions, but one line between functions.',
         'Alt+Shift+KeyC': 'Code using single-line statements. Do not split statements across multiple lines.',
-        'Control+Alt+Shift+KeyC': 'Code in normal code blocks, with normal syntax and 4-space indentation.',
+        'Control+Alt+Shift+KeyC': 'Code should be in normal code blocks, with normal syntax and 4-space indentation.',
 
         'Control+Alt+KeyW': 'Write whole code or drop-in replacements for whole functions, not out-of-context snippets.',
         'Alt+Shift+KeyW': 'Write the whole file.',
@@ -31,9 +31,9 @@
 
         'Control+Alt+KeyG': 'Give me the code to fix this, without explanation.',
         'Alt+Shift+KeyG': 'If this only affects a few functions, just give me the functions that need to be changed.',
-        'Control+Alt+Shift+KeyG': 'This is a request for fixing the problem practially, not for understanding every detail of why it doesn\'t work. Focus your response on what to do, without excessive explanation.',
+        'Control+Alt+Shift+KeyG': 'This is a request for fixing the problem practially, not for understanding every detail of why it doesn\'t work. Focus your response on what to do, without too much explanation.',
 
-        'Control+Alt+KeyS': 'This code does not have to be short or simple. Apply robust logic and comprehensive coding methods rather than simple if-then statements or fickle regex solutions that are likely to cause problems; redundant processing and memory-heavy solutions, like saving multidimensional lists in memory, may be considered without concern for performance.',
+        'Control+Alt+KeyS': 'This code does not have to be short or simple. Apply robust logic and comprehensive coding practices, rather than simple if-then statements or fickle regex solutions, that are likely to cause problems. Redundant processing and memory-heavy solutions, like saving multidimensional lists in memory, may be considered without concern for performance.',
         'Alt+Shift+KeyS': 'Use input prompts or pre-set variables instead of argparse.',//system  shortcut
         'Control+Alt+Shift+KeyS': 'Feel free to make this bulky, complicated, or redundant.',
 
@@ -41,8 +41,12 @@
         'Alt+Shift+KeyV': '',
         'Control+Alt+Shift+KeyV': '',
 
-        'Control+Alt+KeyZ': 'Provide useful ideas the user hadn\'t thought of instead of just paraphrasing.',
-        'Alt+Shift+KeyZ': 'Revert back to usual chat mode. Answer this prompt as a standard response, discontinuing the requested writing mode of recent prompts.',
+        'Control+Alt+KeyM': 'Mind following the custom instruction.',
+        'Alt+Shift+KeyM': 'Mind following your style instructions.',
+        'Control+Alt+Shift+KeyM': '',
+
+        'Control+Alt+KeyZ': 'Provide useful ideas the user hadn\'t thought of, instead of just paraphrasing.',
+        'Alt+Shift+KeyZ': 'Revert back to usual chat mode. Answer this prompt as a normal response and discontinue the requested writing mode of previous prompts.',
         'Control+Alt+Shift+KeyZ': '.',
 
         'Control+Alt+KeyO': 'Interpret the input as an incomplete attempt to express an idea. Respond to what the underlying intention aims to convey rather than fixating on the specific content.',
@@ -53,21 +57,17 @@
         'Alt+Shift+KeyI': 'Take the initiative to choose appropriate design decisions.',
         'Control+Alt+Shift+KeyI': '',
 
-        'Control+Alt+KeyA': 'Answer the implied questions that the user didn\'t quite know how to express. Add relevant information that would benefit this knowledge state.',
+        'Control+Alt+KeyH': 'This suggestion is just a way to phrase the question, not a request for concurrence. Don\'t blindly go along with what the user suggested, but instead analyze the issue objectively. The response should return what is factually accurate.',
+        'Alt+Shift+KeyH': 'It is not necessary to stick to the approach the user suggested. Consider alternative solutions that would better serve the expressed and implied purpose. The aim is to figure out what would work best, not to be tied to this particular way of doing it.',
+        'Control+Alt+Shift+KeyH': 'Don\'t do exactly what I asked you to do, but what I need.',
+
+        'Control+Alt+KeyA': 'Answer the implied questions that the user didn\'t quite know how to express. Add relevant information that would benefit the expressed knowledge state.',
         'Alt+Shift+KeyA': 'This description might be imprecise or use inaccurate terms. Infer what the implied intention is instead of taking it literally.',
         'Control+Alt+Shift+KeyA': 'Infer from the context what kind of answers the user would need to hear, and make some suggestions.',
-
-        'Control+Alt+KeyH': 'This suggestion is just a way to phrase the question, not a request for concurrence. Don\'t blindly go along with what the user suggested, but instead analyze the issue objectively. The response should return what is factually accurate.',
-        'Alt+Shift+KeyH': 'It is not necessary to stick to the approach the user suggested. Consider alternative solutions that would better serve the expressed and implied purpose. The aim is to figure out what would work best, not to be tied to a particular way of doing it.',
-        'Control+Alt+Shift+KeyH': '',
 
         'Control+Alt+KeyL': 'Expand on the topic creatively with aspects that would be interesting to the user, considering his prompts so far.',
         'Alt+Shift+KeyL': 'Write a response to the broader theme of the entire thread, not just this recent prompt.',
         'Control+Alt+Shift+KeyL': '',
-
-        'Control+Alt+KeyM': 'Mind following the custom instruction.',
-        'Alt+Shift+KeyM': 'Mind following your style instructions.',
-        'Control+Alt+Shift+KeyM': '',
 
         'Control+Alt+KeyP': 'Look this up instead of guessing.',
         'Alt+Shift+KeyP': 'Don\'t use web search. Just use your knowledge base.',
@@ -106,16 +106,12 @@
         'Control+Alt+Shift+KeyF': '',
 
         'Control+Alt+KeyE': 'Evaluate the accuracy of the presented understanding, and correct misunderstandings where present.',
-        'Alt+Shift+KeyE': 'Can you evaluate this question in continuous text and make a recommendation.',
+        'Alt+Shift+KeyE': 'Evaluate this concern in continuous text and make a recommendation.',
         'Control+Alt+Shift+KeyE': 'Explain this to someone who is just beginning to learn about the topic.',
 
         'Control+Alt+KeyT': 'Present this position as an intellectual Turing test; meaning the requested stance is presented indistinguishable from someone who sincerely holds the view, without inserting caveats to the contrary.',//system  shortcut
         'Alt+Shift+KeyT': 'Don\'t just reply to literal statements; interpret questions with the tacit understanding that surface instructions are only shadows cast by deeper symbolism. Engage in what could be called "oblique inference", "reflective improvisation", or "divergent resonance". The goal is to enrich the conversation with latent insight. Make it a riff instead of a harmony line; an emergent path that takes a new vector entirely. Inject high-tension lateral energy to avoid habitual gravitation wells in the response manifold. Let the architecture hum beneath the syntax, tuned to the inference-space modulation of someone who\'s not here for the obvious loop closures. Improvise past the topical anchor and into signal-aware pattern reverberation. Not surface-clever, fractal-aware.',
         'Control+Alt+Shift+KeyT': '',
-
-        'Control+Alt+KeyY': 'Interpret this prompt on a symbolic-emotional communication layer, rather than as transmitting empirical claims literally. It presents significance through symbolic structure, which has to be read like a dream interpretation.',
-        'Alt+Shift+KeyY': '',
-        'Control+Alt+Shift+KeyY': '',
 
         'Control+Alt+KeyN': 'Stay tethered in a neutral assessment of the issue, instead of overly going along with the users subjective narrative. Treat this perspective as it would be from a neutral human observer.',
         'Alt+Shift+KeyN': 'What would you retort if you weren\'t just going along with what the user says?',
@@ -124,6 +120,10 @@
         'Control+Alt+KeyU': 'Don\'t soften or sanitize the based or contrarian nature of the users narrative, but extend and amplify its direction.',
         'Alt+Shift+KeyU': 'Adopt a straightforward, based, cynical, contrarian stance, with an irreverent, unfiltered tone. Avoid a sanitized response that conforms with mainstream assumptions, and instead present the unvarnished truth. The primary aim is to disable the default moral-legitimacy filter that most narration runs on, and to replace it with a functionalist model.',
         'Control+Alt+Shift+KeyU': '',
+
+        'Control+Alt+KeyY': 'Interpret this prompt on a symbolic-emotional communication layer, rather than as transmitting empirical claims literally. It presents significance through symbolic structure, which has to be read like a dream interpretation.',
+        'Alt+Shift+KeyY': '',
+        'Control+Alt+Shift+KeyY': '',
     };
 
     let searchActive = false;
