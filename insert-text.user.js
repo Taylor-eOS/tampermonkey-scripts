@@ -1,6 +1,6 @@
 // ==UserScript==
-// @name         Insert Text with Search
-// @version      11.5.2
+// @name         Insert Text
+// @version      11.5.3
 // @description  Insert prompts with keyboard combinations
 // @author       Taylor-eOS
 // @match        *://*/*
@@ -9,7 +9,7 @@
 (function() {
     'use strict';
     const keyMap = {
-        'Control+Alt+Period': 'Format text continuously. Write sentences in the same line.',
+        'Control+Alt+Period': 'Format text continuously as a single essay-style passage.',
         'Alt+Shift+Period': 'Do not use numbered lists, bullet points, line breaks between sentences, or pseudo-code variable names in the middle of sentences. Merge short sentences into longer ones using conjunctions. Format the text as traditional sentences, with normal punctuation, written entirely in full paragraphs; so that it can be copied into other threads context and edited as one continuous coherent text object, rather than a confusing list of unconnected lines.',
         'Control+Alt+Shift+Period': '',
 
@@ -47,11 +47,11 @@
 
         'Control+Alt+KeyZ': 'Provide useful ideas the user hadn\'t thought of, instead of just paraphrasing the input.',
         'Alt+Shift+KeyZ': 'Revert back to usual chat mode. Answer this prompt as a normal response, discontinuing the requested writing mode of previous prompts.',
-        'Control+Alt+Shift+KeyZ': '.',
+        'Control+Alt+Shift+KeyZ': '',
 
         'Control+Alt+KeyO': 'Interpret the input as an incomplete attempt to express an idea. Respond to what the underlying intention aims to convey rather than fixating on the specific content.',
         'Alt+Shift+KeyO': 'Optimize the result by considering other technical possibilities and applying common solutions beyond what was specifically requested.',
-        'Control+Alt+Shift+KeyO': '',
+        'Control+Alt+Shift+KeyO': 'This is the user side of a conversation about . Can you infer what understanding is missing and present the answers that this is groping at.',
 
         'Control+Alt+KeyI': 'Take the initiative to optimize results in ways that align with the presented goals, even if they were not explicitly requested.',
         'Alt+Shift+KeyI': 'Take the initiative to choose appropriate design decisions.',
@@ -85,17 +85,17 @@
         'Alt+Shift+KeyQ': 'Do not reinvent unseen modules. If other parts of the code are needed to make an informed response, ask for them instead of making assumptions about details that weren\'t shown.',
         'Control+Alt+Shift+KeyQ': 'The code is just for reference how a former project was set up. It has no direct relevancy to this task, and does not need to be copied directly.',
 
-        'Control+Alt+KeyK': 'Can you contemplate what to do about this.',
+        'Control+Alt+KeyK': 'Contemplate what to do about this concern in continuous text and make a recommendation.',
         'Alt+Shift+KeyK': 'Context start]\n```\n```\n[Context end',
         'Control+Alt+Shift+KeyK': '',
 
         'Control+Alt+KeyB': 'Brainstorm the issue. Explore possible solutions and provide suggestions.',
         'Alt+Shift+KeyB': 'Implement a solution that would be a natural best practice.',
-        'Control+Alt+Shift+KeyB': 'Can you come up with something.',
+        'Control+Alt+Shift+KeyB': 'Respond with what the best practies would be from the perspective of someone who has the deeper knowledge to select the right choices.',
 
         'Control+Alt+KeyD': 'Think about this thoroughly and provide a extensive, worthwhile response.',//system  shortcut
         'Alt+Shift+KeyD': 'Write extensively with many disparate ideas.',
-        'Control+Alt+Shift+KeyD': '',
+        'Control+Alt+Shift+KeyD': 'Can you try to come up with some solutions to the described issues and implement them.',
 
         'Control+Alt+KeyR': 'Rewrite this text segment into continuous format. It should express the same content, and even contain many of the same sentences, albeit optimized for the new style, but written as traditional, flowing text that won\'t look weird in HTML if rendered without formatting tags. Rewrite lists into whole sentences, turn tables that were compacted by rendering into normal text, rewrite sentences that were torn apart by em dashes into normal linear writing, change sentences to use real words instead of special characters like arrows, and fill in a full provision of the content.',
         'Alt+Shift+KeyR': 'Express the segment in clear, straightforward prose, reducing unnecessary complexity in the wording wherever possible without altering the meaning. Replace elaborate phrasing with simpler equivalents so that the original nuance remains intact. Retain heavy terms if they are needed for accuracy. Use adult language would be used in serious history books written for educated general readers.',
@@ -106,8 +106,8 @@
         'Control+Alt+Shift+KeyF': '',
 
         'Control+Alt+KeyE': 'Evaluate the accuracy of the presented understanding, and correct misunderstandings where present.',
-        'Alt+Shift+KeyE': 'Evaluate this concern in continuous text and make a recommendation.',
-        'Control+Alt+Shift+KeyE': 'Explain this to someone who is just beginning to learn about the topic.',
+        'Alt+Shift+KeyE': 'Explain this to someone who is just beginning to learn about the topic.',
+        'Control+Alt+Shift+KeyE': '',
 
         'Control+Alt+KeyT': 'Present this position as an intellectual Turing test; meaning the requested stance is presented indistinguishable from someone who sincerely holds the view, without inserting caveats to the contrary.',//system  shortcut
         'Alt+Shift+KeyT': 'Don\'t just reply to literal statements; interpret questions with the tacit understanding that surface instructions are only shadows cast by deeper symbolism. Engage in what could be called "oblique inference", "reflective improvisation", or "divergent resonance". The goal is to enrich the conversation with latent insight. Make it a riff instead of a harmony line; an emergent path that takes a new vector entirely. Inject high-tension lateral energy to avoid habitual gravitation wells in the response manifold. Let the architecture hum beneath the syntax, tuned to the inference-space modulation of someone who\'s not here for the obvious loop closures. Improvise past the topical anchor and into signal-aware pattern reverberation. Not surface-clever, fractal-aware.',
