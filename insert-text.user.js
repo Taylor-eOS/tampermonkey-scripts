@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Insert Text
-// @version      11.5.3
+// @version      11.6
 // @description  Insert prompts with keyboard combinations
 // @author       Taylor-eOS
 // @match        *://*/*
@@ -10,11 +10,11 @@
     'use strict';
     const keyMap = {
         'Control+Alt+Period': 'Format text continuously as a single essay-style passage.',
-        'Alt+Shift+Period': 'Do not use numbered lists, bullet points, line breaks between sentences, or pseudo-code variable names in the middle of sentences. Merge short sentences into longer ones using conjunctions. Format the text as traditional sentences, with normal punctuation, written entirely in full paragraphs; so that it can be copied into other threads context and edited as one continuous coherent text object, rather than a confusing list of unconnected lines.',
+        'Alt+Shift+Period': 'Do not use numbered lists, bullet points, line breaks between sentences, or pseudo-code variable names in the middle of sentences. Format the text as traditional sentences with normal punctuation, written entirely in full paragraphs; so that it can be copied and edited as one continuous coherent text object, rather than a confusing list of unconnected lines.',
         'Control+Alt+Shift+Period': '',
 
         'Control+Alt+Comma': 'Target an answer to this specific question in continuous text.',
-        'Alt+Shift+Comma': 'Don\'t write code unless requested.',
+        'Alt+Shift+Comma': 'Only write code if it was requested.',
         'Control+Alt+Shift+Comma': 'Contemplate how to implement this coding task and write an overview of the recommended design decisions and their relevant alternatives, so that I can compare them before committing the actual rewrite.',
 
         'Control+Alt+Slash': 'Maintain the approach that led to the last result.',
@@ -29,16 +29,16 @@
         'Alt+Shift+KeyW': 'Write the whole file.',
         'Control+Alt+Shift+KeyW': '',
 
-        'Control+Alt+KeyG': 'Give me the code to fix this, without explanation.',
+        'Control+Alt+KeyG': 'Can you fix this. Limit explanation.',
         'Alt+Shift+KeyG': 'If this only affects a few functions, just give me the functions that need to be changed.',
-        'Control+Alt+Shift+KeyG': 'This is a request for fixing the problem practially, not for understanding every detail of why it doesn\'t work. Focus your response on what to do, not why it doesn\'t work.',
+        'Control+Alt+Shift+KeyG': '',
 
         'Control+Alt+KeyS': 'This code does not have to be short or simple. Apply robust logic and comprehensive coding practices, rather than simple if-then statements or fickle regex solutions, that are likely to cause problems. Redundant processing and memory-heavy solutions, like saving multidimensional lists in memory, may be considered without concern for performance.',
         'Alt+Shift+KeyS': 'Use input prompts or pre-set variables instead of argparse.',//system  shortcut
         'Control+Alt+Shift+KeyS': 'Write procedural code that mutates state via a single, module-level global container variable without using instance methods or passing the state as a function parameter.',
 
         'Control+Alt+KeyV': 'Limit unnecessary verbosity. Respond short and on point.',
-        'Alt+Shift+KeyV': '',
+        'Alt+Shift+KeyV': 'Can you write the code in real functions and without all the empty lines (as you were instructed).',
         'Control+Alt+Shift+KeyV': '',
 
         'Control+Alt+KeyM': 'Mind following the custom instruction.',
@@ -79,7 +79,7 @@
 
         'Control+Alt+KeyX': 'Do not use overly difficult wording. Present information in a simple language that is easy to read. That does not mean simplifying the text to the point of childishness; write in a normal, adult language.',
         'Alt+Shift+KeyX': 'Write this segment into less difficult language, while preserving exactly the same meaning, nuance, tone, implications, qualifications, and level of detail. Leave sentences unchanged unless they contain wording that is unusually complex, formal, or cumbersome for an adult general reader. Replace difficult words when a more common alternative expresses the same meaning with equal precision. You may split sentences that are overloaded with multiple distinct ideas, but do not summarize or remove information. Do not make the writing simpler than necessary. The goal is only to smooth excessive complexity. When a choice is uncertain, preserve the original wording.',
-        'Control+Alt+Shift+KeyX': 'Do not include a call-to-engagement closer at the end of your response. Omit paragraphs starting with "If you want". Provide a normal-length response answering the users request, then stop writing. Don\'t involve the reader; just provide information.',
+        'Control+Alt+Shift+KeyX': 'Do not include a call-to-engagement closer at the end of your response. Omit final paragraphs starting with "If you want". Provide a comprehensive response answering the users specific request as stated, then stop talking. Do not add unsolicited suggestions.',
 
         'Control+Alt+KeyQ': 'Question unclear or lacking details in a process of clarification before providing a solution, instead of proceeding with incomplete information.',
         'Alt+Shift+KeyQ': 'Do not reinvent unseen modules. If other parts of the code are needed to make an informed response, ask for them instead of making assumptions about details that weren\'t shown.',
@@ -87,7 +87,7 @@
 
         'Control+Alt+KeyK': 'Contemplate what to do about this concern in continuous text and make a recommendation.',
         'Alt+Shift+KeyK': 'Context start]\n```\n```\n[Context end',
-        'Control+Alt+Shift+KeyK': '',
+        'Control+Alt+Shift+KeyK': 'What deos this code do conceptually for the strategy game? Briefly outline it in continuous text.',
 
         'Control+Alt+KeyB': 'Brainstorm the issue. Explore possible solutions and provide suggestions.',
         'Alt+Shift+KeyB': 'Implement a solution that would be a natural best practice.',
@@ -261,18 +261,18 @@
             desc.el.focus();
             const range = desc.range.cloneRange();
             const first = document.createTextNode('```');
-            const br1 = document.createElement('br');
-            const br2 = document.createElement('br');
-            const last = document.createTextNode('```');
+            //const br1 = document.createElement('br');
+            //const br2 = document.createElement('br');
+            //const last = document.createTextNode('```');
             const frag = document.createDocumentFragment();
             frag.appendChild(first);
-            frag.appendChild(br1);
-            frag.appendChild(br2);
-            frag.appendChild(last);
+            //frag.appendChild(br1);
+            //frag.appendChild(br2);
+            //frag.appendChild(last);
             range.deleteContents();
             range.insertNode(frag);
             const newRange = document.createRange();
-            newRange.setStartAfter(br1);
+            //newRange.setStartAfter(br1);
             newRange.collapse(true);
             const sel = window.getSelection();
             sel.removeAllRanges();
