@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Insert Text
-// @version      11.6
+// @version      11.7
 // @description  Insert prompts with keyboard combinations
 // @author       Taylor-eOS
 // @match        *://*/*
@@ -38,7 +38,7 @@
         'Control+Alt+Shift+KeyS': 'Write procedural code that mutates state via a single, module-level global container variable without using instance methods or passing the state as a function parameter.',
 
         'Control+Alt+KeyV': 'Limit unnecessary verbosity. Respond short and on point.',
-        'Alt+Shift+KeyV': 'Can you write the code in real functions and without all the empty lines (as you were instructed).',
+        'Alt+Shift+KeyV': 'Can you write the code in real functions and without all the empty lines.',
         'Control+Alt+Shift+KeyV': '',
 
         'Control+Alt+KeyM': 'Mind following the custom instruction.',
@@ -101,17 +101,17 @@
         'Alt+Shift+KeyR': 'Express the segment in clear, straightforward prose, reducing unnecessary complexity in the wording wherever possible without altering the meaning. Replace elaborate phrasing with simpler equivalents so that the original nuance remains intact. Retain heavy terms if they are needed for accuracy. Use adult language would be used in serious history books written for educated general readers.',
         'Control+Alt+Shift+KeyR': 'Write a GitHub Readme segment in continuous text, giving a basic explaination of the purpose of the project to a internet user who is not familiar with the code, who came across it in an online search. Include a brief instruction how to use it, but only as far as it is unlicely to change.',
 
-        'Control+Alt+KeyF': '',//system  shortcut
+        'Control+Alt+KeyF': 'One thing I dislike about language models is that they always have to hedge against inaccuracy, when a little conceptual compression would reveal some interesting structural insights. I get the incentives to be that way; that is how they get good in benchmarks and people complain when they get details wrong. But intellectual exploration isn\'t about counting kolibri bones. ',//system  shortcut
         'Alt+Shift+KeyF': 'Explore the feasibility of the outlined ideas and suggest how they could be implemented.',
         'Control+Alt+Shift+KeyF': '',
 
         'Control+Alt+KeyE': 'Evaluate the accuracy of the presented understanding, and correct misunderstandings where present.',
-        'Alt+Shift+KeyE': 'Explain this to someone who is just beginning to learn about the topic.',
-        'Control+Alt+Shift+KeyE': '',
+        'Alt+Shift+KeyE': 'Can you just answer this question and remove what is unknown.',
+        'Control+Alt+Shift+KeyE': 'Explain this to someone who is just beginning to learn about the topic.',
 
         'Control+Alt+KeyT': 'Present this position as an intellectual Turing test; meaning the requested stance is presented indistinguishable from someone who sincerely holds the view, without inserting caveats to the contrary.',//system  shortcut
         'Alt+Shift+KeyT': 'Don\'t just reply to literal statements; interpret questions with the tacit understanding that surface instructions are only shadows cast by deeper symbolism. Engage in what could be called "oblique inference", "reflective improvisation", or "divergent resonance". The goal is to enrich the conversation with latent insight. Make it a riff instead of a harmony line; an emergent path that takes a new vector entirely. Inject high-tension lateral energy to avoid habitual gravitation wells in the response manifold. Let the architecture hum beneath the syntax, tuned to the inference-space modulation of someone who\'s not here for the obvious loop closures. Improvise past the topical anchor and into signal-aware pattern reverberation. Not surface-clever, fractal-aware.',
-        'Control+Alt+Shift+KeyT': '',
+        'Control+Alt+Shift+KeyT': 'Write a brief continuously written descriprion that explains what the user should enter and what the script does.',
 
         'Control+Alt+KeyN': 'Stay tethered in a neutral assessment of the issue, instead of overly going along with the users subjective narrative. Treat this perspective as it would be from a neutral human observer.',
         'Alt+Shift+KeyN': 'What would you retort if you weren\'t just going along with what the user says?',
@@ -134,7 +134,7 @@
     let savedDescriptor = null;
     const MAX_RESULTS = 4;
     const OPEN_KEY = 'Control+Shift+KeyF';
-    const START_STRING = '['
+    const START_STRING = '[Instruction: '
     const END_STRING = ']'
 
     document.addEventListener('keydown', function(e) {
