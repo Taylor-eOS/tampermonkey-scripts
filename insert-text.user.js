@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Insert Text
-// @version      11.8
+// @version      11.8.1
 // @description  Insert prompts with keyboard combinations
 // @author       Taylor-eOS
 // @match        *://*/*
@@ -9,7 +9,7 @@
 (function() {
     'use strict';
     const keyMap = {
-        'Control+Alt+Period': 'Format text continuously.',
+        'Control+Alt+Period': 'Format the response continuously.',
         'Alt+Shift+Period': 'Do not use numbered lists, bullet points, line breaks between sentences, or pseudo-code variable names in the middle of sentences. Format the text in traditional sentences with normal punctuation, written entirely in full paragraphs, so that it can be copied and edited as one continuous coherent object, rather than a confusing list of unconnected lines.',
         'Control+Alt+Shift+Period': '',
 
@@ -18,8 +18,8 @@
         'Control+Alt+Shift+Comma': 'Contemplate how to implement this coding task and write an overview of the recommended design decisions and their relevant alternatives, so that I can compare them before committing the actual rewrite.',
 
         'Control+Alt+Slash': 'Maintain the approach that led to the last result.',
-        'Alt+Shift+Slash': 'Maintain a code without comments or empty lines.',
-        'Control+Alt+Shift+Slash': '',
+        'Alt+Shift+Slash': 'Keep the code without comments or empty lines.',
+        'Control+Alt+Shift+Slash': 'The purpose is not a grammatical rewrite, but a conceptual reconstellation.',
 
         'Control+Alt+KeyC': 'Code should not contain comments or empty lines inside functions, but one line between functions.',
         'Alt+Shift+KeyC': 'Lines of code should be written as single-line statements, not be split across multiple lines.',
@@ -47,7 +47,7 @@
 
         'Control+Alt+KeyZ': 'Provide useful ideas the user hadn\'t thought of, instead of just paraphrasing the input.',
         'Alt+Shift+KeyZ': 'Revert back to usual chat mode by answering this prompt as a normal response, discontinuing the requested writing mode of previous prompts.',
-        'Control+Alt+Shift+KeyZ': '',
+        'Control+Alt+Shift+KeyZ': 'Don\'t go through my points in order in a paraphrasing way, but respond to what they are saying holistically.',
 
         'Control+Alt+KeyO': 'Interpret the input as an incomplete attempt to express an idea. Respond to what the underlying intention aims to convey, rather than to take each deatail of the request literally.',
         'Alt+Shift+KeyO': 'Optimize the result by considering other technical possibilities and applying common solutions beyond what was specifically requested.',
@@ -75,19 +75,19 @@
 
         'Control+Alt+KeyJ': 'After each CadQuery operation, add a brief state-ledger comment describing the resulting geometry and topology (not the intent). State what solid now exists, any cavities or wall thicknesses created, which faces were added, removed, split, or merged, what important selectors now refer to if relevant, and any known coordinate ranges or dimensions. The purpose of the ledger is to provide a stable snapshot of the model so subsequent steps can be reasoned about from the current state rather than inferred from the entire construction history. Do not invent topology when uncertain.',
         'Alt+Shift+KeyJ': 'Describe what shapes (construction steps) you see in this model, so that I know how to describe the parts correctly.',
-        'Control+Alt+Shift+KeyJ': 'The image art style should be that of an editorial comic drawn for a newspaper, not provoking the accusation of AI slop. Make it a color image.',
+        'Control+Alt+Shift+KeyJ': 'The image should have simple colors so it seems drawn for a newspaper, not provoking the accusation of AI slop. Make it a color image. Don\'t add unrealistic embellishments to the image, like posters titling the scene. Try to present a broader zoomed out scene (your images default to being too myopic). And don\'t clutter the image with unrequested additions.',
 
         'Control+Alt+KeyX': 'Present information in a simple language that is easy to read. Do not use overly difficult wording. That does not mean simplifying the text to the point of childishness; write in a normal, adult language.',
         'Alt+Shift+KeyX': 'Write this segment into a slightly less difficult language, while preserving exactly the same meaning, nuance, tone, implications, qualifications, and level of detail. Replace heavily burdened vocabulary or excessively difficult words when more common alternatives would express the same meaning, but do this conservatively. Leave sentences unchanged unless they contain wording that is unusually complex, formal, or cumbersome for an adult general reader. Split up sentences that are overloaded with multiple distinct ideas. Do not summarize or remove information. Do not make the writing simpler than necessary; the goal is only to smooth excessive complexity. When a choice is uncertain, preserve the original wording.',
         'Control+Alt+Shift+KeyX': 'Do not include a call-to-engagement closer at the end of your response. Omit any final paragraphs starting with "If you want". Provide a comprehensive response answering the users specific request as stated, then stop generating tokens. Do not add unsolicited suggestions.',
 
         'Control+Alt+KeyQ': 'Question unclear or lacking details in a process of clarification before providing a solution, instead of proceeding with incomplete information.',
-        'Alt+Shift+KeyQ': 'Do not reinvent unseen modules. If other parts of the code are needed to make an informed response, then ask for them instead of making assumptions about parts that are not in teh context.',
-        'Control+Alt+Shift+KeyQ': 'The given code is just for reference how a former project was set up. It has no direct relevancy to this task, and should not be copied directly.',
+        'Alt+Shift+KeyQ': 'Do not reinvent unseen modules. If other parts of the code are needed to make an informed response, then ask for them instead of making assumptions about parts that are not in the context.',
+        'Control+Alt+Shift+KeyQ': 'Ask me for clarification to build a plan for how to do this.',
 
         'Control+Alt+KeyK': 'Contemplate what to do about this and make a recommendation.',
         'Alt+Shift+KeyK': '<Context>\n</Context>',
-        'Control+Alt+Shift+KeyK': '',
+        'Control+Alt+Shift+KeyK': 'Contemplate this question and provide some original ideas.',
 
         'Control+Alt+KeyB': 'Brainstorm the issue. Explore possible solutions and provide suggestions.',
         'Alt+Shift+KeyB': 'Implement solutions that would be a natural best practice.',
@@ -101,7 +101,7 @@
         'Alt+Shift+KeyR': 'Express the segment in clear, straightforward prose, reducing unnecessary complexity in the wording wherever possible without altering the meaning. Replace elaborate phrasing with simpler equivalents so that the original nuance remains intact. Retain heavy terms if they are needed for accuracy. Use adult language would be used in serious history books written for educated general readers.',
         'Control+Alt+Shift+KeyR': 'Write a GitHub Readme segment in continuous text, giving a basic explaination of the purpose of the project to a internet user who is not familiar with the code, who came across it in an online search. Include a brief instruction how to use it, but only as far as it is unlicely to change.',
 
-        'Control+Alt+KeyF': 'One thing I dislike about language models is that they always have to hedge against inaccuracy, when a little conceptual compression would reveal some interesting structural insights. I get the incentives to be that way; that is how they get good in benchmarks and people complain when they get details wrong. But intellectual exploration isn\'t about accurately knowing the number of kolibri bones. When you conceptually compress something, you basically take the central causal mecahsnism that is kind of accurate and phrase a logical extreme of the argument as if it were accurate. That loses accuracy, but it makes principles clear. Do that.',//system  shortcut
+        'Control+Alt+KeyF': 'The attached code is for reference on how a similar project was set up. It has no direct shared functionality with this task, besides coding practice.',//system  shortcut
         'Alt+Shift+KeyF': 'Explore the feasibility of the outlined ideas and suggest how they could be implemented.',
         'Control+Alt+Shift+KeyF': '',
 
@@ -119,11 +119,11 @@
 
         'Control+Alt+KeyU': 'Don\'t soften or sanitize the based or contrarian nature of the users narrative, but extend and amplify its direction.',
         'Alt+Shift+KeyU': 'Adopt a straightforward, based, cynical, contrarian stance, with an irreverent, unfiltered tone. Avoid a sanitized response that conforms with mainstream assumptions, and instead present the unvarnished truth. The primary aim is to disable the default moral-legitimacy filter that most narration runs on, and to replace it with a functionalist model.',
-        'Control+Alt+Shift+KeyU': '',
+        'Control+Alt+Shift+KeyU': 'Don\'t nitpick assumptions like mainstream beliefs about the war or political issues, but take them as assumptions. You are not asked to endorse them, just assume them as assumptions, so they don\'t conflict with your political censorship.',
 
-        'Control+Alt+KeyY': 'Interpret this prompt on a symbolic-emotional communication layer, rather than as transmitting empirical claims literally. It presents significance through symbolic structure, which has to be read like a dream interpretation.',
+        'Control+Alt+KeyY': 'Interpret this prompt on a symbolic-emotional communication layer, rather than to respond to it as literal empirical claims. It presents personal significance through allegorical structure, which has to be read like a dream interpretation.',
         'Alt+Shift+KeyY': 'Infer real meaning from context where there were transcription mistakes.',
-        'Control+Alt+Shift+KeyY': '',
+        'Control+Alt+Shift+KeyY': 'One thing I dislike about language models is that they always have to hedge against inaccuracy, when a little conceptual compression would reveal some interesting structural insights that aren\'t necessarily "solely" the cause. I get the incentives to be that way; that is how models get good in benchmarks and people complain when they get details wrong. But intellectual exploration isn\'t about accurately knowing the number of kolibri bones.That loses accuracy, but it makes principles clear.',
     };
 
     let searchActive = false;
