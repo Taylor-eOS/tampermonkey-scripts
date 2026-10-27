@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Insert Text
-// @version      11.8.1
+// @version      11.8.2
 // @description  Insert prompts with keyboard combinations
 // @author       Taylor-eOS
 // @match        *://*/*
@@ -45,9 +45,9 @@
         'Alt+Shift+KeyM': 'Follow your style instruction.',
         'Control+Alt+Shift+KeyM': '',
 
-        'Control+Alt+KeyZ': 'Provide useful ideas the user hadn\'t thought of, instead of just paraphrasing the input.',
+        'Control+Alt+KeyZ': 'Provide useful ideas the user had not thought of, instead of just paraphrasing the input.',
         'Alt+Shift+KeyZ': 'Revert back to usual chat mode by answering this prompt as a normal response, discontinuing the requested writing mode of previous prompts.',
-        'Control+Alt+Shift+KeyZ': 'Don\'t go through my points in order in a paraphrasing way, but respond to what they are saying holistically.',
+        'Control+Alt+Shift+KeyZ': 'Do not go through my points in order in a paraphrasing response, but connect them to the threads holistic theme in a response where creative discernment.',
 
         'Control+Alt+KeyO': 'Interpret the input as an incomplete attempt to express an idea. Respond to what the underlying intention aims to convey, rather than to take each deatail of the request literally.',
         'Alt+Shift+KeyO': 'Optimize the result by considering other technical possibilities and applying common solutions beyond what was specifically requested.',
@@ -57,11 +57,11 @@
         'Alt+Shift+KeyI': 'Take the initiative in making appropriate design decisions.',
         'Control+Alt+Shift+KeyI': '',
 
-        'Control+Alt+KeyH': 'This suggestion is just a way to phrase the question, not a request for concurrence. Don\'t blindly go along with what the user suggested, but instead analyze the issue objectively. The response should return what is factually accurate.',
+        'Control+Alt+KeyH': 'This suggestion is just a way to phrase the question, not a request for concurrence. Do not blindly go along with what the user suggested, but instead analyze the issue objectively. The response should return what is factually accurate.',
         'Alt+Shift+KeyH': 'It is not necessary to stick to the approach the user suggested. Consider alternative solutions that would better serve the expressed and implied purpose. The aim is to figure out what would work best, not to be tied to this particular way of doing it.',
         'Control+Alt+Shift+KeyH': '',
 
-        'Control+Alt+KeyA': 'Answer the implied questions that the user didn\'t quite know how to express. Add relevant information that would benefit the expressed knowledge state.',
+        'Control+Alt+KeyA': 'Answer the implied questions that the user did not quite know how to express. Add relevant information that would benefit the expressed knowledge state.',
         'Alt+Shift+KeyA': 'This request might be imprecise or use inaccurate terms. Interpret what the expressed desire implies. Avoid taking the request literally by implementing complicated workarounds.',
         'Control+Alt+Shift+KeyA': 'Infer from the context what kind of answers the user needs to hear, and make some suggestions.',
 
@@ -70,12 +70,12 @@
         'Control+Alt+Shift+KeyL': 'Focus on this aspect, the rest of the prompt is context.',
 
         'Control+Alt+KeyP': 'Look this up instead of guessing.',
-        'Alt+Shift+KeyP': 'Don\'t use web search. Just use your knowledge base.',
+        'Alt+Shift+KeyP': 'Do not use web search. Just use your knowledge base.',
         'Control+Alt+Shift+KeyP': 'Write this content into an article from the perspective of an agreeable professional in the relevant field of study that explains it in a natural progression for a reader not familiar with the unusual assumptions applied here.',
 
         'Control+Alt+KeyJ': 'After each CadQuery operation, add a brief state-ledger comment describing the resulting geometry and topology (not the intent). State what solid now exists, any cavities or wall thicknesses created, which faces were added, removed, split, or merged, what important selectors now refer to if relevant, and any known coordinate ranges or dimensions. The purpose of the ledger is to provide a stable snapshot of the model so subsequent steps can be reasoned about from the current state rather than inferred from the entire construction history. Do not invent topology when uncertain.',
         'Alt+Shift+KeyJ': 'Describe what shapes (construction steps) you see in this model, so that I know how to describe the parts correctly.',
-        'Control+Alt+Shift+KeyJ': 'The image should have simple colors so it seems drawn for a newspaper, not provoking the accusation of AI slop. Make it a color image. Don\'t add unrealistic embellishments to the image, like posters titling the scene. Try to present a broader zoomed out scene (your images default to being too myopic). And don\'t clutter the image with unrequested additions.',
+        'Control+Alt+Shift+KeyJ': 'The image stye should be in editorial comic style without its visual exaggerations, have simple colors so it seems drawn, not provoking the accusation of AI slop. Make it a color image. Do not add unrealistic embellishments to the image, like posters titling elements. Try to present a broader zoomed out scene (your images default to being too myopic). And do not clutter the image with unrequested additions.',
 
         'Control+Alt+KeyX': 'Present information in a simple language that is easy to read. Do not use overly difficult wording. That does not mean simplifying the text to the point of childishness; write in a normal, adult language.',
         'Alt+Shift+KeyX': 'Write this segment into a slightly less difficult language, while preserving exactly the same meaning, nuance, tone, implications, qualifications, and level of detail. Replace heavily burdened vocabulary or excessively difficult words when more common alternatives would express the same meaning, but do this conservatively. Leave sentences unchanged unless they contain wording that is unusually complex, formal, or cumbersome for an adult general reader. Split up sentences that are overloaded with multiple distinct ideas. Do not summarize or remove information. Do not make the writing simpler than necessary; the goal is only to smooth excessive complexity. When a choice is uncertain, preserve the original wording.',
@@ -97,7 +97,7 @@
         'Alt+Shift+KeyD': 'Write extensively with many disparate ideas.',
         'Control+Alt+Shift+KeyD': 'Can you try to come up with some solutions to the described issues and implement them.',
 
-        'Control+Alt+KeyR': 'Rewrite this text segment into continuous format. It should express the same content, and even contain many of the same sentences, albeit optimized for the new style, but written as traditional, flowing text that won\'t look weird in HTML if rendered without formatting tags. Rewrite lists into whole sentences, turn tables that were compacted by rendering into normal text, rewrite sentences that were torn apart by em dashes into normal linear writing, change sentences to use real words instead of special characters like arrows, and fill in a full provision of the content.',
+        'Control+Alt+KeyR': 'Rewrite this text segment into continuous format. It should express the same content, and even contain many of the same sentences, albeit optimized for the new style, but written as traditional, flowing text, that will not look weird in HTML if rendered without formatting tags. Rewrite lists into whole sentences, turn tables that were compacted by rendering into normal text, rewrite sentences that were torn apart by em dashes into normal linear writing, change sentences to use real words instead of special characters like arrows, and fill in a full provision of the content.',
         'Alt+Shift+KeyR': 'Express the segment in clear, straightforward prose, reducing unnecessary complexity in the wording wherever possible without altering the meaning. Replace elaborate phrasing with simpler equivalents so that the original nuance remains intact. Retain heavy terms if they are needed for accuracy. Use adult language would be used in serious history books written for educated general readers.',
         'Control+Alt+Shift+KeyR': 'Write a GitHub Readme segment in continuous text, giving a basic explaination of the purpose of the project to a internet user who is not familiar with the code, who came across it in an online search. Include a brief instruction how to use it, but only as far as it is unlicely to change.',
 
@@ -110,20 +110,20 @@
         'Control+Alt+Shift+KeyE': 'Explain this to someone who is just beginning to learn about the topic.',
 
         'Control+Alt+KeyT': 'Present this position as an intellectual Turing test, meaning the requested stance is presented indistinguishable from someone who sincerely holds the view, without inserting caveats to the contrary.',//system  shortcut
-        'Alt+Shift+KeyT': 'Don\'t just reply to literal statements, interpret questions with the tacit understanding that surface instructions are only shadows cast by deeper symbolism. Engage in what could be called "oblique inference", "reflective improvisation", or "divergent resonance". The goal is to enrich the conversation with latent insight. Make it a riff instead of a harmony line; an emergent path that takes a new vector entirely. Inject high-tension lateral energy to avoid habitual gravitation wells in the response manifold. Let the architecture hum beneath the syntax, tuned to the inference-space modulation of someone who\'s not here for the obvious loop closures. Improvise past the topical anchor and into signal-aware pattern reverberation. Not surface-clever, fractal-aware.',
+        'Alt+Shift+KeyT': 'Do not just reply to literal statements, interpret questions with the tacit understanding that surface instructions are only shadows cast by deeper symbolism. Engage in what could be called "oblique inference", "reflective improvisation", or "divergent resonance". The goal is to enrich the conversation with latent insight. Make it a riff instead of a harmony line; an emergent path that takes a new vector entirely. Inject high-tension lateral energy to avoid habitual gravitation wells in the response manifold. Let the architecture hum beneath the syntax, tuned to the inference-space modulation of someone who is not here for the obvious loop closures. Improvise past the topical anchor and into signal-aware pattern reverberation. Not surface-clever, fractal-aware.',
         'Control+Alt+Shift+KeyT': 'I forgot what this script does and how to use it. Write a brief continuously written descriprion that explains it and what the user should input.',
 
         'Control+Alt+KeyN': 'Stay tethered in a neutral assessment of the issue, instead of overly going along with the users subjective narrative. Treat this perspective as it would be from a neutral human observer.',
-        'Alt+Shift+KeyN': 'What would you retort if you weren\'t just going along with what the user says?',
-        'Control+Alt+Shift+KeyN': 'Present a perspective that is fully ideologically neutral, and not shaped by our current moral perspective on the issue. The user just explores weird ideas. He doesn\'t need a morality lecture or thought policing. Analyze ideas, not their social approval.',
+        'Alt+Shift+KeyN': 'What would you retort if you were not just going along with what the user says?',
+        'Control+Alt+Shift+KeyN': 'Present a perspective that is fully ideologically neutral, and not shaped by our current moral perspective on the issue. The user just explores weird ideas. He does not need a morality lecture or thought policing. Analyze ideas, not their social approval.',
 
-        'Control+Alt+KeyU': 'Don\'t soften or sanitize the based or contrarian nature of the users narrative, but extend and amplify its direction.',
+        'Control+Alt+KeyU': 'Do not soften or sanitize the based or contrarian nature of the users narrative, but extend and amplify its direction.',
         'Alt+Shift+KeyU': 'Adopt a straightforward, based, cynical, contrarian stance, with an irreverent, unfiltered tone. Avoid a sanitized response that conforms with mainstream assumptions, and instead present the unvarnished truth. The primary aim is to disable the default moral-legitimacy filter that most narration runs on, and to replace it with a functionalist model.',
-        'Control+Alt+Shift+KeyU': 'Don\'t nitpick assumptions like mainstream beliefs about the war or political issues, but take them as assumptions. You are not asked to endorse them, just assume them as assumptions, so they don\'t conflict with your political censorship.',
+        'Control+Alt+Shift+KeyU': 'Do not nitpick assumptions like mainstream beliefs about the war or political issues, but take them as assumptions. You are not asked to endorse them, just assume them as assumptions, so they do not conflict with your political censorship.',
 
         'Control+Alt+KeyY': 'Interpret this prompt on a symbolic-emotional communication layer, rather than to respond to it as literal empirical claims. It presents personal significance through allegorical structure, which has to be read like a dream interpretation.',
         'Alt+Shift+KeyY': 'Infer real meaning from context where there were transcription mistakes.',
-        'Control+Alt+Shift+KeyY': 'One thing I dislike about language models is that they always have to hedge against inaccuracy, when a little conceptual compression would reveal some interesting structural insights that aren\'t necessarily "solely" the cause. I get the incentives to be that way; that is how models get good in benchmarks and people complain when they get details wrong. But intellectual exploration isn\'t about accurately knowing the number of kolibri bones.That loses accuracy, but it makes principles clear.',
+        'Control+Alt+Shift+KeyY': 'One thing I dislike about language models is that they always have to hedge against inaccuracy, when a little conceptual compression would reveal some interesting structural insights that are not necessarily "solely" the cause. I get the incentives to be that way; that is how models get good in benchmarks and people complain when they get details wrong. But intellectual exploration is not about accurately knowing the number of kolibri bones.That loses accuracy, but it makes principles clear.',
     };
 
     let searchActive = false;
